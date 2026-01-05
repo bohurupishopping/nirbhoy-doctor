@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../consultation_controller.dart';
 import '../../domain/consultation_models.dart';
@@ -17,7 +18,7 @@ class HistoryTab extends ConsumerWidget {
     if (contextData == null) return const SizedBox.shrink();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,16 +27,17 @@ class HistoryTab extends ConsumerWidget {
             children: [
               Icon(
                 FontAwesomeIcons.timeline,
-                size: 16,
+                size: 14,
                 color: Colors.blue.shade700,
               ),
               const SizedBox(width: 8),
               Text(
                 "VISIT TIMELINE",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
                   color: Colors.grey.shade600,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
@@ -57,16 +59,17 @@ class HistoryTab extends ConsumerWidget {
             children: [
               Icon(
                 FontAwesomeIcons.folderOpen,
-                size: 16,
+                size: 14,
                 color: Colors.orange.shade700,
               ),
               const SizedBox(width: 8),
               Text(
                 "MEDICAL DOCUMENTS",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
                   color: Colors.grey.shade600,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
@@ -112,8 +115,8 @@ class _EmptyState extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.black.withOpacity(0.04)),
       ),
       child: Column(
         children: [
@@ -121,7 +124,7 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             message,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.grey.shade400,
               fontWeight: FontWeight.w600,
             ),
@@ -138,21 +141,13 @@ class _VisitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateFormat('MMM dd, yyyy').format(visit.date);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.black.withOpacity(0.04)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,23 +156,23 @@ class _VisitCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               children: [
                 Text(
                   DateFormat('dd').format(visit.date),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontWeight: FontWeight.w800,
                     fontSize: 18,
                     color: Colors.blue.shade800,
                   ),
                 ),
                 Text(
                   DateFormat('MMM').format(visit.date).toUpperCase(),
-                  style: TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 10,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Colors.blue.shade600,
                   ),
                 ),
@@ -191,17 +186,18 @@ class _VisitCard extends StatelessWidget {
               children: [
                 Text(
                   "OPD Consultation",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w700,
                     fontSize: 15,
                   ),
                 ),
                 if (visit.doctorName != null)
                   Text(
                     "Dr. ${visit.doctorName}",
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
                       height: 1.4,
                     ),
                   ),
@@ -222,10 +218,10 @@ class _VisitCard extends StatelessWidget {
                           ),
                           child: Text(
                             d.toString(),
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -250,13 +246,13 @@ class _DocumentCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.black.withOpacity(0.04)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(FontAwesomeIcons.filePdf, size: 32, color: Colors.red.shade400),
+          Icon(FontAwesomeIcons.filePdf, size: 32, color: Colors.pink.shade300),
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -265,16 +261,19 @@ class _DocumentCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           const SizedBox(height: 4),
           Text(
             doc.category.toUpperCase(),
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 9,
               color: Colors.grey.shade400,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

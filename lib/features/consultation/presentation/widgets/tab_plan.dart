@@ -34,15 +34,24 @@ class PlanTab extends ConsumerWidget {
             initialValue: state.adviceNotes,
             onChanged: (val) => controller.updateAdvice(val),
             maxLines: 6,
+            style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
             decoration: InputDecoration(
               hintText: 'Enter diet, precautions, or general instructions...',
+              hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
               filled: true,
               fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(16),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                ),
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
               ),
             ),
           ),
@@ -69,16 +78,21 @@ class PlanTab extends ConsumerWidget {
                 controller.updateNextVisit(date);
               }
             },
+            borderRadius: BorderRadius.circular(16),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.black.withOpacity(0.05)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today_rounded, size: 20),
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    size: 20,
+                    color: Colors.blue.shade700,
+                  ),
                   const SizedBox(width: 12),
                   Text(
                     state.nextVisitDate != null
@@ -89,8 +103,8 @@ class PlanTab extends ConsumerWidget {
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       color: state.nextVisitDate != null
-                          ? Colors.black
-                          : Colors.grey,
+                          ? Colors.black87
+                          : Colors.grey[400],
                     ),
                   ),
                 ],

@@ -124,15 +124,37 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
               TextFormField(
                 controller: _searchController,
                 onChanged: _onSearch,
+                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 decoration: InputDecoration(
                   hintText: 'Search brand or generic name...',
-                  prefixIcon: const Icon(Icons.search),
+                  hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey[400],
+                    size: 20,
+                  ),
                   filled: true,
                   fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Colors.grey.withValues(alpha: 0.2),
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.black.withOpacity(0.2),
                     ),
                   ),
                   suffixIcon: _isSearching
@@ -153,16 +175,17 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                   margin: const EdgeInsets.only(top: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
+                        color: Colors.black.withOpacity(0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: ListView.builder(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {
@@ -214,11 +237,11 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
             // Controller `updateMedicine` expects full object, `removeMedicine` expects tempId
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.black.withOpacity(0.04)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,6 +266,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
                                   color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                           ],
@@ -257,7 +281,10 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                       ),
                     ],
                   ),
-                  const Divider(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Divider(height: 1),
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -339,7 +366,14 @@ class _InlineInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.inter(fontSize: 10, color: Colors.grey)),
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 10,
+            color: Colors.grey,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 4),
         TextFormField(
           initialValue: value,
@@ -351,7 +385,15 @@ class _InlineInput extends StatelessWidget {
               horizontal: 0,
               vertical: 8,
             ),
-            border: const UnderlineInputBorder(),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black.withOpacity(0.1)),
+            ),
           ),
         ),
       ],

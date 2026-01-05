@@ -50,13 +50,21 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'Describe main complaint...',
+              hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
               filled: true,
               fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(16),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                ),
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
               ),
             ),
           ),
@@ -78,13 +86,29 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                   controller: _symptomController,
                   decoration: InputDecoration(
                     hintText: 'Add Symptom/Diagnosis...',
+                    hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide(
-                        color: Colors.grey.withValues(alpha: 0.2),
+                        color: Colors.black.withOpacity(0.05),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.black.withOpacity(0.05),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.black.withOpacity(0.2),
                       ),
                     ),
                   ),
@@ -109,6 +133,10 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
+                  fixedSize: const Size(48, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
             ],
@@ -120,15 +148,27 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
             children: state.diagnosis
                 .map(
                   (e) => Chip(
-                    label: Text(e),
-                    deleteIcon: const Icon(Icons.close, size: 16),
+                    label: Text(
+                      e,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                    deleteIcon: const Icon(
+                      Icons.close,
+                      size: 14,
+                      color: Colors.grey,
+                    ),
                     onDeleted: () => controller.removeDiagnosis(e),
                     backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
-                      side: BorderSide(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                      ),
+                      side: BorderSide(color: Colors.black.withOpacity(0.05)),
                     ),
                   ),
                 )

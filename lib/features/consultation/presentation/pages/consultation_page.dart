@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../consultation_controller.dart';
 import '../widgets/tab_vitals.dart';
 import '../widgets/tab_complaints.dart';
@@ -60,79 +60,30 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                   final patient = state.context!.patient;
 
                   return [
-                    // Header
+                    // 1. Clean Header Section (Custom)
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                              onPressed: () => context.pop(),
-                              icon: const Icon(Icons.arrow_back_rounded),
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      patient.name,
-                                      style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    if (patient.isCritical)
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.red.shade100,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "CRITICAL",
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    if (patient.isWheelchair)
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4),
-                                        child: Icon(
-                                          FontAwesomeIcons.wheelchair,
-                                          size: 14,
-                                          color: Colors.blue.shade700,
-                                        ),
-                                      ),
-                                  ],
+                                _HeaderActionButton(
+                                  icon: Icons.arrow_back_rounded,
+                                  onTap: () => context.pop(),
                                 ),
+                                const SizedBox(width: 16),
                                 Text(
-                                  '${patient.age} Y / ${patient.gender} • ${patient.phone ?? "No Phone"}',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w600,
+                                  'Consultation',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
                             ),
-                            const Spacer(),
                             if (state.isSaving)
                               const SizedBox(
                                 width: 20,
@@ -169,8 +120,9 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black,
+                                  backgroundColor: const Color(0xFFFF8A65),
                                   foregroundColor: Colors.white,
+                                  elevation: 0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -191,23 +143,116 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                       ),
                     ),
 
-                    // Tabs
+                    // 2. Patient Profile Card (Simplified for Consultation)
+                    SliverToBoxAdapter(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.04),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 56,
+                              width: 56,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF8A65).withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  patient.name.isNotEmpty
+                                      ? patient.name[0].toUpperCase()
+                                      : 'P',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: const Color(0xFFFF8A65),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        patient.name,
+                                        style: GoogleFonts.plusJakartaSans(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      if (patient.isCritical) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.shade100,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "CRITICAL",
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.red.shade800,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${patient.age} Y • ${patient.gender} • ${patient.phone ?? "No Phone"}',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // 3. Capsule style Tab UI - Sticky Header
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _StickyTabBarDelegate(
                         child: Container(
-                          color: const Color(0xFFFFFCF8),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
+                            horizontal: 24,
                             vertical: 8,
                           ),
+                          color: const Color(0xFFFFFCF8),
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                color: Colors.black.withValues(alpha: 0.05),
+                                color: Colors.black.withOpacity(0.03),
                               ),
                             ),
                             child: TabBar(
@@ -219,8 +264,9 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               labelColor: Colors.white,
-                              unselectedLabelColor: Colors.grey[600],
+                              unselectedLabelColor: Colors.grey[500],
                               dividerColor: Colors.transparent,
+                              indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: GoogleFonts.plusJakartaSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 13,
@@ -260,6 +306,30 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                   ],
                 ),
               ),
+      ),
+    );
+  }
+}
+
+class _HeaderActionButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _HeaderActionButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        width: 48,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.black.withOpacity(0.05)),
+        ),
+        child: Center(child: Icon(icon, size: 22, color: Colors.black87)),
       ),
     );
   }

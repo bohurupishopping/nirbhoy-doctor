@@ -61,15 +61,32 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
               Expanded(
                 child: TextFormField(
                   controller: _testController,
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                   decoration: InputDecoration(
                     hintText: 'Enter test name (e.g. CBC, Lipid Profile)...',
+                    hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide(
-                        color: Colors.grey.withValues(alpha: 0.2),
+                        color: Colors.black.withOpacity(0.05),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.black.withOpacity(0.05),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.black.withOpacity(0.2),
                       ),
                     ),
                   ),
@@ -83,6 +100,10 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
+                  fixedSize: const Size(48, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
             ],
@@ -108,12 +129,12 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 0,
+                  vertical: 4,
                 ),
                 tileColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Colors.black.withValues(alpha: 0.04)),
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(color: Colors.black.withOpacity(0.04)),
                 ),
                 title: Text(
                   lab.testName,

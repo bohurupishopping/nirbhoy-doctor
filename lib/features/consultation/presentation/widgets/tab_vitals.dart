@@ -143,16 +143,20 @@ class VitalsTab extends ConsumerWidget {
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
+              horizontal: 16,
+              vertical: 14,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
             ),
           ),
         ),
