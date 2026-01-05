@@ -246,7 +246,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                         item: item,
                         isActive: true,
                         onTap: () {
-                          // Option to resume/view consult
+                          context.push('/consultation/${item.appointmentId}');
                         },
                       );
                     }, childCount: state.queue.active.length),

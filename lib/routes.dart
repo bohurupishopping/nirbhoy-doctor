@@ -11,6 +11,7 @@ import 'features/booking/presentation/booking_page.dart';
 import 'features/appointments/presentation/appointments_page.dart';
 import 'features/finance/presentation/pages/finance_page.dart';
 import 'features/splash/presentation/splash_page.dart';
+import 'features/consultation/presentation/pages/consultation_page.dart';
 
 class Routes {
   static const String login = '/login';
@@ -89,6 +90,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const FinancePage(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/consultation/:id',
+        builder: (context, state) =>
+            ConsultationPage(appointmentId: state.pathParameters['id']!),
       ),
     ],
   );
