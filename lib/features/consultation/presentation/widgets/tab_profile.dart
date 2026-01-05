@@ -124,13 +124,13 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                     ),
                   )
                 : const Icon(Icons.save),
-            label: const Text("UPDATE MEDICAL PROFILE"),
+            label: const Text("Update Medical Profile"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.all(20),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(100),
               ),
               textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -153,7 +153,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.amber.shade50,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.amber.shade200),
       ),
       child: Row(
@@ -233,7 +233,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                   ),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(100),
                     side: BorderSide(color: Colors.grey.shade300),
                   ),
                   deleteIcon: const Icon(Icons.close, size: 14),
@@ -257,7 +257,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                       vertical: 0,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                     filled: true,
