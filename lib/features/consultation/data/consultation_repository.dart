@@ -82,10 +82,31 @@ class ConsultationRepository {
         Map<String, dynamic>.from(summaryResponse['medical_profile'] ?? {}),
       );
 
+      // 3. Check if consultation exists, if not create one (same as Next.js pattern)
+      String consultationId;
+      final existingConsult = await _supabase
+          .from('consultations')
+          .select('id')
+          .eq('appointment_id', appointmentId)
+          .maybeSingle();
+
+      if (existingConsult != null) {
+        consultationId = existingConsult['id'];
+      } else {
+        // Create new consultation record
+        final newConsult = await _supabase
+            .from('consultations')
+            .insert({'appointment_id': appointmentId, 'doctor_id': doctorId})
+            .select('id')
+            .single();
+        consultationId = newConsult['id'];
+      }
+
       // Map to ConsultationContext
       return ConsultationContext(
-        consultationId: appointmentId,
+        consultationId: consultationId,
         patient: patient,
+
         safetyProfile: safetyProfile,
         visitHistory: (summaryResponse['visit_history'] as List? ?? []).map((
           e,

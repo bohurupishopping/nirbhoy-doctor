@@ -29,10 +29,10 @@ class ConsultationContext with _$ConsultationContext {
 @freezed
 class PersonBasicDetails with _$PersonBasicDetails {
   const factory PersonBasicDetails({
-    required String id,
-    required String name,
-    required int age,
-    required String gender,
+    @Default('') String id,
+    @Default('Unknown') String name,
+    @Default(0) int age,
+    @Default('') String gender,
     String? phone,
     String? address,
     @Default(false) bool isCritical,
@@ -82,10 +82,10 @@ class VisitHistoryItem with _$VisitHistoryItem {
 @freezed
 class PatientDocument with _$PatientDocument {
   const factory PatientDocument({
-    required String id,
-    @JsonKey(name: 'file_name') required String fileName,
-    @JsonKey(name: 'file_url') required String fileUrl,
-    required String category,
+    @Default('') String id,
+    @JsonKey(name: 'name') @Default('') String fileName,
+    @JsonKey(name: 'url') @Default('') String fileUrl,
+    @Default('') String category,
     DateTime? date,
   }) = _PatientDocument;
 
@@ -96,11 +96,10 @@ class PatientDocument with _$PatientDocument {
 @freezed
 class VitalsTrendItem with _$VitalsTrendItem {
   const factory VitalsTrendItem({
-    required DateTime date,
-    double? weight,
-    double? temp,
-    @JsonKey(name: 'bp_sys') int? bpSys,
-    @JsonKey(name: 'bp_dia') int? bpDia,
+    DateTime? date,
+    String? weight,
+    String? temp,
+    String? bp,
   }) = _VitalsTrendItem;
 
   factory VitalsTrendItem.fromJson(Map<String, dynamic> json) =>

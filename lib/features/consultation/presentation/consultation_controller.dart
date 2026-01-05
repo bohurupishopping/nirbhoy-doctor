@@ -172,9 +172,17 @@ class ConsultationController extends StateNotifier<ConsultationState> {
 
   // --- Submit ---
   Future<bool> submit() async {
+    if (state.context == null) {
+      state = state.copyWith(error: 'Consultation context not loaded');
+      return false;
+    }
+
     state = state.copyWith(isSaving: true, error: null);
     try {
-      await _repo.submitPrescription(consultId: _appointmentId, state: state);
+      await _repo.submitPrescription(
+        consultId: state.context!.consultationId,
+        state: state,
+      );
 
       state = state.copyWith(isSaving: false);
       return true;

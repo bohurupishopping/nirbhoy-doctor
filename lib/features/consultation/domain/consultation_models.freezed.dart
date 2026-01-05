@@ -599,10 +599,10 @@ class _$PersonBasicDetailsImpl
     with DiagnosticableTreeMixin
     implements _PersonBasicDetails {
   const _$PersonBasicDetailsImpl({
-    required this.id,
-    required this.name,
-    required this.age,
-    required this.gender,
+    this.id = '',
+    this.name = 'Unknown',
+    this.age = 0,
+    this.gender = '',
     this.phone,
     this.address,
     this.isCritical = false,
@@ -613,12 +613,16 @@ class _$PersonBasicDetailsImpl
       _$$PersonBasicDetailsImplFromJson(json);
 
   @override
+  @JsonKey()
   final String id;
   @override
+  @JsonKey()
   final String name;
   @override
+  @JsonKey()
   final int age;
   @override
+  @JsonKey()
   final String gender;
   @override
   final String? phone;
@@ -701,10 +705,10 @@ class _$PersonBasicDetailsImpl
 
 abstract class _PersonBasicDetails implements PersonBasicDetails {
   const factory _PersonBasicDetails({
-    required final String id,
-    required final String name,
-    required final int age,
-    required final String gender,
+    final String id,
+    final String name,
+    final int age,
+    final String gender,
     final String? phone,
     final String? address,
     final bool isCritical,
@@ -1482,9 +1486,9 @@ PatientDocument _$PatientDocumentFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PatientDocument {
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'file_name')
+  @JsonKey(name: 'name')
   String get fileName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'file_url')
+  @JsonKey(name: 'url')
   String get fileUrl => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   DateTime? get date => throw _privateConstructorUsedError;
@@ -1508,8 +1512,8 @@ abstract class $PatientDocumentCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'file_name') String fileName,
-    @JsonKey(name: 'file_url') String fileUrl,
+    @JsonKey(name: 'name') String fileName,
+    @JsonKey(name: 'url') String fileUrl,
     String category,
     DateTime? date,
   });
@@ -1575,8 +1579,8 @@ abstract class _$$PatientDocumentImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'file_name') String fileName,
-    @JsonKey(name: 'file_url') String fileUrl,
+    @JsonKey(name: 'name') String fileName,
+    @JsonKey(name: 'url') String fileUrl,
     String category,
     DateTime? date,
   });
@@ -1635,10 +1639,10 @@ class _$PatientDocumentImpl
     with DiagnosticableTreeMixin
     implements _PatientDocument {
   const _$PatientDocumentImpl({
-    required this.id,
-    @JsonKey(name: 'file_name') required this.fileName,
-    @JsonKey(name: 'file_url') required this.fileUrl,
-    required this.category,
+    this.id = '',
+    @JsonKey(name: 'name') this.fileName = '',
+    @JsonKey(name: 'url') this.fileUrl = '',
+    this.category = '',
     this.date,
   });
 
@@ -1646,14 +1650,16 @@ class _$PatientDocumentImpl
       _$$PatientDocumentImplFromJson(json);
 
   @override
+  @JsonKey()
   final String id;
   @override
-  @JsonKey(name: 'file_name')
+  @JsonKey(name: 'name')
   final String fileName;
   @override
-  @JsonKey(name: 'file_url')
+  @JsonKey(name: 'url')
   final String fileUrl;
   @override
+  @JsonKey()
   final String category;
   @override
   final DateTime? date;
@@ -1713,10 +1719,10 @@ class _$PatientDocumentImpl
 
 abstract class _PatientDocument implements PatientDocument {
   const factory _PatientDocument({
-    required final String id,
-    @JsonKey(name: 'file_name') required final String fileName,
-    @JsonKey(name: 'file_url') required final String fileUrl,
-    required final String category,
+    final String id,
+    @JsonKey(name: 'name') final String fileName,
+    @JsonKey(name: 'url') final String fileUrl,
+    final String category,
     final DateTime? date,
   }) = _$PatientDocumentImpl;
 
@@ -1726,10 +1732,10 @@ abstract class _PatientDocument implements PatientDocument {
   @override
   String get id;
   @override
-  @JsonKey(name: 'file_name')
+  @JsonKey(name: 'name')
   String get fileName;
   @override
-  @JsonKey(name: 'file_url')
+  @JsonKey(name: 'url')
   String get fileUrl;
   @override
   String get category;
@@ -1750,13 +1756,10 @@ VitalsTrendItem _$VitalsTrendItemFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VitalsTrendItem {
-  DateTime get date => throw _privateConstructorUsedError;
-  double? get weight => throw _privateConstructorUsedError;
-  double? get temp => throw _privateConstructorUsedError;
-  @JsonKey(name: 'bp_sys')
-  int? get bpSys => throw _privateConstructorUsedError;
-  @JsonKey(name: 'bp_dia')
-  int? get bpDia => throw _privateConstructorUsedError;
+  DateTime? get date => throw _privateConstructorUsedError;
+  String? get weight => throw _privateConstructorUsedError;
+  String? get temp => throw _privateConstructorUsedError;
+  String? get bp => throw _privateConstructorUsedError;
 
   /// Serializes this VitalsTrendItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1775,13 +1778,7 @@ abstract class $VitalsTrendItemCopyWith<$Res> {
     $Res Function(VitalsTrendItem) then,
   ) = _$VitalsTrendItemCopyWithImpl<$Res, VitalsTrendItem>;
   @useResult
-  $Res call({
-    DateTime date,
-    double? weight,
-    double? temp,
-    @JsonKey(name: 'bp_sys') int? bpSys,
-    @JsonKey(name: 'bp_dia') int? bpDia,
-  });
+  $Res call({DateTime? date, String? weight, String? temp, String? bp});
 }
 
 /// @nodoc
@@ -1799,34 +1796,29 @@ class _$VitalsTrendItemCopyWithImpl<$Res, $Val extends VitalsTrendItem>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? date = freezed,
     Object? weight = freezed,
     Object? temp = freezed,
-    Object? bpSys = freezed,
-    Object? bpDia = freezed,
+    Object? bp = freezed,
   }) {
     return _then(
       _value.copyWith(
-            date: null == date
+            date: freezed == date
                 ? _value.date
                 : date // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
+                      as DateTime?,
             weight: freezed == weight
                 ? _value.weight
                 : weight // ignore: cast_nullable_to_non_nullable
-                      as double?,
+                      as String?,
             temp: freezed == temp
                 ? _value.temp
                 : temp // ignore: cast_nullable_to_non_nullable
-                      as double?,
-            bpSys: freezed == bpSys
-                ? _value.bpSys
-                : bpSys // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            bpDia: freezed == bpDia
-                ? _value.bpDia
-                : bpDia // ignore: cast_nullable_to_non_nullable
-                      as int?,
+                      as String?,
+            bp: freezed == bp
+                ? _value.bp
+                : bp // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -1842,13 +1834,7 @@ abstract class _$$VitalsTrendItemImplCopyWith<$Res>
   ) = __$$VitalsTrendItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    DateTime date,
-    double? weight,
-    double? temp,
-    @JsonKey(name: 'bp_sys') int? bpSys,
-    @JsonKey(name: 'bp_dia') int? bpDia,
-  });
+  $Res call({DateTime? date, String? weight, String? temp, String? bp});
 }
 
 /// @nodoc
@@ -1865,34 +1851,29 @@ class __$$VitalsTrendItemImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? date = freezed,
     Object? weight = freezed,
     Object? temp = freezed,
-    Object? bpSys = freezed,
-    Object? bpDia = freezed,
+    Object? bp = freezed,
   }) {
     return _then(
       _$VitalsTrendItemImpl(
-        date: null == date
+        date: freezed == date
             ? _value.date
             : date // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
+                  as DateTime?,
         weight: freezed == weight
             ? _value.weight
             : weight // ignore: cast_nullable_to_non_nullable
-                  as double?,
+                  as String?,
         temp: freezed == temp
             ? _value.temp
             : temp // ignore: cast_nullable_to_non_nullable
-                  as double?,
-        bpSys: freezed == bpSys
-            ? _value.bpSys
-            : bpSys // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        bpDia: freezed == bpDia
-            ? _value.bpDia
-            : bpDia // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                  as String?,
+        bp: freezed == bp
+            ? _value.bp
+            : bp // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -1903,33 +1884,23 @@ class __$$VitalsTrendItemImplCopyWithImpl<$Res>
 class _$VitalsTrendItemImpl
     with DiagnosticableTreeMixin
     implements _VitalsTrendItem {
-  const _$VitalsTrendItemImpl({
-    required this.date,
-    this.weight,
-    this.temp,
-    @JsonKey(name: 'bp_sys') this.bpSys,
-    @JsonKey(name: 'bp_dia') this.bpDia,
-  });
+  const _$VitalsTrendItemImpl({this.date, this.weight, this.temp, this.bp});
 
   factory _$VitalsTrendItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$VitalsTrendItemImplFromJson(json);
 
   @override
-  final DateTime date;
+  final DateTime? date;
   @override
-  final double? weight;
+  final String? weight;
   @override
-  final double? temp;
+  final String? temp;
   @override
-  @JsonKey(name: 'bp_sys')
-  final int? bpSys;
-  @override
-  @JsonKey(name: 'bp_dia')
-  final int? bpDia;
+  final String? bp;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VitalsTrendItem(date: $date, weight: $weight, temp: $temp, bpSys: $bpSys, bpDia: $bpDia)';
+    return 'VitalsTrendItem(date: $date, weight: $weight, temp: $temp, bp: $bp)';
   }
 
   @override
@@ -1940,8 +1911,7 @@ class _$VitalsTrendItemImpl
       ..add(DiagnosticsProperty('date', date))
       ..add(DiagnosticsProperty('weight', weight))
       ..add(DiagnosticsProperty('temp', temp))
-      ..add(DiagnosticsProperty('bpSys', bpSys))
-      ..add(DiagnosticsProperty('bpDia', bpDia));
+      ..add(DiagnosticsProperty('bp', bp));
   }
 
   @override
@@ -1952,14 +1922,12 @@ class _$VitalsTrendItemImpl
             (identical(other.date, date) || other.date == date) &&
             (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.temp, temp) || other.temp == temp) &&
-            (identical(other.bpSys, bpSys) || other.bpSys == bpSys) &&
-            (identical(other.bpDia, bpDia) || other.bpDia == bpDia));
+            (identical(other.bp, bp) || other.bp == bp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, weight, temp, bpSys, bpDia);
+  int get hashCode => Object.hash(runtimeType, date, weight, temp, bp);
 
   /// Create a copy of VitalsTrendItem
   /// with the given fields replaced by the non-null parameter values.
@@ -1980,28 +1948,23 @@ class _$VitalsTrendItemImpl
 
 abstract class _VitalsTrendItem implements VitalsTrendItem {
   const factory _VitalsTrendItem({
-    required final DateTime date,
-    final double? weight,
-    final double? temp,
-    @JsonKey(name: 'bp_sys') final int? bpSys,
-    @JsonKey(name: 'bp_dia') final int? bpDia,
+    final DateTime? date,
+    final String? weight,
+    final String? temp,
+    final String? bp,
   }) = _$VitalsTrendItemImpl;
 
   factory _VitalsTrendItem.fromJson(Map<String, dynamic> json) =
       _$VitalsTrendItemImpl.fromJson;
 
   @override
-  DateTime get date;
+  DateTime? get date;
   @override
-  double? get weight;
+  String? get weight;
   @override
-  double? get temp;
+  String? get temp;
   @override
-  @JsonKey(name: 'bp_sys')
-  int? get bpSys;
-  @override
-  @JsonKey(name: 'bp_dia')
-  int? get bpDia;
+  String? get bp;
 
   /// Create a copy of VitalsTrendItem
   /// with the given fields replaced by the non-null parameter values.

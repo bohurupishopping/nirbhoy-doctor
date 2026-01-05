@@ -47,10 +47,10 @@ Map<String, dynamic> _$$ConsultationContextImplToJson(
 _$PersonBasicDetailsImpl _$$PersonBasicDetailsImplFromJson(
   Map<String, dynamic> json,
 ) => _$PersonBasicDetailsImpl(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  age: (json['age'] as num).toInt(),
-  gender: json['gender'] as String,
+  id: json['id'] as String? ?? '',
+  name: json['name'] as String? ?? 'Unknown',
+  age: (json['age'] as num?)?.toInt() ?? 0,
+  gender: json['gender'] as String? ?? '',
   phone: json['phone'] as String?,
   address: json['address'] as String?,
   isCritical: json['isCritical'] as bool? ?? false,
@@ -132,10 +132,10 @@ Map<String, dynamic> _$$VisitHistoryItemImplToJson(
 _$PatientDocumentImpl _$$PatientDocumentImplFromJson(
   Map<String, dynamic> json,
 ) => _$PatientDocumentImpl(
-  id: json['id'] as String,
-  fileName: json['file_name'] as String,
-  fileUrl: json['file_url'] as String,
-  category: json['category'] as String,
+  id: json['id'] as String? ?? '',
+  fileName: json['name'] as String? ?? '',
+  fileUrl: json['url'] as String? ?? '',
+  category: json['category'] as String? ?? '',
   date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
 );
 
@@ -143,8 +143,8 @@ Map<String, dynamic> _$$PatientDocumentImplToJson(
   _$PatientDocumentImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'file_name': instance.fileName,
-  'file_url': instance.fileUrl,
+  'name': instance.fileName,
+  'url': instance.fileUrl,
   'category': instance.category,
   'date': instance.date?.toIso8601String(),
 };
@@ -152,21 +152,19 @@ Map<String, dynamic> _$$PatientDocumentImplToJson(
 _$VitalsTrendItemImpl _$$VitalsTrendItemImplFromJson(
   Map<String, dynamic> json,
 ) => _$VitalsTrendItemImpl(
-  date: DateTime.parse(json['date'] as String),
-  weight: (json['weight'] as num?)?.toDouble(),
-  temp: (json['temp'] as num?)?.toDouble(),
-  bpSys: (json['bp_sys'] as num?)?.toInt(),
-  bpDia: (json['bp_dia'] as num?)?.toInt(),
+  date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+  weight: json['weight'] as String?,
+  temp: json['temp'] as String?,
+  bp: json['bp'] as String?,
 );
 
 Map<String, dynamic> _$$VitalsTrendItemImplToJson(
   _$VitalsTrendItemImpl instance,
 ) => <String, dynamic>{
-  'date': instance.date.toIso8601String(),
+  'date': instance.date?.toIso8601String(),
   'weight': instance.weight,
   'temp': instance.temp,
-  'bp_sys': instance.bpSys,
-  'bp_dia': instance.bpDia,
+  'bp': instance.bp,
 };
 
 _$MedicineSearchResultImpl _$$MedicineSearchResultImplFromJson(
