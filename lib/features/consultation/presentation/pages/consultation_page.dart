@@ -134,7 +134,7 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                                   ),
                                 ),
                                 child: Text(
-                                  'Sign & Complete',
+                                  'Submit',
                                   style: GoogleFonts.plusJakartaSans(
                                     fontWeight: FontWeight.w700,
                                   ),
