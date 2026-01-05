@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../consultation_controller.dart';
 import '../widgets/tab_vitals.dart';
 import '../widgets/tab_complaints.dart';
 import '../widgets/tab_medicines.dart';
 import '../widgets/tab_diagnostics.dart';
 import '../widgets/tab_plan.dart';
+import '../widgets/tab_summary.dart';
+import '../widgets/tab_history.dart';
+import '../widgets/tab_profile.dart';
 
 class ConsultationPage extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -25,7 +29,7 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 8, vsync: this);
   }
 
   @override
@@ -48,11 +52,13 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
       body: SafeArea(
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : state.initData == null
+            : state.context == null
             ? Center(child: Text("Error loading data: ${state.error}"))
             : NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  final patient = state.initData!.patient360.profile;
+                  // prefer context if available
+                  final patient = state.context!.patient;
+
                   return [
                     // Header
                     SliverToBoxAdapter(
@@ -74,15 +80,50 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  patient.fullName,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      patient.name,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    if (patient.isCritical)
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade100,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "CRITICAL",
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red.shade800,
+                                          ),
+                                        ),
+                                      ),
+                                    if (patient.isWheelchair)
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 4),
+                                        child: Icon(
+                                          FontAwesomeIcons.wheelchair,
+                                          size: 14,
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 Text(
-                                  '${patient.age} Y / ${patient.gender} • ${patient.phone}',
+                                  '${patient.age} Y / ${patient.gender} • ${patient.phone ?? "No Phone"}',
                                   style: GoogleFonts.inter(
                                     fontSize: 12,
                                     color: Colors.grey[600],
@@ -103,18 +144,24 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                             else
                               ElevatedButton(
                                 onPressed: () async {
+                                  final messenger = ScaffoldMessenger.of(
+                                    context,
+                                  );
+                                  final router = GoRouter.of(context);
+
                                   final success = await controller.submit();
-                                  if (success && mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+
+                                  if (success) {
+                                    messenger.showSnackBar(
                                       const SnackBar(
                                         content: Text(
                                           'Consultation Completed!',
                                         ),
                                       ),
                                     );
-                                    context.pop(); // Go back to dashboard/list
-                                  } else if (mounted && state.error != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    if (router.canPop()) router.pop();
+                                  } else if (state.error != null) {
+                                    messenger.showSnackBar(
                                       SnackBar(
                                         content: Text('Error: ${state.error}'),
                                       ),
@@ -183,6 +230,9 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                                 fontSize: 13,
                               ),
                               tabs: const [
+                                Tab(text: "Summary"),
+                                Tab(text: "History"),
+                                Tab(text: "Profile"),
                                 Tab(text: "Vitals"),
                                 Tab(text: "Complaints"),
                                 Tab(text: "Medicines"),
@@ -199,6 +249,9 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                 body: TabBarView(
                   controller: _tabController,
                   children: [
+                    SummaryTab(appointmentId: widget.appointmentId),
+                    HistoryTab(appointmentId: widget.appointmentId),
+                    ProfileTab(appointmentId: widget.appointmentId),
                     VitalsTab(appointmentId: widget.appointmentId),
                     ComplaintsTab(appointmentId: widget.appointmentId),
                     MedicinesTab(appointmentId: widget.appointmentId),

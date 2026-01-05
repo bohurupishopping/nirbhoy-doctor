@@ -84,7 +84,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                       ),
                     ),
                   ),

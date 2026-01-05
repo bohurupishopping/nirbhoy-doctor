@@ -1,7 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../patient/domain/clinical_models.dart';
-import '../../patient/domain/patient_models.dart';
 import '../domain/consultation_models.dart';
 
 final consultationRepositoryProvider = Provider<ConsultationRepository>((ref) {
@@ -13,64 +11,196 @@ class ConsultationRepository {
 
   ConsultationRepository(this._supabase);
 
-  Future<ConsultationInitData> getConsultationInitData(
+  Future<ConsultationContext> getConsultationInitData(
     String appointmentId,
   ) async {
     try {
       // 1. Get Appointment Details
-      final apptResponse = await _supabase.rpc(
-        'get_appointment_clinical_details',
+      // 1. Get Appointment Details
+      final dynamic apptRaw = await _supabase.rpc(
+        'get_appointment_details_by_id',
         params: {'_appointment_id': appointmentId},
       );
 
-      if (apptResponse == null) {
-        throw 'Appointment Details not found';
+      if (apptRaw == null) {
+        throw 'Appointment Details not found (null response)';
       }
-      final apptDetails = AppointmentClinicalDetails.fromJson(apptResponse);
 
-      // 2. Get Patient 360 (using patient ID from appt)
-      final patientResponse = await _supabase.rpc(
-        'get_patient_admin_history',
-        params: {'_patient_id': apptDetails.patient.id},
+      Map<String, dynamic> apptResponse;
+      if (apptRaw is List) {
+        if (apptRaw.isEmpty) throw 'Appointment Details empty list';
+        apptResponse = Map<String, dynamic>.from(apptRaw.first);
+      } else {
+        apptResponse = Map<String, dynamic>.from(apptRaw);
+      }
+
+      // Extract patient basic info from appointment details - FIXED PATH
+      final appointmentObj = apptResponse['appointment'];
+      if (appointmentObj == null) throw 'Appointment object missing';
+
+      final String patientId = appointmentObj['patient_id'];
+
+      // We also need doctor_id for the 360 summary (to calculate is_my_visit)
+      final String doctorId = appointmentObj['doctor_id'];
+
+      // 2. Get Patient 360 Summary
+      final dynamic summaryRaw = await _supabase.rpc(
+        'get_patient_360_summary',
+        params: {'_patient_id': patientId, '_doctor_id': doctorId},
       );
 
-      if (patientResponse == null) {
-        throw 'Patient History not found';
+      if (summaryRaw == null) {
+        throw 'Patient 360 Summary not found';
       }
-      final patient360 = PatientDetail.fromJson(patientResponse);
 
-      return ConsultationInitData(
-        appointmentDetails: apptDetails,
-        patient360: patient360,
+      Map<String, dynamic> summaryResponse;
+      if (summaryRaw is List) {
+        if (summaryRaw.isEmpty) throw 'Summary empty list';
+        summaryResponse = Map<String, dynamic>.from(summaryRaw.first);
+      } else {
+        summaryResponse = Map<String, dynamic>.from(summaryRaw);
+      }
+
+      // Map details from Summary which is richer
+      final patientData = Map<String, dynamic>.from(
+        summaryResponse['patient'] ?? {},
+      );
+      // Remap keys to match PersonBasicDetails
+      patientData['name'] =
+          patientData['full_name'] ??
+          appointmentObj['patient_name'] ??
+          'Unknown';
+      // Handle flags if present (assuming List or null)
+      final flags = patientData['flags'];
+      if (flags is List) {
+        patientData['isCritical'] = flags.contains('critical');
+        patientData['isWheelchair'] = flags.contains('wheelchair');
+      }
+
+      final patient = PersonBasicDetails.fromJson(patientData);
+      final safetyProfile = MedicalProfile.fromJson(
+        Map<String, dynamic>.from(summaryResponse['medical_profile'] ?? {}),
+      );
+
+      // Map to ConsultationContext
+      return ConsultationContext(
+        consultationId: appointmentId,
+        patient: patient,
+        safetyProfile: safetyProfile,
+        visitHistory: (summaryResponse['visit_history'] as List? ?? []).map((
+          e,
+        ) {
+          final map = Map<String, dynamic>.from(e);
+          // Manual mapping to ensure safety even if build_runner is stale
+          if (map['id'] == null && map['appointment_id'] != null) {
+            map['id'] = map['appointment_id'];
+          }
+          if (map['date'] == null && map['visit_date'] != null) {
+            map['date'] = map['visit_date'];
+          }
+          // Handle explicit nulls for lists which might crash fromJson
+          if (map['diagnosis'] == null) map['diagnosis'] = [];
+          if (map['prescriptions'] == null) map['prescriptions'] = [];
+          if (map['lab_orders'] == null) map['lab_orders'] = [];
+          return VisitHistoryItem.fromJson(map);
+        }).toList(),
+        documents: (summaryResponse['documents'] as List? ?? [])
+            .map((e) => PatientDocument.fromJson(Map<String, dynamic>.from(e)))
+            .toList(),
+        vitalsTrend: (summaryResponse['vitals_trend'] as List? ?? [])
+            .map((e) => VitalsTrendItem.fromJson(Map<String, dynamic>.from(e)))
+            .toList(),
+        aiSummary: summaryResponse['ai_summary'],
       );
     } catch (e) {
       throw 'Init Consultation Error: $e';
     }
   }
 
-  Future<List<MedicineMaster>> searchMedicines(String query) async {
+  Future<void> updateMedicalProfile(
+    String patientId,
+    MedicalProfile profile,
+  ) async {
+    try {
+      await _supabase.rpc(
+        'upsert_patient_medical_profile',
+        params: {
+          '_patient_id': patientId,
+          '_allergies': profile.allergies,
+          '_chronic_conditions': profile.chronicConditions,
+          '_family_history': profile.familyHistory,
+          '_lifestyle_tags': profile.lifestyle,
+        },
+      );
+    } catch (e) {
+      throw 'Update Profile Error: $e';
+    }
+  }
+
+  Future<List<MedicineSearchResult>> searchMedicines(String query) async {
     try {
       final response = await _supabase.rpc(
         'search_medicines_vector',
         params: {'_query': query},
       );
-      return (response as List).map((e) => MedicineMaster.fromJson(e)).toList();
+      return (response as List)
+          .map(
+            (e) => MedicineSearchResult.fromJson(Map<String, dynamic>.from(e)),
+          )
+          .toList();
     } catch (e) {
-      // Fallback or empty if error? throw for now
       throw 'Search Medicine Error: $e';
     }
   }
 
-  // TODO: Check schema for `submit_prescription_complete` signature
-  // Assuming it takes a JSON payload.
   Future<void> submitPrescription({
-    required String appointmentId,
-    required Map<String, dynamic> payload,
+    required String consultId,
+    required ConsultationState state,
   }) async {
     try {
+      // Prepare payloads
+      final diagnosisJson = state.diagnosis
+          .map((d) => {'code': d, 'label': d})
+          .toList(); // Simple string to object map
+
+      final vitalsJson = state.vitals;
+
+      final medsJson = state.medicines
+          .map(
+            (m) => {
+              'master_id': m.masterId,
+              'name': m.name,
+              'composition': m.composition,
+              'frequency': m.frequency,
+              'duration': m.duration,
+              'instruction': m.instruction,
+              'special_instructions': m.specialInstructions,
+              'type': m.type,
+            },
+          )
+          .toList();
+
+      final labsJson = state.labOrders
+          .map((l) => {'test_name': l.testName, 'instruction': l.instruction})
+          .toList();
+
       await _supabase.rpc(
         'submit_prescription_complete',
-        params: {'_appointment_id': appointmentId, '_payload': payload},
+        params: {
+          '_consult_id': consultId,
+          '_diagnosis': diagnosisJson,
+          '_chief_complaint':
+              state.chiefComplaint, // Using chiefComplaint as primary complaint
+          '_notes': state.adviceNotes,
+          '_vitals': vitalsJson,
+          '_meds': medsJson,
+          '_labs': labsJson,
+          '_next_visit_date': state.nextVisitDate?.toIso8601String().split(
+            'T',
+          )[0], // YYYY-MM-DD
+          '_next_visit_text':
+              null, // Optional text logic can be added if UI supports it
+        },
       );
     } catch (e) {
       throw 'Submit Prescription Error: $e';

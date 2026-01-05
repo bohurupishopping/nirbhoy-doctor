@@ -1,5 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../patient/domain/clinical_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Using standard toast or fluttertoast? User prefers Sonner in web, maybe toastification here.
+// Actually I'll use a simple snackbar mechanism or just expose error/warning state?
+// The plan said "Show toast warning". I'll use a listener in UI or simple state getter.
+// For now, I'll just expose the check method and let UI handle toast.
+
 import '../data/consultation_repository.dart';
 import '../domain/consultation_models.dart';
 
@@ -28,24 +31,54 @@ class ConsultationController extends StateNotifier<ConsultationState> {
       final data = await _repo.getConsultationInitData(_appointmentId);
       state = state.copyWith(
         isLoading: false,
-        initData: data,
-        // Pre-fill fields if needed logic here (e.g. from draft)
+        context: data,
+        // Pre-fill logic can go here if restoring from draft
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
+  // --- Profile ---
+  Future<void> saveMedicalProfile(MedicalProfile profile) async {
+    if (state.context == null) return;
+
+    // Optimistic update of context
+    final oldContext = state.context!;
+    state = state.copyWith(
+      context: oldContext.copyWith(safetyProfile: profile),
+      isSaving:
+          true, // Reusing isSaving to show spinner, or could use separate flag
+    );
+
+    try {
+      await _repo.updateMedicalProfile(oldContext.patient.id, profile);
+      state = state.copyWith(isSaving: false);
+    } catch (e) {
+      // Revert
+      state = state.copyWith(
+        context: oldContext,
+        isSaving: false,
+        error: "Failed to update profile: $e",
+      );
+    }
+    // Note: UI should listen to state.error or just `await` this future if exposed
+  }
+
   // --- Vitals ---
-  void updateVital(String key, dynamic value) {
-    if (value == null || (value is String && value.isEmpty)) {
-      final newVitals = Map<String, dynamic>.from(state.vitals);
+  void updateVital(String key, String value) {
+    if (value.isEmpty) {
+      final newVitals = Map<String, String>.from(state.vitals);
       newVitals.remove(key);
       state = state.copyWith(vitals: newVitals);
       return;
     }
-    final newVitals = Map<String, dynamic>.from(state.vitals);
+    final newVitals = Map<String, String>.from(state.vitals);
     newVitals[key] = value;
+    state = state.copyWith(vitals: newVitals);
+  }
+
+  void updateAllVitals(Map<String, String> newVitals) {
     state = state.copyWith(vitals: newVitals);
   }
 
@@ -80,36 +113,49 @@ class ConsultationController extends StateNotifier<ConsultationState> {
   }
 
   // --- Medicines ---
-  void addMedicine(PrescriptionMedicine med) {
-    // If med exists (by brand name?), update it? or allow duplicates?
-    // Assuming unique brand name for simplicity or append.
+
+  // Helper to check allergy
+  String? checkAllergyWarning(String medName) {
+    final allergies = state.context?.safetyProfile.allergies ?? [];
+    if (allergies.isEmpty) return null;
+
+    final lowerName = medName.toLowerCase();
+    for (final allergy in allergies) {
+      if (lowerName.contains(allergy.toLowerCase())) {
+        return "Warning: Patient has allergy to $allergy";
+      }
+    }
+    return null;
+  }
+
+  void addMedicine(ConsultationMedicine med) {
     state = state.copyWith(medicines: [...state.medicines, med]);
   }
 
-  void removeMedicine(int index) {
-    if (index >= 0 && index < state.medicines.length) {
-      final newMeds = List<PrescriptionMedicine>.from(state.medicines);
-      newMeds.removeAt(index);
-      state = state.copyWith(medicines: newMeds);
-    }
+  void removeMedicine(String tempId) {
+    state = state.copyWith(
+      medicines: state.medicines.where((m) => m.tempId != tempId).toList(),
+    );
   }
 
-  void updateMedicine(int index, PrescriptionMedicine updatedMed) {
-    if (index >= 0 && index < state.medicines.length) {
-      final newMeds = List<PrescriptionMedicine>.from(state.medicines);
-      newMeds[index] = updatedMed;
+  void updateMedicine(ConsultationMedicine med) {
+    final index = state.medicines.indexWhere((m) => m.tempId == med.tempId);
+    if (index != -1) {
+      final newMeds = List<ConsultationMedicine>.from(state.medicines);
+      newMeds[index] = med;
       state = state.copyWith(medicines: newMeds);
     }
   }
 
   // --- Labs ---
-  void addLab(PrescriptionLab lab) {
+  void addLab(ConsultationLab lab) {
+    // Avoid dups by testName if needed, or allow
     state = state.copyWith(labOrders: [...state.labOrders, lab]);
   }
 
   void removeLab(int index) {
     if (index >= 0 && index < state.labOrders.length) {
-      final newLabs = List<PrescriptionLab>.from(state.labOrders);
+      final newLabs = List<ConsultationLab>.from(state.labOrders);
       newLabs.removeAt(index);
       state = state.copyWith(labOrders: newLabs);
     }
@@ -120,31 +166,15 @@ class ConsultationController extends StateNotifier<ConsultationState> {
     state = state.copyWith(adviceNotes: notes);
   }
 
-  void updateNextVisit(String? dateIso) {
-    state = state.copyWith(nextVisitDate: dateIso);
+  void updateNextVisit(DateTime? date) {
+    state = state.copyWith(nextVisitDate: date);
   }
 
   // --- Submit ---
   Future<bool> submit() async {
     state = state.copyWith(isSaving: true, error: null);
     try {
-      final payload = {
-        'vitals': state.vitals,
-        'symptoms': state.symptoms, // List<String>
-        'diagnosis': state.diagnosis, // List<String>
-        'chief_complaint': state.chiefComplaint,
-        'medicines': state.medicines.map((e) => e.toJson()).toList(),
-        'lab_orders': state.labOrders.map((e) => e.toJson()).toList(),
-        'advice': {
-          'notes': state.adviceNotes,
-          'next_visit_date': state.nextVisitDate,
-        },
-      };
-
-      await _repo.submitPrescription(
-        appointmentId: _appointmentId,
-        payload: payload,
-      );
+      await _repo.submitPrescription(consultId: _appointmentId, state: state);
 
       state = state.copyWith(isSaving: false);
       return true;

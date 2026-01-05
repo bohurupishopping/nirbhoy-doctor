@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../patient/domain/clinical_models.dart';
+import 'package:uuid/uuid.dart';
 import '../consultation_controller.dart';
 import '../../data/consultation_repository.dart';
 import '../../domain/consultation_models.dart';
@@ -17,12 +17,12 @@ class MedicinesTab extends ConsumerStatefulWidget {
 
 class _MedicinesTabState extends ConsumerState<MedicinesTab> {
   final _searchController = TextEditingController();
-  List<MedicineMaster> _searchResults = [];
+  List<MedicineSearchResult> _searchResults = [];
   bool _isSearching = false;
 
   void _onSearch(String query) async {
     if (query.length < 2) {
-      setState(() => _searchResults = []);
+      if (mounted) setState(() => _searchResults = []);
       return;
     }
 
@@ -42,22 +42,55 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
     }
   }
 
-  void _addMedicine(MedicineMaster master) {
-    // Show dialog to enter details? Or add directly with defaults?
-    // For now, add directly and allow edit inline or via bottom sheet.
-    // Making it simple: add then edit.
-    final med = PrescriptionMedicine(
-      brandName: master.name,
-      genericName: master.genericName,
+  void _addMedicine(MedicineSearchResult master) {
+    // Check allergy
+    final controller = ref.read(
+      consultationControllerProvider(widget.appointmentId).notifier,
+    );
+    final warning = controller.checkAllergyWarning(master.brandName);
+
+    if (warning != null) {
+      // Show warning toast or dialog
+      // For now, simple snackbar or toast
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(warning),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: "ADD ANYWAY",
+            textColor: Colors.white,
+            onPressed: () {
+              _doAdd(master, controller);
+            },
+          ),
+        ),
+      );
+      // We return here to let user acknowledge. If they want to force, they click action.
+      // Alternatively, we could show a dialog.
+      return;
+    }
+
+    _doAdd(master, controller);
+  }
+
+  void _doAdd(MedicineSearchResult master, ConsultationController controller) {
+    // Generate a temp ID for UI key
+    final tempId = const Uuid().v4();
+
+    final med = ConsultationMedicine(
+      tempId: tempId,
+      masterId: master.id,
+      name: master.brandName,
+      composition: master.genericName,
       type: master.type,
-      dosage: '1-0-1', // Default
+      frequency: '1-0-1', // Default
       duration: '5 Days',
       instruction: 'After Food',
+      specialInstructions: '',
     );
 
-    ref
-        .read(consultationControllerProvider(widget.appointmentId).notifier)
-        .addMedicine(med);
+    controller.addMedicine(med);
     _searchController.clear();
     setState(() => _searchResults = []);
   }
@@ -134,9 +167,10 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {
                       final item = _searchResults[index];
+                      // Highlight if allergy mismatch?
                       return ListTile(
                         title: Text(
-                          item.name,
+                          item.brandName,
                           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                         ),
                         subtitle: Text(
@@ -174,9 +208,10 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
               ),
             ),
 
-          ...meds.asMap().entries.map((entry) {
-            final index = entry.key;
-            final med = entry.value;
+          // Using tempId as key is safer if reordering/deleting
+          ...meds.map((med) {
+            // We need index for some logic, but updating by tempId in controller is better
+            // Controller `updateMedicine` expects full object, `removeMedicine` expects tempId
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
@@ -196,15 +231,15 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              med.brandName,
+                              med.name,
                               style: GoogleFonts.plusJakartaSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
                               ),
                             ),
-                            if (med.genericName != null)
+                            if (med.composition != null)
                               Text(
-                                med.genericName!,
+                                med.composition!,
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -218,7 +253,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           Icons.delete_outline,
                           color: Colors.red,
                         ),
-                        onPressed: () => controller.removeMedicine(index),
+                        onPressed: () => controller.removeMedicine(med.tempId),
                       ),
                     ],
                   ),
@@ -228,11 +263,10 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                       Expanded(
                         child: _InlineInput(
                           label: 'Dosage',
-                          value: med.dosage ?? '',
+                          value: med.frequency ?? '',
                           onChanged: (val) {
                             controller.updateMedicine(
-                              index,
-                              med.copyWith(dosage: val),
+                              med.copyWith(frequency: val),
                             );
                           },
                         ),
@@ -244,7 +278,6 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           value: med.duration ?? '',
                           onChanged: (val) {
                             controller.updateMedicine(
-                              index,
                               med.copyWith(duration: val),
                             );
                           },
@@ -253,15 +286,32 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _InlineInput(
-                    label: 'Instruction',
-                    value: med.instruction ?? '',
-                    onChanged: (val) {
-                      controller.updateMedicine(
-                        index,
-                        med.copyWith(instruction: val),
-                      );
-                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _InlineInput(
+                          label: 'Instruction',
+                          value: med.instruction ?? '',
+                          onChanged: (val) {
+                            controller.updateMedicine(
+                              med.copyWith(instruction: val),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _InlineInput(
+                          label: 'Special Note',
+                          value: med.specialInstructions ?? '',
+                          onChanged: (val) {
+                            controller.updateMedicine(
+                              med.copyWith(specialInstructions: val),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

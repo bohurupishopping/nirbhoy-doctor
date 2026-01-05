@@ -66,7 +66,7 @@ class PlanTab extends ConsumerWidget {
                 lastDate: DateTime.now().add(const Duration(days: 365)),
               );
               if (date != null) {
-                controller.updateNextVisit(date.toIso8601String());
+                controller.updateNextVisit(date);
               }
             },
             child: Container(
@@ -84,7 +84,7 @@ class PlanTab extends ConsumerWidget {
                     state.nextVisitDate != null
                         ? DateFormat(
                             'MMM dd, yyyy',
-                          ).format(DateTime.parse(state.nextVisitDate!))
+                          ).format(state.nextVisitDate!)
                         : 'Select Follow-up Date (Optional)',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../consultation_controller.dart';
-import '../../../patient/domain/clinical_models.dart';
+import '../../domain/consultation_models.dart';
 
 class DiagnosticsTab extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -25,7 +25,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
   void _addTest() {
     final val = _testController.text;
     if (val.trim().isNotEmpty) {
-      final lab = PrescriptionLab(testName: val.trim());
+      final lab = ConsultationLab(testName: val.trim());
       ref
           .read(consultationControllerProvider(widget.appointmentId).notifier)
           .addLab(lab);
