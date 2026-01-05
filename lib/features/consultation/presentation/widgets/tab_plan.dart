@@ -40,17 +40,17 @@ class PlanTab extends ConsumerWidget {
               hintStyle: GoogleFonts.inter(color: Colors.grey[400]),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(16),
+              contentPadding: const EdgeInsets.all(20),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
               ),
             ),
@@ -78,12 +78,12 @@ class PlanTab extends ConsumerWidget {
                 controller.updateNextVisit(date);
               }
             },
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(100),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(100),
                 border: Border.all(color: Colors.black.withOpacity(0.05)),
               ),
               child: Row(

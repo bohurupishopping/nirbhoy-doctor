@@ -68,23 +68,23 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
+                      horizontal: 24,
                       vertical: 14,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.05),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.05),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.2),
                       ),
@@ -102,7 +102,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                   foregroundColor: Colors.white,
                   fixedSize: const Size(48, 48),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(100),
                   ),
                 ),
               ),

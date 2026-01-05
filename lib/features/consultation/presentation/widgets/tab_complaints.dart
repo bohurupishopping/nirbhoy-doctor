@@ -55,15 +55,15 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.all(16),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
               ),
             ),
@@ -90,23 +90,23 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
+                      horizontal: 24,
                       vertical: 14,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.05),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.05),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(
                         color: Colors.black.withOpacity(0.2),
                       ),
@@ -135,7 +135,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                   foregroundColor: Colors.white,
                   fixedSize: const Size(48, 48),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(100),
                   ),
                 ),
               ),

@@ -136,23 +136,23 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 24,
                     vertical: 14,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(
                       color: Colors.black.withOpacity(0.05),
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(
                       color: Colors.black.withOpacity(0.05),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(
                       color: Colors.black.withOpacity(0.2),
                     ),

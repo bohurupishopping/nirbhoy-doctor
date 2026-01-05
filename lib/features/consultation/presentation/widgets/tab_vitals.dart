@@ -147,15 +147,15 @@ class VitalsTab extends ConsumerWidget {
               vertical: 14,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(100),
               borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(100),
               borderSide: BorderSide(color: Colors.black.withOpacity(0.05)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(100),
               borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
             ),
           ),
