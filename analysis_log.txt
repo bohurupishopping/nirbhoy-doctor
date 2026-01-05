@@ -1,0 +1,10 @@
+Analyzing nirbhoy_doctor...                                      
+
+   info - Don't invoke 'print' in production code - lib\features\dashboard\data\dashboard_repository.dart:26:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\dashboard\data\dashboard_repository.dart:40:7 - avoid_print
+warning - The '!' will have no effect because the receiver can't be null - lib\features\dashboard\presentation\dashboard_controller.dart:80:42 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\features\dashboard\presentation\dashboard_controller.dart:81:37 - unnecessary_non_null_assertion
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\presentation\widgets\stat_card.dart:36:28 - deprecated_member_use
+warning - The value of the local variable 'vitals' isn't used - lib\features\dashboard\presentation\widgets\triage_sheet.dart:45:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\dashboard\presentation\widgets\triage_sheet.dart:281:37 - deprecated_member_use
+

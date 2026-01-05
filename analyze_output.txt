@@ -1,0 +1,5 @@
+Analyzing nirbhoy_doctor...                                      
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\booking\presentation\widgets\slot_selection_step.dart:98:47 - deprecated_member_use
+
+1 issue found. (ran in 3.2s)
