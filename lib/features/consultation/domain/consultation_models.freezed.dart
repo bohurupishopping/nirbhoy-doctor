@@ -3363,3 +3363,2625 @@ abstract class _ConsultationState implements ConsultationState {
   _$$ConsultationStateImplCopyWith<_$ConsultationStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+PrescriptionPrintData _$PrescriptionPrintDataFromJson(
+  Map<String, dynamic> json,
+) {
+  return _PrescriptionPrintData.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionPrintData {
+  PrescriptionMeta get meta => throw _privateConstructorUsedError;
+  PrescriptionClinic get clinic => throw _privateConstructorUsedError;
+  PrescriptionDoctor get doctor => throw _privateConstructorUsedError;
+  PrescriptionPatient get patient => throw _privateConstructorUsedError;
+  PrescriptionClinical? get clinical => throw _privateConstructorUsedError;
+  @JsonKey(name: 'rx_items')
+  List<PrescriptionMedicine> get rxItems => throw _privateConstructorUsedError;
+  @JsonKey(name: 'lab_orders')
+  List<PrescriptionLab> get labOrders => throw _privateConstructorUsedError;
+  PrescriptionAdvice get advice => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionPrintData to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionPrintDataCopyWith<PrescriptionPrintData> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionPrintDataCopyWith<$Res> {
+  factory $PrescriptionPrintDataCopyWith(
+    PrescriptionPrintData value,
+    $Res Function(PrescriptionPrintData) then,
+  ) = _$PrescriptionPrintDataCopyWithImpl<$Res, PrescriptionPrintData>;
+  @useResult
+  $Res call({
+    PrescriptionMeta meta,
+    PrescriptionClinic clinic,
+    PrescriptionDoctor doctor,
+    PrescriptionPatient patient,
+    PrescriptionClinical? clinical,
+    @JsonKey(name: 'rx_items') List<PrescriptionMedicine> rxItems,
+    @JsonKey(name: 'lab_orders') List<PrescriptionLab> labOrders,
+    PrescriptionAdvice advice,
+  });
+
+  $PrescriptionMetaCopyWith<$Res> get meta;
+  $PrescriptionClinicCopyWith<$Res> get clinic;
+  $PrescriptionDoctorCopyWith<$Res> get doctor;
+  $PrescriptionPatientCopyWith<$Res> get patient;
+  $PrescriptionClinicalCopyWith<$Res>? get clinical;
+  $PrescriptionAdviceCopyWith<$Res> get advice;
+}
+
+/// @nodoc
+class _$PrescriptionPrintDataCopyWithImpl<
+  $Res,
+  $Val extends PrescriptionPrintData
+>
+    implements $PrescriptionPrintDataCopyWith<$Res> {
+  _$PrescriptionPrintDataCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? meta = null,
+    Object? clinic = null,
+    Object? doctor = null,
+    Object? patient = null,
+    Object? clinical = freezed,
+    Object? rxItems = null,
+    Object? labOrders = null,
+    Object? advice = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            meta: null == meta
+                ? _value.meta
+                : meta // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionMeta,
+            clinic: null == clinic
+                ? _value.clinic
+                : clinic // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionClinic,
+            doctor: null == doctor
+                ? _value.doctor
+                : doctor // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionDoctor,
+            patient: null == patient
+                ? _value.patient
+                : patient // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionPatient,
+            clinical: freezed == clinical
+                ? _value.clinical
+                : clinical // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionClinical?,
+            rxItems: null == rxItems
+                ? _value.rxItems
+                : rxItems // ignore: cast_nullable_to_non_nullable
+                      as List<PrescriptionMedicine>,
+            labOrders: null == labOrders
+                ? _value.labOrders
+                : labOrders // ignore: cast_nullable_to_non_nullable
+                      as List<PrescriptionLab>,
+            advice: null == advice
+                ? _value.advice
+                : advice // ignore: cast_nullable_to_non_nullable
+                      as PrescriptionAdvice,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionMetaCopyWith<$Res> get meta {
+    return $PrescriptionMetaCopyWith<$Res>(_value.meta, (value) {
+      return _then(_value.copyWith(meta: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionClinicCopyWith<$Res> get clinic {
+    return $PrescriptionClinicCopyWith<$Res>(_value.clinic, (value) {
+      return _then(_value.copyWith(clinic: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionDoctorCopyWith<$Res> get doctor {
+    return $PrescriptionDoctorCopyWith<$Res>(_value.doctor, (value) {
+      return _then(_value.copyWith(doctor: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionPatientCopyWith<$Res> get patient {
+    return $PrescriptionPatientCopyWith<$Res>(_value.patient, (value) {
+      return _then(_value.copyWith(patient: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionClinicalCopyWith<$Res>? get clinical {
+    if (_value.clinical == null) {
+      return null;
+    }
+
+    return $PrescriptionClinicalCopyWith<$Res>(_value.clinical!, (value) {
+      return _then(_value.copyWith(clinical: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrescriptionAdviceCopyWith<$Res> get advice {
+    return $PrescriptionAdviceCopyWith<$Res>(_value.advice, (value) {
+      return _then(_value.copyWith(advice: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionPrintDataImplCopyWith<$Res>
+    implements $PrescriptionPrintDataCopyWith<$Res> {
+  factory _$$PrescriptionPrintDataImplCopyWith(
+    _$PrescriptionPrintDataImpl value,
+    $Res Function(_$PrescriptionPrintDataImpl) then,
+  ) = __$$PrescriptionPrintDataImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    PrescriptionMeta meta,
+    PrescriptionClinic clinic,
+    PrescriptionDoctor doctor,
+    PrescriptionPatient patient,
+    PrescriptionClinical? clinical,
+    @JsonKey(name: 'rx_items') List<PrescriptionMedicine> rxItems,
+    @JsonKey(name: 'lab_orders') List<PrescriptionLab> labOrders,
+    PrescriptionAdvice advice,
+  });
+
+  @override
+  $PrescriptionMetaCopyWith<$Res> get meta;
+  @override
+  $PrescriptionClinicCopyWith<$Res> get clinic;
+  @override
+  $PrescriptionDoctorCopyWith<$Res> get doctor;
+  @override
+  $PrescriptionPatientCopyWith<$Res> get patient;
+  @override
+  $PrescriptionClinicalCopyWith<$Res>? get clinical;
+  @override
+  $PrescriptionAdviceCopyWith<$Res> get advice;
+}
+
+/// @nodoc
+class __$$PrescriptionPrintDataImplCopyWithImpl<$Res>
+    extends
+        _$PrescriptionPrintDataCopyWithImpl<$Res, _$PrescriptionPrintDataImpl>
+    implements _$$PrescriptionPrintDataImplCopyWith<$Res> {
+  __$$PrescriptionPrintDataImplCopyWithImpl(
+    _$PrescriptionPrintDataImpl _value,
+    $Res Function(_$PrescriptionPrintDataImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? meta = null,
+    Object? clinic = null,
+    Object? doctor = null,
+    Object? patient = null,
+    Object? clinical = freezed,
+    Object? rxItems = null,
+    Object? labOrders = null,
+    Object? advice = null,
+  }) {
+    return _then(
+      _$PrescriptionPrintDataImpl(
+        meta: null == meta
+            ? _value.meta
+            : meta // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionMeta,
+        clinic: null == clinic
+            ? _value.clinic
+            : clinic // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionClinic,
+        doctor: null == doctor
+            ? _value.doctor
+            : doctor // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionDoctor,
+        patient: null == patient
+            ? _value.patient
+            : patient // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionPatient,
+        clinical: freezed == clinical
+            ? _value.clinical
+            : clinical // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionClinical?,
+        rxItems: null == rxItems
+            ? _value._rxItems
+            : rxItems // ignore: cast_nullable_to_non_nullable
+                  as List<PrescriptionMedicine>,
+        labOrders: null == labOrders
+            ? _value._labOrders
+            : labOrders // ignore: cast_nullable_to_non_nullable
+                  as List<PrescriptionLab>,
+        advice: null == advice
+            ? _value.advice
+            : advice // ignore: cast_nullable_to_non_nullable
+                  as PrescriptionAdvice,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionPrintDataImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionPrintData {
+  const _$PrescriptionPrintDataImpl({
+    required this.meta,
+    required this.clinic,
+    required this.doctor,
+    required this.patient,
+    this.clinical,
+    @JsonKey(name: 'rx_items')
+    final List<PrescriptionMedicine> rxItems = const [],
+    @JsonKey(name: 'lab_orders')
+    final List<PrescriptionLab> labOrders = const [],
+    required this.advice,
+  }) : _rxItems = rxItems,
+       _labOrders = labOrders;
+
+  factory _$PrescriptionPrintDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionPrintDataImplFromJson(json);
+
+  @override
+  final PrescriptionMeta meta;
+  @override
+  final PrescriptionClinic clinic;
+  @override
+  final PrescriptionDoctor doctor;
+  @override
+  final PrescriptionPatient patient;
+  @override
+  final PrescriptionClinical? clinical;
+  final List<PrescriptionMedicine> _rxItems;
+  @override
+  @JsonKey(name: 'rx_items')
+  List<PrescriptionMedicine> get rxItems {
+    if (_rxItems is EqualUnmodifiableListView) return _rxItems;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_rxItems);
+  }
+
+  final List<PrescriptionLab> _labOrders;
+  @override
+  @JsonKey(name: 'lab_orders')
+  List<PrescriptionLab> get labOrders {
+    if (_labOrders is EqualUnmodifiableListView) return _labOrders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_labOrders);
+  }
+
+  @override
+  final PrescriptionAdvice advice;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionPrintData(meta: $meta, clinic: $clinic, doctor: $doctor, patient: $patient, clinical: $clinical, rxItems: $rxItems, labOrders: $labOrders, advice: $advice)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionPrintData'))
+      ..add(DiagnosticsProperty('meta', meta))
+      ..add(DiagnosticsProperty('clinic', clinic))
+      ..add(DiagnosticsProperty('doctor', doctor))
+      ..add(DiagnosticsProperty('patient', patient))
+      ..add(DiagnosticsProperty('clinical', clinical))
+      ..add(DiagnosticsProperty('rxItems', rxItems))
+      ..add(DiagnosticsProperty('labOrders', labOrders))
+      ..add(DiagnosticsProperty('advice', advice));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionPrintDataImpl &&
+            (identical(other.meta, meta) || other.meta == meta) &&
+            (identical(other.clinic, clinic) || other.clinic == clinic) &&
+            (identical(other.doctor, doctor) || other.doctor == doctor) &&
+            (identical(other.patient, patient) || other.patient == patient) &&
+            (identical(other.clinical, clinical) ||
+                other.clinical == clinical) &&
+            const DeepCollectionEquality().equals(other._rxItems, _rxItems) &&
+            const DeepCollectionEquality().equals(
+              other._labOrders,
+              _labOrders,
+            ) &&
+            (identical(other.advice, advice) || other.advice == advice));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    meta,
+    clinic,
+    doctor,
+    patient,
+    clinical,
+    const DeepCollectionEquality().hash(_rxItems),
+    const DeepCollectionEquality().hash(_labOrders),
+    advice,
+  );
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionPrintDataImplCopyWith<_$PrescriptionPrintDataImpl>
+  get copyWith =>
+      __$$PrescriptionPrintDataImplCopyWithImpl<_$PrescriptionPrintDataImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionPrintDataImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionPrintData implements PrescriptionPrintData {
+  const factory _PrescriptionPrintData({
+    required final PrescriptionMeta meta,
+    required final PrescriptionClinic clinic,
+    required final PrescriptionDoctor doctor,
+    required final PrescriptionPatient patient,
+    final PrescriptionClinical? clinical,
+    @JsonKey(name: 'rx_items') final List<PrescriptionMedicine> rxItems,
+    @JsonKey(name: 'lab_orders') final List<PrescriptionLab> labOrders,
+    required final PrescriptionAdvice advice,
+  }) = _$PrescriptionPrintDataImpl;
+
+  factory _PrescriptionPrintData.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionPrintDataImpl.fromJson;
+
+  @override
+  PrescriptionMeta get meta;
+  @override
+  PrescriptionClinic get clinic;
+  @override
+  PrescriptionDoctor get doctor;
+  @override
+  PrescriptionPatient get patient;
+  @override
+  PrescriptionClinical? get clinical;
+  @override
+  @JsonKey(name: 'rx_items')
+  List<PrescriptionMedicine> get rxItems;
+  @override
+  @JsonKey(name: 'lab_orders')
+  List<PrescriptionLab> get labOrders;
+  @override
+  PrescriptionAdvice get advice;
+
+  /// Create a copy of PrescriptionPrintData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionPrintDataImplCopyWith<_$PrescriptionPrintDataImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+PrescriptionMeta _$PrescriptionMetaFromJson(Map<String, dynamic> json) {
+  return _PrescriptionMeta.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionMeta {
+  @JsonKey(name: 'generated_at')
+  String get generatedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'appointment_number')
+  String get appointmentNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: 'visit_type')
+  String get visitType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'visit_date')
+  String get visitDate => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionMeta to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionMetaCopyWith<PrescriptionMeta> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionMetaCopyWith<$Res> {
+  factory $PrescriptionMetaCopyWith(
+    PrescriptionMeta value,
+    $Res Function(PrescriptionMeta) then,
+  ) = _$PrescriptionMetaCopyWithImpl<$Res, PrescriptionMeta>;
+  @useResult
+  $Res call({
+    @JsonKey(name: 'generated_at') String generatedAt,
+    @JsonKey(name: 'appointment_number') String appointmentNumber,
+    @JsonKey(name: 'visit_type') String visitType,
+    @JsonKey(name: 'visit_date') String visitDate,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionMetaCopyWithImpl<$Res, $Val extends PrescriptionMeta>
+    implements $PrescriptionMetaCopyWith<$Res> {
+  _$PrescriptionMetaCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? generatedAt = null,
+    Object? appointmentNumber = null,
+    Object? visitType = null,
+    Object? visitDate = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            generatedAt: null == generatedAt
+                ? _value.generatedAt
+                : generatedAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+            appointmentNumber: null == appointmentNumber
+                ? _value.appointmentNumber
+                : appointmentNumber // ignore: cast_nullable_to_non_nullable
+                      as String,
+            visitType: null == visitType
+                ? _value.visitType
+                : visitType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            visitDate: null == visitDate
+                ? _value.visitDate
+                : visitDate // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionMetaImplCopyWith<$Res>
+    implements $PrescriptionMetaCopyWith<$Res> {
+  factory _$$PrescriptionMetaImplCopyWith(
+    _$PrescriptionMetaImpl value,
+    $Res Function(_$PrescriptionMetaImpl) then,
+  ) = __$$PrescriptionMetaImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    @JsonKey(name: 'generated_at') String generatedAt,
+    @JsonKey(name: 'appointment_number') String appointmentNumber,
+    @JsonKey(name: 'visit_type') String visitType,
+    @JsonKey(name: 'visit_date') String visitDate,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionMetaImplCopyWithImpl<$Res>
+    extends _$PrescriptionMetaCopyWithImpl<$Res, _$PrescriptionMetaImpl>
+    implements _$$PrescriptionMetaImplCopyWith<$Res> {
+  __$$PrescriptionMetaImplCopyWithImpl(
+    _$PrescriptionMetaImpl _value,
+    $Res Function(_$PrescriptionMetaImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? generatedAt = null,
+    Object? appointmentNumber = null,
+    Object? visitType = null,
+    Object? visitDate = null,
+  }) {
+    return _then(
+      _$PrescriptionMetaImpl(
+        generatedAt: null == generatedAt
+            ? _value.generatedAt
+            : generatedAt // ignore: cast_nullable_to_non_nullable
+                  as String,
+        appointmentNumber: null == appointmentNumber
+            ? _value.appointmentNumber
+            : appointmentNumber // ignore: cast_nullable_to_non_nullable
+                  as String,
+        visitType: null == visitType
+            ? _value.visitType
+            : visitType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        visitDate: null == visitDate
+            ? _value.visitDate
+            : visitDate // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionMetaImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionMeta {
+  const _$PrescriptionMetaImpl({
+    @JsonKey(name: 'generated_at') required this.generatedAt,
+    @JsonKey(name: 'appointment_number') required this.appointmentNumber,
+    @JsonKey(name: 'visit_type') required this.visitType,
+    @JsonKey(name: 'visit_date') required this.visitDate,
+  });
+
+  factory _$PrescriptionMetaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionMetaImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'generated_at')
+  final String generatedAt;
+  @override
+  @JsonKey(name: 'appointment_number')
+  final String appointmentNumber;
+  @override
+  @JsonKey(name: 'visit_type')
+  final String visitType;
+  @override
+  @JsonKey(name: 'visit_date')
+  final String visitDate;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionMeta(generatedAt: $generatedAt, appointmentNumber: $appointmentNumber, visitType: $visitType, visitDate: $visitDate)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionMeta'))
+      ..add(DiagnosticsProperty('generatedAt', generatedAt))
+      ..add(DiagnosticsProperty('appointmentNumber', appointmentNumber))
+      ..add(DiagnosticsProperty('visitType', visitType))
+      ..add(DiagnosticsProperty('visitDate', visitDate));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionMetaImpl &&
+            (identical(other.generatedAt, generatedAt) ||
+                other.generatedAt == generatedAt) &&
+            (identical(other.appointmentNumber, appointmentNumber) ||
+                other.appointmentNumber == appointmentNumber) &&
+            (identical(other.visitType, visitType) ||
+                other.visitType == visitType) &&
+            (identical(other.visitDate, visitDate) ||
+                other.visitDate == visitDate));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    generatedAt,
+    appointmentNumber,
+    visitType,
+    visitDate,
+  );
+
+  /// Create a copy of PrescriptionMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionMetaImplCopyWith<_$PrescriptionMetaImpl> get copyWith =>
+      __$$PrescriptionMetaImplCopyWithImpl<_$PrescriptionMetaImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionMetaImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionMeta implements PrescriptionMeta {
+  const factory _PrescriptionMeta({
+    @JsonKey(name: 'generated_at') required final String generatedAt,
+    @JsonKey(name: 'appointment_number')
+    required final String appointmentNumber,
+    @JsonKey(name: 'visit_type') required final String visitType,
+    @JsonKey(name: 'visit_date') required final String visitDate,
+  }) = _$PrescriptionMetaImpl;
+
+  factory _PrescriptionMeta.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionMetaImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'generated_at')
+  String get generatedAt;
+  @override
+  @JsonKey(name: 'appointment_number')
+  String get appointmentNumber;
+  @override
+  @JsonKey(name: 'visit_type')
+  String get visitType;
+  @override
+  @JsonKey(name: 'visit_date')
+  String get visitDate;
+
+  /// Create a copy of PrescriptionMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionMetaImplCopyWith<_$PrescriptionMetaImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PrescriptionClinic _$PrescriptionClinicFromJson(Map<String, dynamic> json) {
+  return _PrescriptionClinic.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionClinic {
+  String get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'logo_url')
+  String? get logoUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'header_image_url')
+  String? get headerImageUrl => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
+  @JsonKey(name: 'footer_text')
+  String? get footerText => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionClinic to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionClinic
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionClinicCopyWith<PrescriptionClinic> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionClinicCopyWith<$Res> {
+  factory $PrescriptionClinicCopyWith(
+    PrescriptionClinic value,
+    $Res Function(PrescriptionClinic) then,
+  ) = _$PrescriptionClinicCopyWithImpl<$Res, PrescriptionClinic>;
+  @useResult
+  $Res call({
+    String name,
+    @JsonKey(name: 'logo_url') String? logoUrl,
+    @JsonKey(name: 'header_image_url') String? headerImageUrl,
+    String? phone,
+    String? email,
+    String? address,
+    @JsonKey(name: 'footer_text') String? footerText,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionClinicCopyWithImpl<$Res, $Val extends PrescriptionClinic>
+    implements $PrescriptionClinicCopyWith<$Res> {
+  _$PrescriptionClinicCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionClinic
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? logoUrl = freezed,
+    Object? headerImageUrl = freezed,
+    Object? phone = freezed,
+    Object? email = freezed,
+    Object? address = freezed,
+    Object? footerText = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            logoUrl: freezed == logoUrl
+                ? _value.logoUrl
+                : logoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            headerImageUrl: freezed == headerImageUrl
+                ? _value.headerImageUrl
+                : headerImageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phone: freezed == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            email: freezed == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            address: freezed == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            footerText: freezed == footerText
+                ? _value.footerText
+                : footerText // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionClinicImplCopyWith<$Res>
+    implements $PrescriptionClinicCopyWith<$Res> {
+  factory _$$PrescriptionClinicImplCopyWith(
+    _$PrescriptionClinicImpl value,
+    $Res Function(_$PrescriptionClinicImpl) then,
+  ) = __$$PrescriptionClinicImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String name,
+    @JsonKey(name: 'logo_url') String? logoUrl,
+    @JsonKey(name: 'header_image_url') String? headerImageUrl,
+    String? phone,
+    String? email,
+    String? address,
+    @JsonKey(name: 'footer_text') String? footerText,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionClinicImplCopyWithImpl<$Res>
+    extends _$PrescriptionClinicCopyWithImpl<$Res, _$PrescriptionClinicImpl>
+    implements _$$PrescriptionClinicImplCopyWith<$Res> {
+  __$$PrescriptionClinicImplCopyWithImpl(
+    _$PrescriptionClinicImpl _value,
+    $Res Function(_$PrescriptionClinicImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionClinic
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? logoUrl = freezed,
+    Object? headerImageUrl = freezed,
+    Object? phone = freezed,
+    Object? email = freezed,
+    Object? address = freezed,
+    Object? footerText = freezed,
+  }) {
+    return _then(
+      _$PrescriptionClinicImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        logoUrl: freezed == logoUrl
+            ? _value.logoUrl
+            : logoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        headerImageUrl: freezed == headerImageUrl
+            ? _value.headerImageUrl
+            : headerImageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phone: freezed == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        email: freezed == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        footerText: freezed == footerText
+            ? _value.footerText
+            : footerText // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionClinicImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionClinic {
+  const _$PrescriptionClinicImpl({
+    required this.name,
+    @JsonKey(name: 'logo_url') this.logoUrl,
+    @JsonKey(name: 'header_image_url') this.headerImageUrl,
+    this.phone,
+    this.email,
+    this.address,
+    @JsonKey(name: 'footer_text') this.footerText,
+  });
+
+  factory _$PrescriptionClinicImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionClinicImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  @JsonKey(name: 'logo_url')
+  final String? logoUrl;
+  @override
+  @JsonKey(name: 'header_image_url')
+  final String? headerImageUrl;
+  @override
+  final String? phone;
+  @override
+  final String? email;
+  @override
+  final String? address;
+  @override
+  @JsonKey(name: 'footer_text')
+  final String? footerText;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionClinic(name: $name, logoUrl: $logoUrl, headerImageUrl: $headerImageUrl, phone: $phone, email: $email, address: $address, footerText: $footerText)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionClinic'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('logoUrl', logoUrl))
+      ..add(DiagnosticsProperty('headerImageUrl', headerImageUrl))
+      ..add(DiagnosticsProperty('phone', phone))
+      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('address', address))
+      ..add(DiagnosticsProperty('footerText', footerText));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionClinicImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
+            (identical(other.headerImageUrl, headerImageUrl) ||
+                other.headerImageUrl == headerImageUrl) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.footerText, footerText) ||
+                other.footerText == footerText));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    logoUrl,
+    headerImageUrl,
+    phone,
+    email,
+    address,
+    footerText,
+  );
+
+  /// Create a copy of PrescriptionClinic
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionClinicImplCopyWith<_$PrescriptionClinicImpl> get copyWith =>
+      __$$PrescriptionClinicImplCopyWithImpl<_$PrescriptionClinicImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionClinicImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionClinic implements PrescriptionClinic {
+  const factory _PrescriptionClinic({
+    required final String name,
+    @JsonKey(name: 'logo_url') final String? logoUrl,
+    @JsonKey(name: 'header_image_url') final String? headerImageUrl,
+    final String? phone,
+    final String? email,
+    final String? address,
+    @JsonKey(name: 'footer_text') final String? footerText,
+  }) = _$PrescriptionClinicImpl;
+
+  factory _PrescriptionClinic.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionClinicImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  @JsonKey(name: 'logo_url')
+  String? get logoUrl;
+  @override
+  @JsonKey(name: 'header_image_url')
+  String? get headerImageUrl;
+  @override
+  String? get phone;
+  @override
+  String? get email;
+  @override
+  String? get address;
+  @override
+  @JsonKey(name: 'footer_text')
+  String? get footerText;
+
+  /// Create a copy of PrescriptionClinic
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionClinicImplCopyWith<_$PrescriptionClinicImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PrescriptionDoctor _$PrescriptionDoctorFromJson(Map<String, dynamic> json) {
+  return _PrescriptionDoctor.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionDoctor {
+  String get name => throw _privateConstructorUsedError;
+  String? get specialty => throw _privateConstructorUsedError;
+  String? get qualifications => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reg_number')
+  String? get regNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: 'signature_url')
+  String? get signatureUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionDoctor to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionDoctor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionDoctorCopyWith<PrescriptionDoctor> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionDoctorCopyWith<$Res> {
+  factory $PrescriptionDoctorCopyWith(
+    PrescriptionDoctor value,
+    $Res Function(PrescriptionDoctor) then,
+  ) = _$PrescriptionDoctorCopyWithImpl<$Res, PrescriptionDoctor>;
+  @useResult
+  $Res call({
+    String name,
+    String? specialty,
+    String? qualifications,
+    @JsonKey(name: 'reg_number') String? regNumber,
+    @JsonKey(name: 'signature_url') String? signatureUrl,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionDoctorCopyWithImpl<$Res, $Val extends PrescriptionDoctor>
+    implements $PrescriptionDoctorCopyWith<$Res> {
+  _$PrescriptionDoctorCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionDoctor
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? specialty = freezed,
+    Object? qualifications = freezed,
+    Object? regNumber = freezed,
+    Object? signatureUrl = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            specialty: freezed == specialty
+                ? _value.specialty
+                : specialty // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            qualifications: freezed == qualifications
+                ? _value.qualifications
+                : qualifications // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            regNumber: freezed == regNumber
+                ? _value.regNumber
+                : regNumber // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            signatureUrl: freezed == signatureUrl
+                ? _value.signatureUrl
+                : signatureUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionDoctorImplCopyWith<$Res>
+    implements $PrescriptionDoctorCopyWith<$Res> {
+  factory _$$PrescriptionDoctorImplCopyWith(
+    _$PrescriptionDoctorImpl value,
+    $Res Function(_$PrescriptionDoctorImpl) then,
+  ) = __$$PrescriptionDoctorImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String name,
+    String? specialty,
+    String? qualifications,
+    @JsonKey(name: 'reg_number') String? regNumber,
+    @JsonKey(name: 'signature_url') String? signatureUrl,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionDoctorImplCopyWithImpl<$Res>
+    extends _$PrescriptionDoctorCopyWithImpl<$Res, _$PrescriptionDoctorImpl>
+    implements _$$PrescriptionDoctorImplCopyWith<$Res> {
+  __$$PrescriptionDoctorImplCopyWithImpl(
+    _$PrescriptionDoctorImpl _value,
+    $Res Function(_$PrescriptionDoctorImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionDoctor
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? specialty = freezed,
+    Object? qualifications = freezed,
+    Object? regNumber = freezed,
+    Object? signatureUrl = freezed,
+  }) {
+    return _then(
+      _$PrescriptionDoctorImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        specialty: freezed == specialty
+            ? _value.specialty
+            : specialty // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        qualifications: freezed == qualifications
+            ? _value.qualifications
+            : qualifications // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        regNumber: freezed == regNumber
+            ? _value.regNumber
+            : regNumber // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        signatureUrl: freezed == signatureUrl
+            ? _value.signatureUrl
+            : signatureUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionDoctorImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionDoctor {
+  const _$PrescriptionDoctorImpl({
+    required this.name,
+    this.specialty,
+    this.qualifications,
+    @JsonKey(name: 'reg_number') this.regNumber,
+    @JsonKey(name: 'signature_url') this.signatureUrl,
+  });
+
+  factory _$PrescriptionDoctorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionDoctorImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String? specialty;
+  @override
+  final String? qualifications;
+  @override
+  @JsonKey(name: 'reg_number')
+  final String? regNumber;
+  @override
+  @JsonKey(name: 'signature_url')
+  final String? signatureUrl;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionDoctor(name: $name, specialty: $specialty, qualifications: $qualifications, regNumber: $regNumber, signatureUrl: $signatureUrl)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionDoctor'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('specialty', specialty))
+      ..add(DiagnosticsProperty('qualifications', qualifications))
+      ..add(DiagnosticsProperty('regNumber', regNumber))
+      ..add(DiagnosticsProperty('signatureUrl', signatureUrl));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionDoctorImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.specialty, specialty) ||
+                other.specialty == specialty) &&
+            (identical(other.qualifications, qualifications) ||
+                other.qualifications == qualifications) &&
+            (identical(other.regNumber, regNumber) ||
+                other.regNumber == regNumber) &&
+            (identical(other.signatureUrl, signatureUrl) ||
+                other.signatureUrl == signatureUrl));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    specialty,
+    qualifications,
+    regNumber,
+    signatureUrl,
+  );
+
+  /// Create a copy of PrescriptionDoctor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionDoctorImplCopyWith<_$PrescriptionDoctorImpl> get copyWith =>
+      __$$PrescriptionDoctorImplCopyWithImpl<_$PrescriptionDoctorImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionDoctorImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionDoctor implements PrescriptionDoctor {
+  const factory _PrescriptionDoctor({
+    required final String name,
+    final String? specialty,
+    final String? qualifications,
+    @JsonKey(name: 'reg_number') final String? regNumber,
+    @JsonKey(name: 'signature_url') final String? signatureUrl,
+  }) = _$PrescriptionDoctorImpl;
+
+  factory _PrescriptionDoctor.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionDoctorImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String? get specialty;
+  @override
+  String? get qualifications;
+  @override
+  @JsonKey(name: 'reg_number')
+  String? get regNumber;
+  @override
+  @JsonKey(name: 'signature_url')
+  String? get signatureUrl;
+
+  /// Create a copy of PrescriptionDoctor
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionDoctorImplCopyWith<_$PrescriptionDoctorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PrescriptionPatient _$PrescriptionPatientFromJson(Map<String, dynamic> json) {
+  return _PrescriptionPatient.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionPatient {
+  String get name => throw _privateConstructorUsedError;
+  String get uhid => throw _privateConstructorUsedError;
+  @JsonKey(name: 'age_gender')
+  String get ageGender => throw _privateConstructorUsedError;
+  String get phone => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
+  @JsonKey(name: 'known_allergies')
+  List<String> get knownAllergies => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionPatient to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionPatientCopyWith<PrescriptionPatient> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionPatientCopyWith<$Res> {
+  factory $PrescriptionPatientCopyWith(
+    PrescriptionPatient value,
+    $Res Function(PrescriptionPatient) then,
+  ) = _$PrescriptionPatientCopyWithImpl<$Res, PrescriptionPatient>;
+  @useResult
+  $Res call({
+    String name,
+    String uhid,
+    @JsonKey(name: 'age_gender') String ageGender,
+    String phone,
+    String address,
+    @JsonKey(name: 'known_allergies') List<String> knownAllergies,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionPatientCopyWithImpl<$Res, $Val extends PrescriptionPatient>
+    implements $PrescriptionPatientCopyWith<$Res> {
+  _$PrescriptionPatientCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? uhid = null,
+    Object? ageGender = null,
+    Object? phone = null,
+    Object? address = null,
+    Object? knownAllergies = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            uhid: null == uhid
+                ? _value.uhid
+                : uhid // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ageGender: null == ageGender
+                ? _value.ageGender
+                : ageGender // ignore: cast_nullable_to_non_nullable
+                      as String,
+            phone: null == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String,
+            address: null == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String,
+            knownAllergies: null == knownAllergies
+                ? _value.knownAllergies
+                : knownAllergies // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionPatientImplCopyWith<$Res>
+    implements $PrescriptionPatientCopyWith<$Res> {
+  factory _$$PrescriptionPatientImplCopyWith(
+    _$PrescriptionPatientImpl value,
+    $Res Function(_$PrescriptionPatientImpl) then,
+  ) = __$$PrescriptionPatientImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String name,
+    String uhid,
+    @JsonKey(name: 'age_gender') String ageGender,
+    String phone,
+    String address,
+    @JsonKey(name: 'known_allergies') List<String> knownAllergies,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionPatientImplCopyWithImpl<$Res>
+    extends _$PrescriptionPatientCopyWithImpl<$Res, _$PrescriptionPatientImpl>
+    implements _$$PrescriptionPatientImplCopyWith<$Res> {
+  __$$PrescriptionPatientImplCopyWithImpl(
+    _$PrescriptionPatientImpl _value,
+    $Res Function(_$PrescriptionPatientImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? uhid = null,
+    Object? ageGender = null,
+    Object? phone = null,
+    Object? address = null,
+    Object? knownAllergies = null,
+  }) {
+    return _then(
+      _$PrescriptionPatientImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        uhid: null == uhid
+            ? _value.uhid
+            : uhid // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ageGender: null == ageGender
+            ? _value.ageGender
+            : ageGender // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phone: null == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String,
+        address: null == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String,
+        knownAllergies: null == knownAllergies
+            ? _value._knownAllergies
+            : knownAllergies // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionPatientImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionPatient {
+  const _$PrescriptionPatientImpl({
+    required this.name,
+    required this.uhid,
+    @JsonKey(name: 'age_gender') required this.ageGender,
+    required this.phone,
+    required this.address,
+    @JsonKey(name: 'known_allergies')
+    final List<String> knownAllergies = const [],
+  }) : _knownAllergies = knownAllergies;
+
+  factory _$PrescriptionPatientImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionPatientImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String uhid;
+  @override
+  @JsonKey(name: 'age_gender')
+  final String ageGender;
+  @override
+  final String phone;
+  @override
+  final String address;
+  final List<String> _knownAllergies;
+  @override
+  @JsonKey(name: 'known_allergies')
+  List<String> get knownAllergies {
+    if (_knownAllergies is EqualUnmodifiableListView) return _knownAllergies;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_knownAllergies);
+  }
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionPatient(name: $name, uhid: $uhid, ageGender: $ageGender, phone: $phone, address: $address, knownAllergies: $knownAllergies)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionPatient'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('uhid', uhid))
+      ..add(DiagnosticsProperty('ageGender', ageGender))
+      ..add(DiagnosticsProperty('phone', phone))
+      ..add(DiagnosticsProperty('address', address))
+      ..add(DiagnosticsProperty('knownAllergies', knownAllergies));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionPatientImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.uhid, uhid) || other.uhid == uhid) &&
+            (identical(other.ageGender, ageGender) ||
+                other.ageGender == ageGender) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.address, address) || other.address == address) &&
+            const DeepCollectionEquality().equals(
+              other._knownAllergies,
+              _knownAllergies,
+            ));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    uhid,
+    ageGender,
+    phone,
+    address,
+    const DeepCollectionEquality().hash(_knownAllergies),
+  );
+
+  /// Create a copy of PrescriptionPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionPatientImplCopyWith<_$PrescriptionPatientImpl> get copyWith =>
+      __$$PrescriptionPatientImplCopyWithImpl<_$PrescriptionPatientImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionPatientImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionPatient implements PrescriptionPatient {
+  const factory _PrescriptionPatient({
+    required final String name,
+    required final String uhid,
+    @JsonKey(name: 'age_gender') required final String ageGender,
+    required final String phone,
+    required final String address,
+    @JsonKey(name: 'known_allergies') final List<String> knownAllergies,
+  }) = _$PrescriptionPatientImpl;
+
+  factory _PrescriptionPatient.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionPatientImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get uhid;
+  @override
+  @JsonKey(name: 'age_gender')
+  String get ageGender;
+  @override
+  String get phone;
+  @override
+  String get address;
+  @override
+  @JsonKey(name: 'known_allergies')
+  List<String> get knownAllergies;
+
+  /// Create a copy of PrescriptionPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionPatientImplCopyWith<_$PrescriptionPatientImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PrescriptionClinical _$PrescriptionClinicalFromJson(Map<String, dynamic> json) {
+  return _PrescriptionClinical.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionClinical {
+  Map<String, dynamic>? get vitals => throw _privateConstructorUsedError;
+  dynamic get diagnosis =>
+      throw _privateConstructorUsedError; // Can be string or list json, use carefully
+  dynamic get symptoms => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'chief_complaint')
+  String? get chiefComplaint => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionClinical to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionClinical
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionClinicalCopyWith<PrescriptionClinical> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionClinicalCopyWith<$Res> {
+  factory $PrescriptionClinicalCopyWith(
+    PrescriptionClinical value,
+    $Res Function(PrescriptionClinical) then,
+  ) = _$PrescriptionClinicalCopyWithImpl<$Res, PrescriptionClinical>;
+  @useResult
+  $Res call({
+    Map<String, dynamic>? vitals,
+    dynamic diagnosis,
+    dynamic symptoms,
+    String? notes,
+    @JsonKey(name: 'chief_complaint') String? chiefComplaint,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionClinicalCopyWithImpl<
+  $Res,
+  $Val extends PrescriptionClinical
+>
+    implements $PrescriptionClinicalCopyWith<$Res> {
+  _$PrescriptionClinicalCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionClinical
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? vitals = freezed,
+    Object? diagnosis = freezed,
+    Object? symptoms = freezed,
+    Object? notes = freezed,
+    Object? chiefComplaint = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            vitals: freezed == vitals
+                ? _value.vitals
+                : vitals // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            diagnosis: freezed == diagnosis
+                ? _value.diagnosis
+                : diagnosis // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+            symptoms: freezed == symptoms
+                ? _value.symptoms
+                : symptoms // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+            notes: freezed == notes
+                ? _value.notes
+                : notes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            chiefComplaint: freezed == chiefComplaint
+                ? _value.chiefComplaint
+                : chiefComplaint // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionClinicalImplCopyWith<$Res>
+    implements $PrescriptionClinicalCopyWith<$Res> {
+  factory _$$PrescriptionClinicalImplCopyWith(
+    _$PrescriptionClinicalImpl value,
+    $Res Function(_$PrescriptionClinicalImpl) then,
+  ) = __$$PrescriptionClinicalImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    Map<String, dynamic>? vitals,
+    dynamic diagnosis,
+    dynamic symptoms,
+    String? notes,
+    @JsonKey(name: 'chief_complaint') String? chiefComplaint,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionClinicalImplCopyWithImpl<$Res>
+    extends _$PrescriptionClinicalCopyWithImpl<$Res, _$PrescriptionClinicalImpl>
+    implements _$$PrescriptionClinicalImplCopyWith<$Res> {
+  __$$PrescriptionClinicalImplCopyWithImpl(
+    _$PrescriptionClinicalImpl _value,
+    $Res Function(_$PrescriptionClinicalImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionClinical
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? vitals = freezed,
+    Object? diagnosis = freezed,
+    Object? symptoms = freezed,
+    Object? notes = freezed,
+    Object? chiefComplaint = freezed,
+  }) {
+    return _then(
+      _$PrescriptionClinicalImpl(
+        vitals: freezed == vitals
+            ? _value._vitals
+            : vitals // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        diagnosis: freezed == diagnosis
+            ? _value.diagnosis
+            : diagnosis // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+        symptoms: freezed == symptoms
+            ? _value.symptoms
+            : symptoms // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+        notes: freezed == notes
+            ? _value.notes
+            : notes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        chiefComplaint: freezed == chiefComplaint
+            ? _value.chiefComplaint
+            : chiefComplaint // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionClinicalImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionClinical {
+  const _$PrescriptionClinicalImpl({
+    final Map<String, dynamic>? vitals,
+    this.diagnosis,
+    this.symptoms,
+    this.notes,
+    @JsonKey(name: 'chief_complaint') this.chiefComplaint,
+  }) : _vitals = vitals;
+
+  factory _$PrescriptionClinicalImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionClinicalImplFromJson(json);
+
+  final Map<String, dynamic>? _vitals;
+  @override
+  Map<String, dynamic>? get vitals {
+    final value = _vitals;
+    if (value == null) return null;
+    if (_vitals is EqualUnmodifiableMapView) return _vitals;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  final dynamic diagnosis;
+  // Can be string or list json, use carefully
+  @override
+  final dynamic symptoms;
+  @override
+  final String? notes;
+  @override
+  @JsonKey(name: 'chief_complaint')
+  final String? chiefComplaint;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionClinical(vitals: $vitals, diagnosis: $diagnosis, symptoms: $symptoms, notes: $notes, chiefComplaint: $chiefComplaint)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionClinical'))
+      ..add(DiagnosticsProperty('vitals', vitals))
+      ..add(DiagnosticsProperty('diagnosis', diagnosis))
+      ..add(DiagnosticsProperty('symptoms', symptoms))
+      ..add(DiagnosticsProperty('notes', notes))
+      ..add(DiagnosticsProperty('chiefComplaint', chiefComplaint));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionClinicalImpl &&
+            const DeepCollectionEquality().equals(other._vitals, _vitals) &&
+            const DeepCollectionEquality().equals(other.diagnosis, diagnosis) &&
+            const DeepCollectionEquality().equals(other.symptoms, symptoms) &&
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.chiefComplaint, chiefComplaint) ||
+                other.chiefComplaint == chiefComplaint));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_vitals),
+    const DeepCollectionEquality().hash(diagnosis),
+    const DeepCollectionEquality().hash(symptoms),
+    notes,
+    chiefComplaint,
+  );
+
+  /// Create a copy of PrescriptionClinical
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionClinicalImplCopyWith<_$PrescriptionClinicalImpl>
+  get copyWith =>
+      __$$PrescriptionClinicalImplCopyWithImpl<_$PrescriptionClinicalImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionClinicalImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionClinical implements PrescriptionClinical {
+  const factory _PrescriptionClinical({
+    final Map<String, dynamic>? vitals,
+    final dynamic diagnosis,
+    final dynamic symptoms,
+    final String? notes,
+    @JsonKey(name: 'chief_complaint') final String? chiefComplaint,
+  }) = _$PrescriptionClinicalImpl;
+
+  factory _PrescriptionClinical.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionClinicalImpl.fromJson;
+
+  @override
+  Map<String, dynamic>? get vitals;
+  @override
+  dynamic get diagnosis; // Can be string or list json, use carefully
+  @override
+  dynamic get symptoms;
+  @override
+  String? get notes;
+  @override
+  @JsonKey(name: 'chief_complaint')
+  String? get chiefComplaint;
+
+  /// Create a copy of PrescriptionClinical
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionClinicalImplCopyWith<_$PrescriptionClinicalImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+PrescriptionMedicine _$PrescriptionMedicineFromJson(Map<String, dynamic> json) {
+  return _PrescriptionMedicine.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionMedicine {
+  @JsonKey(name: 'brand_name')
+  String get brandName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'generic_name')
+  String? get genericName => throw _privateConstructorUsedError;
+  String? get type => throw _privateConstructorUsedError;
+  String? get dosage =>
+      throw _privateConstructorUsedError; // This maps to frequency in some views
+  String? get duration => throw _privateConstructorUsedError;
+  String? get instruction => throw _privateConstructorUsedError;
+  String? get note => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionMedicine to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionMedicine
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionMedicineCopyWith<PrescriptionMedicine> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionMedicineCopyWith<$Res> {
+  factory $PrescriptionMedicineCopyWith(
+    PrescriptionMedicine value,
+    $Res Function(PrescriptionMedicine) then,
+  ) = _$PrescriptionMedicineCopyWithImpl<$Res, PrescriptionMedicine>;
+  @useResult
+  $Res call({
+    @JsonKey(name: 'brand_name') String brandName,
+    @JsonKey(name: 'generic_name') String? genericName,
+    String? type,
+    String? dosage,
+    String? duration,
+    String? instruction,
+    String? note,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionMedicineCopyWithImpl<
+  $Res,
+  $Val extends PrescriptionMedicine
+>
+    implements $PrescriptionMedicineCopyWith<$Res> {
+  _$PrescriptionMedicineCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionMedicine
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? brandName = null,
+    Object? genericName = freezed,
+    Object? type = freezed,
+    Object? dosage = freezed,
+    Object? duration = freezed,
+    Object? instruction = freezed,
+    Object? note = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            brandName: null == brandName
+                ? _value.brandName
+                : brandName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            genericName: freezed == genericName
+                ? _value.genericName
+                : genericName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            dosage: freezed == dosage
+                ? _value.dosage
+                : dosage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            duration: freezed == duration
+                ? _value.duration
+                : duration // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            instruction: freezed == instruction
+                ? _value.instruction
+                : instruction // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            note: freezed == note
+                ? _value.note
+                : note // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionMedicineImplCopyWith<$Res>
+    implements $PrescriptionMedicineCopyWith<$Res> {
+  factory _$$PrescriptionMedicineImplCopyWith(
+    _$PrescriptionMedicineImpl value,
+    $Res Function(_$PrescriptionMedicineImpl) then,
+  ) = __$$PrescriptionMedicineImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    @JsonKey(name: 'brand_name') String brandName,
+    @JsonKey(name: 'generic_name') String? genericName,
+    String? type,
+    String? dosage,
+    String? duration,
+    String? instruction,
+    String? note,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionMedicineImplCopyWithImpl<$Res>
+    extends _$PrescriptionMedicineCopyWithImpl<$Res, _$PrescriptionMedicineImpl>
+    implements _$$PrescriptionMedicineImplCopyWith<$Res> {
+  __$$PrescriptionMedicineImplCopyWithImpl(
+    _$PrescriptionMedicineImpl _value,
+    $Res Function(_$PrescriptionMedicineImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionMedicine
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? brandName = null,
+    Object? genericName = freezed,
+    Object? type = freezed,
+    Object? dosage = freezed,
+    Object? duration = freezed,
+    Object? instruction = freezed,
+    Object? note = freezed,
+  }) {
+    return _then(
+      _$PrescriptionMedicineImpl(
+        brandName: null == brandName
+            ? _value.brandName
+            : brandName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        genericName: freezed == genericName
+            ? _value.genericName
+            : genericName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        dosage: freezed == dosage
+            ? _value.dosage
+            : dosage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        duration: freezed == duration
+            ? _value.duration
+            : duration // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        instruction: freezed == instruction
+            ? _value.instruction
+            : instruction // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        note: freezed == note
+            ? _value.note
+            : note // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionMedicineImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionMedicine {
+  const _$PrescriptionMedicineImpl({
+    @JsonKey(name: 'brand_name') required this.brandName,
+    @JsonKey(name: 'generic_name') this.genericName,
+    this.type,
+    this.dosage,
+    this.duration,
+    this.instruction,
+    this.note,
+  });
+
+  factory _$PrescriptionMedicineImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionMedicineImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'brand_name')
+  final String brandName;
+  @override
+  @JsonKey(name: 'generic_name')
+  final String? genericName;
+  @override
+  final String? type;
+  @override
+  final String? dosage;
+  // This maps to frequency in some views
+  @override
+  final String? duration;
+  @override
+  final String? instruction;
+  @override
+  final String? note;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionMedicine(brandName: $brandName, genericName: $genericName, type: $type, dosage: $dosage, duration: $duration, instruction: $instruction, note: $note)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionMedicine'))
+      ..add(DiagnosticsProperty('brandName', brandName))
+      ..add(DiagnosticsProperty('genericName', genericName))
+      ..add(DiagnosticsProperty('type', type))
+      ..add(DiagnosticsProperty('dosage', dosage))
+      ..add(DiagnosticsProperty('duration', duration))
+      ..add(DiagnosticsProperty('instruction', instruction))
+      ..add(DiagnosticsProperty('note', note));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionMedicineImpl &&
+            (identical(other.brandName, brandName) ||
+                other.brandName == brandName) &&
+            (identical(other.genericName, genericName) ||
+                other.genericName == genericName) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.dosage, dosage) || other.dosage == dosage) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
+            (identical(other.instruction, instruction) ||
+                other.instruction == instruction) &&
+            (identical(other.note, note) || other.note == note));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    brandName,
+    genericName,
+    type,
+    dosage,
+    duration,
+    instruction,
+    note,
+  );
+
+  /// Create a copy of PrescriptionMedicine
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionMedicineImplCopyWith<_$PrescriptionMedicineImpl>
+  get copyWith =>
+      __$$PrescriptionMedicineImplCopyWithImpl<_$PrescriptionMedicineImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionMedicineImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionMedicine implements PrescriptionMedicine {
+  const factory _PrescriptionMedicine({
+    @JsonKey(name: 'brand_name') required final String brandName,
+    @JsonKey(name: 'generic_name') final String? genericName,
+    final String? type,
+    final String? dosage,
+    final String? duration,
+    final String? instruction,
+    final String? note,
+  }) = _$PrescriptionMedicineImpl;
+
+  factory _PrescriptionMedicine.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionMedicineImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'brand_name')
+  String get brandName;
+  @override
+  @JsonKey(name: 'generic_name')
+  String? get genericName;
+  @override
+  String? get type;
+  @override
+  String? get dosage; // This maps to frequency in some views
+  @override
+  String? get duration;
+  @override
+  String? get instruction;
+  @override
+  String? get note;
+
+  /// Create a copy of PrescriptionMedicine
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionMedicineImplCopyWith<_$PrescriptionMedicineImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+PrescriptionLab _$PrescriptionLabFromJson(Map<String, dynamic> json) {
+  return _PrescriptionLab.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionLab {
+  @JsonKey(name: 'test_name')
+  String get testName => throw _privateConstructorUsedError;
+  String? get instruction => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionLab to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionLab
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionLabCopyWith<PrescriptionLab> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionLabCopyWith<$Res> {
+  factory $PrescriptionLabCopyWith(
+    PrescriptionLab value,
+    $Res Function(PrescriptionLab) then,
+  ) = _$PrescriptionLabCopyWithImpl<$Res, PrescriptionLab>;
+  @useResult
+  $Res call({@JsonKey(name: 'test_name') String testName, String? instruction});
+}
+
+/// @nodoc
+class _$PrescriptionLabCopyWithImpl<$Res, $Val extends PrescriptionLab>
+    implements $PrescriptionLabCopyWith<$Res> {
+  _$PrescriptionLabCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionLab
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? testName = null, Object? instruction = freezed}) {
+    return _then(
+      _value.copyWith(
+            testName: null == testName
+                ? _value.testName
+                : testName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            instruction: freezed == instruction
+                ? _value.instruction
+                : instruction // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionLabImplCopyWith<$Res>
+    implements $PrescriptionLabCopyWith<$Res> {
+  factory _$$PrescriptionLabImplCopyWith(
+    _$PrescriptionLabImpl value,
+    $Res Function(_$PrescriptionLabImpl) then,
+  ) = __$$PrescriptionLabImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({@JsonKey(name: 'test_name') String testName, String? instruction});
+}
+
+/// @nodoc
+class __$$PrescriptionLabImplCopyWithImpl<$Res>
+    extends _$PrescriptionLabCopyWithImpl<$Res, _$PrescriptionLabImpl>
+    implements _$$PrescriptionLabImplCopyWith<$Res> {
+  __$$PrescriptionLabImplCopyWithImpl(
+    _$PrescriptionLabImpl _value,
+    $Res Function(_$PrescriptionLabImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionLab
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? testName = null, Object? instruction = freezed}) {
+    return _then(
+      _$PrescriptionLabImpl(
+        testName: null == testName
+            ? _value.testName
+            : testName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        instruction: freezed == instruction
+            ? _value.instruction
+            : instruction // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionLabImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionLab {
+  const _$PrescriptionLabImpl({
+    @JsonKey(name: 'test_name') required this.testName,
+    this.instruction,
+  });
+
+  factory _$PrescriptionLabImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionLabImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'test_name')
+  final String testName;
+  @override
+  final String? instruction;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionLab(testName: $testName, instruction: $instruction)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionLab'))
+      ..add(DiagnosticsProperty('testName', testName))
+      ..add(DiagnosticsProperty('instruction', instruction));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionLabImpl &&
+            (identical(other.testName, testName) ||
+                other.testName == testName) &&
+            (identical(other.instruction, instruction) ||
+                other.instruction == instruction));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, testName, instruction);
+
+  /// Create a copy of PrescriptionLab
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionLabImplCopyWith<_$PrescriptionLabImpl> get copyWith =>
+      __$$PrescriptionLabImplCopyWithImpl<_$PrescriptionLabImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionLabImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionLab implements PrescriptionLab {
+  const factory _PrescriptionLab({
+    @JsonKey(name: 'test_name') required final String testName,
+    final String? instruction,
+  }) = _$PrescriptionLabImpl;
+
+  factory _PrescriptionLab.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionLabImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'test_name')
+  String get testName;
+  @override
+  String? get instruction;
+
+  /// Create a copy of PrescriptionLab
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionLabImplCopyWith<_$PrescriptionLabImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PrescriptionAdvice _$PrescriptionAdviceFromJson(Map<String, dynamic> json) {
+  return _PrescriptionAdvice.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrescriptionAdvice {
+  @JsonKey(name: 'next_visit_date')
+  String? get nextVisitDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'next_visit_text')
+  String? get nextVisitText => throw _privateConstructorUsedError;
+
+  /// Serializes this PrescriptionAdvice to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrescriptionAdvice
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrescriptionAdviceCopyWith<PrescriptionAdvice> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrescriptionAdviceCopyWith<$Res> {
+  factory $PrescriptionAdviceCopyWith(
+    PrescriptionAdvice value,
+    $Res Function(PrescriptionAdvice) then,
+  ) = _$PrescriptionAdviceCopyWithImpl<$Res, PrescriptionAdvice>;
+  @useResult
+  $Res call({
+    @JsonKey(name: 'next_visit_date') String? nextVisitDate,
+    @JsonKey(name: 'next_visit_text') String? nextVisitText,
+  });
+}
+
+/// @nodoc
+class _$PrescriptionAdviceCopyWithImpl<$Res, $Val extends PrescriptionAdvice>
+    implements $PrescriptionAdviceCopyWith<$Res> {
+  _$PrescriptionAdviceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrescriptionAdvice
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? nextVisitDate = freezed,
+    Object? nextVisitText = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            nextVisitDate: freezed == nextVisitDate
+                ? _value.nextVisitDate
+                : nextVisitDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            nextVisitText: freezed == nextVisitText
+                ? _value.nextVisitText
+                : nextVisitText // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PrescriptionAdviceImplCopyWith<$Res>
+    implements $PrescriptionAdviceCopyWith<$Res> {
+  factory _$$PrescriptionAdviceImplCopyWith(
+    _$PrescriptionAdviceImpl value,
+    $Res Function(_$PrescriptionAdviceImpl) then,
+  ) = __$$PrescriptionAdviceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    @JsonKey(name: 'next_visit_date') String? nextVisitDate,
+    @JsonKey(name: 'next_visit_text') String? nextVisitText,
+  });
+}
+
+/// @nodoc
+class __$$PrescriptionAdviceImplCopyWithImpl<$Res>
+    extends _$PrescriptionAdviceCopyWithImpl<$Res, _$PrescriptionAdviceImpl>
+    implements _$$PrescriptionAdviceImplCopyWith<$Res> {
+  __$$PrescriptionAdviceImplCopyWithImpl(
+    _$PrescriptionAdviceImpl _value,
+    $Res Function(_$PrescriptionAdviceImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PrescriptionAdvice
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? nextVisitDate = freezed,
+    Object? nextVisitText = freezed,
+  }) {
+    return _then(
+      _$PrescriptionAdviceImpl(
+        nextVisitDate: freezed == nextVisitDate
+            ? _value.nextVisitDate
+            : nextVisitDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        nextVisitText: freezed == nextVisitText
+            ? _value.nextVisitText
+            : nextVisitText // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrescriptionAdviceImpl
+    with DiagnosticableTreeMixin
+    implements _PrescriptionAdvice {
+  const _$PrescriptionAdviceImpl({
+    @JsonKey(name: 'next_visit_date') this.nextVisitDate,
+    @JsonKey(name: 'next_visit_text') this.nextVisitText,
+  });
+
+  factory _$PrescriptionAdviceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrescriptionAdviceImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'next_visit_date')
+  final String? nextVisitDate;
+  @override
+  @JsonKey(name: 'next_visit_text')
+  final String? nextVisitText;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PrescriptionAdvice(nextVisitDate: $nextVisitDate, nextVisitText: $nextVisitText)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'PrescriptionAdvice'))
+      ..add(DiagnosticsProperty('nextVisitDate', nextVisitDate))
+      ..add(DiagnosticsProperty('nextVisitText', nextVisitText));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrescriptionAdviceImpl &&
+            (identical(other.nextVisitDate, nextVisitDate) ||
+                other.nextVisitDate == nextVisitDate) &&
+            (identical(other.nextVisitText, nextVisitText) ||
+                other.nextVisitText == nextVisitText));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, nextVisitDate, nextVisitText);
+
+  /// Create a copy of PrescriptionAdvice
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrescriptionAdviceImplCopyWith<_$PrescriptionAdviceImpl> get copyWith =>
+      __$$PrescriptionAdviceImplCopyWithImpl<_$PrescriptionAdviceImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrescriptionAdviceImplToJson(this);
+  }
+}
+
+abstract class _PrescriptionAdvice implements PrescriptionAdvice {
+  const factory _PrescriptionAdvice({
+    @JsonKey(name: 'next_visit_date') final String? nextVisitDate,
+    @JsonKey(name: 'next_visit_text') final String? nextVisitText,
+  }) = _$PrescriptionAdviceImpl;
+
+  factory _PrescriptionAdvice.fromJson(Map<String, dynamic> json) =
+      _$PrescriptionAdviceImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'next_visit_date')
+  String? get nextVisitDate;
+  @override
+  @JsonKey(name: 'next_visit_text')
+  String? get nextVisitText;
+
+  /// Create a copy of PrescriptionAdvice
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrescriptionAdviceImplCopyWith<_$PrescriptionAdviceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

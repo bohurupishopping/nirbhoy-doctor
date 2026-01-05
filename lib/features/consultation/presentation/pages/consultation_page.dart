@@ -14,6 +14,7 @@ import '../widgets/tab_plan.dart';
 import '../widgets/tab_summary.dart';
 import '../widgets/tab_history.dart';
 import '../widgets/tab_profile.dart';
+import '../widgets/sheet_prescription_preview.dart';
 
 class ConsultationPage extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -95,50 +96,69 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                                 ),
                               )
                             else
-                              ElevatedButton(
-                                onPressed: () async {
-                                  final messenger = ScaffoldMessenger.of(
-                                    context,
-                                  );
-                                  final router = GoRouter.of(context);
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _HeaderActionButton(
+                                    icon: Icons.remove_red_eye_outlined,
+                                    onTap: () {
+                                      PrescriptionPreviewSheet.show(
+                                        context,
+                                        widget.appointmentId,
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final messenger = ScaffoldMessenger.of(
+                                        context,
+                                      );
+                                      final router = GoRouter.of(context);
 
-                                  final success = await controller.submit();
+                                      final success = await controller.submit();
 
-                                  if (success) {
-                                    messenger.showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Consultation Completed!',
+                                      if (success) {
+                                        messenger.showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Consultation Completed!',
+                                            ),
+                                          ),
+                                        );
+                                        if (router.canPop()) router.pop();
+                                      } else if (state.error != null) {
+                                        messenger.showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Error: ${state.error}',
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFFF8A65),
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          100,
                                         ),
                                       ),
-                                    );
-                                    if (router.canPop()) router.pop();
-                                  } else if (state.error != null) {
-                                    messenger.showSnackBar(
-                                      SnackBar(
-                                        content: Text('Error: ${state.error}'),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 24,
+                                        vertical: 12,
                                       ),
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFFF8A65),
-                                  foregroundColor: Colors.white,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                      'Submit',
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                    vertical: 12,
-                                  ),
-                                ),
-                                child: Text(
-                                  'Submit',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                                ],
                               ),
                           ],
                         ),

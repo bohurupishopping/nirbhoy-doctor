@@ -1,0 +1,8 @@
+Analyzing 4 items...                                            
+
+  error - Expected to find ']' - lib\features\consultation\presentation\pages\consultation_page.dart:161:23 - expected_token
+  error - Too many positional arguments: 0 expected, but 2 found - lib\features\consultation\presentation\pages\consultation_page.dart:165:21 - extra_positional_arguments_could_be_named
+  error - Expected to find ')' - lib\features\consultation\presentation\pages\consultation_page.dart:311:19 - expected_token
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\consultation\presentation\widgets\sheet_prescription_preview.dart:264:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\consultation\presentation\widgets\sheet_prescription_preview.dart:312:45 - deprecated_member_use
+

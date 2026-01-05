@@ -286,3 +286,201 @@ Map<String, dynamic> _$$ConsultationStateImplToJson(
   'nextVisitDate': instance.nextVisitDate?.toIso8601String(),
   'adviceNotes': instance.adviceNotes,
 };
+
+_$PrescriptionPrintDataImpl _$$PrescriptionPrintDataImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionPrintDataImpl(
+  meta: PrescriptionMeta.fromJson(json['meta'] as Map<String, dynamic>),
+  clinic: PrescriptionClinic.fromJson(json['clinic'] as Map<String, dynamic>),
+  doctor: PrescriptionDoctor.fromJson(json['doctor'] as Map<String, dynamic>),
+  patient: PrescriptionPatient.fromJson(
+    json['patient'] as Map<String, dynamic>,
+  ),
+  clinical: json['clinical'] == null
+      ? null
+      : PrescriptionClinical.fromJson(json['clinical'] as Map<String, dynamic>),
+  rxItems:
+      (json['rx_items'] as List<dynamic>?)
+          ?.map((e) => PrescriptionMedicine.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  labOrders:
+      (json['lab_orders'] as List<dynamic>?)
+          ?.map((e) => PrescriptionLab.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  advice: PrescriptionAdvice.fromJson(json['advice'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$$PrescriptionPrintDataImplToJson(
+  _$PrescriptionPrintDataImpl instance,
+) => <String, dynamic>{
+  'meta': instance.meta,
+  'clinic': instance.clinic,
+  'doctor': instance.doctor,
+  'patient': instance.patient,
+  'clinical': instance.clinical,
+  'rx_items': instance.rxItems,
+  'lab_orders': instance.labOrders,
+  'advice': instance.advice,
+};
+
+_$PrescriptionMetaImpl _$$PrescriptionMetaImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionMetaImpl(
+  generatedAt: json['generated_at'] as String,
+  appointmentNumber: json['appointment_number'] as String,
+  visitType: json['visit_type'] as String,
+  visitDate: json['visit_date'] as String,
+);
+
+Map<String, dynamic> _$$PrescriptionMetaImplToJson(
+  _$PrescriptionMetaImpl instance,
+) => <String, dynamic>{
+  'generated_at': instance.generatedAt,
+  'appointment_number': instance.appointmentNumber,
+  'visit_type': instance.visitType,
+  'visit_date': instance.visitDate,
+};
+
+_$PrescriptionClinicImpl _$$PrescriptionClinicImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionClinicImpl(
+  name: json['name'] as String,
+  logoUrl: json['logo_url'] as String?,
+  headerImageUrl: json['header_image_url'] as String?,
+  phone: json['phone'] as String?,
+  email: json['email'] as String?,
+  address: json['address'] as String?,
+  footerText: json['footer_text'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionClinicImplToJson(
+  _$PrescriptionClinicImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'logo_url': instance.logoUrl,
+  'header_image_url': instance.headerImageUrl,
+  'phone': instance.phone,
+  'email': instance.email,
+  'address': instance.address,
+  'footer_text': instance.footerText,
+};
+
+_$PrescriptionDoctorImpl _$$PrescriptionDoctorImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionDoctorImpl(
+  name: json['name'] as String,
+  specialty: json['specialty'] as String?,
+  qualifications: json['qualifications'] as String?,
+  regNumber: json['reg_number'] as String?,
+  signatureUrl: json['signature_url'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionDoctorImplToJson(
+  _$PrescriptionDoctorImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'specialty': instance.specialty,
+  'qualifications': instance.qualifications,
+  'reg_number': instance.regNumber,
+  'signature_url': instance.signatureUrl,
+};
+
+_$PrescriptionPatientImpl _$$PrescriptionPatientImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionPatientImpl(
+  name: json['name'] as String,
+  uhid: json['uhid'] as String,
+  ageGender: json['age_gender'] as String,
+  phone: json['phone'] as String,
+  address: json['address'] as String,
+  knownAllergies:
+      (json['known_allergies'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$$PrescriptionPatientImplToJson(
+  _$PrescriptionPatientImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'uhid': instance.uhid,
+  'age_gender': instance.ageGender,
+  'phone': instance.phone,
+  'address': instance.address,
+  'known_allergies': instance.knownAllergies,
+};
+
+_$PrescriptionClinicalImpl _$$PrescriptionClinicalImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionClinicalImpl(
+  vitals: json['vitals'] as Map<String, dynamic>?,
+  diagnosis: json['diagnosis'],
+  symptoms: json['symptoms'],
+  notes: json['notes'] as String?,
+  chiefComplaint: json['chief_complaint'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionClinicalImplToJson(
+  _$PrescriptionClinicalImpl instance,
+) => <String, dynamic>{
+  'vitals': instance.vitals,
+  'diagnosis': instance.diagnosis,
+  'symptoms': instance.symptoms,
+  'notes': instance.notes,
+  'chief_complaint': instance.chiefComplaint,
+};
+
+_$PrescriptionMedicineImpl _$$PrescriptionMedicineImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionMedicineImpl(
+  brandName: json['brand_name'] as String,
+  genericName: json['generic_name'] as String?,
+  type: json['type'] as String?,
+  dosage: json['dosage'] as String?,
+  duration: json['duration'] as String?,
+  instruction: json['instruction'] as String?,
+  note: json['note'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionMedicineImplToJson(
+  _$PrescriptionMedicineImpl instance,
+) => <String, dynamic>{
+  'brand_name': instance.brandName,
+  'generic_name': instance.genericName,
+  'type': instance.type,
+  'dosage': instance.dosage,
+  'duration': instance.duration,
+  'instruction': instance.instruction,
+  'note': instance.note,
+};
+
+_$PrescriptionLabImpl _$$PrescriptionLabImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionLabImpl(
+  testName: json['test_name'] as String,
+  instruction: json['instruction'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionLabImplToJson(
+  _$PrescriptionLabImpl instance,
+) => <String, dynamic>{
+  'test_name': instance.testName,
+  'instruction': instance.instruction,
+};
+
+_$PrescriptionAdviceImpl _$$PrescriptionAdviceImplFromJson(
+  Map<String, dynamic> json,
+) => _$PrescriptionAdviceImpl(
+  nextVisitDate: json['next_visit_date'] as String?,
+  nextVisitText: json['next_visit_text'] as String?,
+);
+
+Map<String, dynamic> _$$PrescriptionAdviceImplToJson(
+  _$PrescriptionAdviceImpl instance,
+) => <String, dynamic>{
+  'next_visit_date': instance.nextVisitDate,
+  'next_visit_text': instance.nextVisitText,
+};

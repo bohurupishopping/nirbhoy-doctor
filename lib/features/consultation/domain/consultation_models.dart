@@ -182,3 +182,131 @@ class ConsultationState with _$ConsultationState {
   factory ConsultationState.fromJson(Map<String, dynamic> json) =>
       _$ConsultationStateFromJson(json);
 }
+
+// --- Prescription Print Models ---
+@freezed
+class PrescriptionPrintData with _$PrescriptionPrintData {
+  const factory PrescriptionPrintData({
+    required PrescriptionMeta meta,
+    required PrescriptionClinic clinic,
+    required PrescriptionDoctor doctor,
+    required PrescriptionPatient patient,
+    PrescriptionClinical? clinical,
+    @JsonKey(name: 'rx_items') @Default([]) List<PrescriptionMedicine> rxItems,
+    @JsonKey(name: 'lab_orders') @Default([]) List<PrescriptionLab> labOrders,
+    required PrescriptionAdvice advice,
+  }) = _PrescriptionPrintData;
+
+  factory PrescriptionPrintData.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionPrintDataFromJson(json);
+}
+
+@freezed
+class PrescriptionMeta with _$PrescriptionMeta {
+  const factory PrescriptionMeta({
+    @JsonKey(name: 'generated_at') required String generatedAt,
+    @JsonKey(name: 'appointment_number') required String appointmentNumber,
+    @JsonKey(name: 'visit_type') required String visitType,
+    @JsonKey(name: 'visit_date') required String visitDate,
+  }) = _PrescriptionMeta;
+
+  factory PrescriptionMeta.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionMetaFromJson(json);
+}
+
+@freezed
+class PrescriptionClinic with _$PrescriptionClinic {
+  const factory PrescriptionClinic({
+    required String name,
+    @JsonKey(name: 'logo_url') String? logoUrl,
+    @JsonKey(name: 'header_image_url') String? headerImageUrl,
+    String? phone,
+    String? email,
+    String? address,
+    @JsonKey(name: 'footer_text') String? footerText,
+  }) = _PrescriptionClinic;
+
+  factory PrescriptionClinic.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionClinicFromJson(json);
+}
+
+@freezed
+class PrescriptionDoctor with _$PrescriptionDoctor {
+  const factory PrescriptionDoctor({
+    required String name,
+    String? specialty,
+    String? qualifications,
+    @JsonKey(name: 'reg_number') String? regNumber,
+    @JsonKey(name: 'signature_url') String? signatureUrl,
+  }) = _PrescriptionDoctor;
+
+  factory PrescriptionDoctor.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionDoctorFromJson(json);
+}
+
+@freezed
+class PrescriptionPatient with _$PrescriptionPatient {
+  const factory PrescriptionPatient({
+    required String name,
+    required String uhid,
+    @JsonKey(name: 'age_gender') required String ageGender,
+    required String phone,
+    required String address,
+    @JsonKey(name: 'known_allergies') @Default([]) List<String> knownAllergies,
+  }) = _PrescriptionPatient;
+
+  factory PrescriptionPatient.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionPatientFromJson(json);
+}
+
+@freezed
+class PrescriptionClinical with _$PrescriptionClinical {
+  const factory PrescriptionClinical({
+    Map<String, dynamic>? vitals,
+    dynamic diagnosis, // Can be string or list json, use carefully
+    dynamic symptoms,
+    String? notes,
+    @JsonKey(name: 'chief_complaint') String? chiefComplaint,
+  }) = _PrescriptionClinical;
+
+  factory PrescriptionClinical.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionClinicalFromJson(json);
+}
+
+@freezed
+class PrescriptionMedicine with _$PrescriptionMedicine {
+  const factory PrescriptionMedicine({
+    @JsonKey(name: 'brand_name') required String brandName,
+    @JsonKey(name: 'generic_name') String? genericName,
+    String? type,
+    String? dosage, // This maps to frequency in some views
+    String? duration,
+    String? instruction,
+    String? note,
+  }) = _PrescriptionMedicine;
+
+  factory PrescriptionMedicine.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionMedicineFromJson(json);
+}
+
+@freezed
+class PrescriptionLab with _$PrescriptionLab {
+  const factory PrescriptionLab({
+    @JsonKey(name: 'test_name') required String testName,
+    String? instruction,
+  }) = _PrescriptionLab;
+
+  factory PrescriptionLab.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionLabFromJson(json);
+}
+
+@freezed
+class PrescriptionAdvice with _$PrescriptionAdvice {
+  const factory PrescriptionAdvice({
+    @JsonKey(name: 'next_visit_date') String? nextVisitDate,
+    @JsonKey(name: 'next_visit_text') String? nextVisitText,
+  }) = _PrescriptionAdvice;
+
+  factory PrescriptionAdvice.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionAdviceFromJson(json);
+}
