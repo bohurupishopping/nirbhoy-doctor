@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/consultation_models.dart';
@@ -226,5 +228,180 @@ class ConsultationRepository {
     } catch (e) {
       throw 'Submit Prescription Error: $e';
     }
+  }
+
+  Future<String> generateSummary({required String appointmentId}) async {
+    ConsultationContext? context;
+    try {
+      // 1. Get Context (needed for fallback and patient IDs)
+      context = await getConsultationInitData(appointmentId);
+
+      // 2. Fetch Secure API Key
+      final String? apiKey = await _supabase.rpc(
+        'get_active_api_key',
+        params: {'_provider': 'openai'},
+      );
+
+      if (apiKey == null || apiKey.isEmpty) {
+        // print('OpenAI Key not found, using local fallback.');
+        return _generateLocalSummary(context);
+      }
+
+      // 3. Configure OpenAI
+      OpenAI.apiKey = apiKey;
+
+      // 4. Fetch Raw 360 Data for AI Context (as per ai.ts pattern)
+      final raw360Data = await _supabase.rpc(
+        'get_patient_360_summary',
+        params: {
+          '_patient_id': context.patient.id, // Assuming context has valid ID
+          '_doctor_id': _supabase.auth.currentUser?.id ?? '',
+        },
+      );
+
+      // System Prompt (from ai.ts)
+      const systemPrompt = '''
+You are an expert Clinical AI Medical Assistant aimed at senior doctors.
+Your task is to analyze the provided Patient 360 JSON data and generate a "Clinical Snapshot & Executive Summary" in Markdown format.
+
+**Goal:** Provide a high-level, actionable summary. Highlight critical alerts, recent patterns, and safety issues first.
+
+**Output Structure & Style Guidelines (Strictly Follow This Format):**
+
+1.  **Clinical Snapshot & Executive Summary**
+    *   **Patient:** Name (Age/Gender) | UHID: ...[last 4 digits]
+    *   **Status:** [CRITICAL / STABLE / WHEELCHAIR] (Derived from access_flags or recent vitals)
+    *   **Summary:** Write a single, high-density paragraph (approx 3-4 sentences) that synthesizes the patient's profile, main presenting complaints, active diagnoses, and recent visit context. Focus on the "why now" - why is the patient here today?
+
+2.  **🔍 Detailed Clinical Analysis**
+    *   **⚠️ Safety & Alerts:** Bullet points for Allergies and Critical Flags. "None" if clean.
+    *   **💊 Active Meds & Regimen:** concise review of current drugs. Group by condition. Flag any unusual durations or interactions.
+    *   **📉 Vitals & History:** Most recent vitals with date. Mention key chronic conditions.
+    *   **🗓️ Visit Pattern:** Briefly mention visit frequency (e.g., "3rd visit in 2 weeks") and last 2-3 visits with 1-line context.
+
+**Tone:** Professional, precise, physician-to-physician. Use icons (🚨, ⚠️, 💊, 📉, 🗓️) to make scanning easy.
+**Constraint:** Keep it "semi-detailed" - enough for clinical decision making, but short enough to read in 30 seconds. Avoid fluff.
+''';
+
+      final userPrompt =
+          '''
+Here is the Patient 360 Data JSON:
+```json
+${jsonEncode(raw360Data)}
+```
+
+Generate the Clinical Snapshot now.
+''';
+
+      // 5. Call OpenAI
+      // Note: OpenAI.instance.chat.create returns a Future<OpenAIChatCompletionModel>
+      final completion = await OpenAI.instance.chat.create(
+        model: "gpt-4o",
+        messages: [
+          OpenAIChatCompletionChoiceMessageModel(
+            role: OpenAIChatMessageRole.system,
+            content: [
+              OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                systemPrompt,
+              ),
+            ],
+          ),
+          OpenAIChatCompletionChoiceMessageModel(
+            role: OpenAIChatMessageRole.user,
+            content: [
+              OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                userPrompt,
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final content = completion.choices.first.message.content;
+      if (content == null || content.isEmpty) throw 'Empty AI response';
+
+      String rawContent = content
+          .map((e) => e.text ?? '')
+          .join(); // Simplified content extraction
+
+      // Clean up potential markdown code blocks
+      rawContent = rawContent
+          .replaceAll(RegExp(r'^```markdown\s*'), '')
+          .replaceAll(RegExp(r'^```\s*'), '')
+          .replaceAll(RegExp(r'```\s*$'), '');
+
+      return rawContent.trim();
+    } catch (e) {
+      // print('AI Generation Failed: $e');
+      if (context != null) {
+        return _generateLocalSummary(context);
+      }
+      rethrow;
+    }
+  }
+
+  String _generateLocalSummary(ConsultationContext context) {
+    final patient = context.patient;
+    final history = context.visitHistory;
+
+    final sb = StringBuffer();
+
+    sb.writeln('### Clinical Snapshot & Executive Summary');
+    sb.writeln(
+      '**Patient:** ${patient.name} (${patient.age}/${patient.gender})',
+    );
+    if (patient.isCritical == true) {
+      sb.writeln('**Status:** 🚨 CRITICAL');
+    }
+    if (patient.isWheelchair == true) {
+      sb.writeln('**Status:** ♿ Wheelchair User');
+    }
+    sb.writeln('');
+    sb.writeln('**Summary:**');
+    sb.writeln(
+      'Patient presenting for consultation. History indicates ${history.length} previous visits.',
+    );
+    if (context.safetyProfile.chronicConditions.isNotEmpty) {
+      sb.writeln(
+        'Known conditions: ${context.safetyProfile.chronicConditions.join(", ")}.',
+      );
+    }
+    sb.writeln('');
+
+    sb.writeln('### 🔍 Detailed Clinical Analysis');
+    sb.writeln('* **⚠️ Safety & Alerts:**');
+    if (context.safetyProfile.allergies.isNotEmpty) {
+      sb.writeln(
+        '  * Allergies: ${context.safetyProfile.allergies.join(", ")}',
+      );
+    } else {
+      sb.writeln('  * No known allergies recorded.');
+    }
+
+    sb.writeln('* **📉 Vitals & Trends:**');
+    if (context.vitalsTrend.isNotEmpty) {
+      final latest = context.vitalsTrend.first;
+      final bp = latest.bp ?? '--';
+      final temp = latest.temp ?? '--';
+      final weight = latest.weight ?? '--';
+      sb.writeln('  * Latest: BP $bp, Temp $temp°F, Weight ${weight}kg');
+    } else {
+      sb.writeln('  * No recent vitals data.');
+    }
+
+    sb.writeln('* **🗓️ Visit Pattern:**');
+    if (history.isNotEmpty) {
+      sb.writeln('  * Last visit: ${history.first.date}');
+      sb.writeln('  * Total recorded visits: ${history.length}');
+    } else {
+      sb.writeln('  * This appears to be the first recorded visit.');
+    }
+
+    sb.writeln('');
+    sb.writeln(
+      '> *Note: This summary is generated based on available records.*',
+    );
+
+    return sb.toString();
   }
 }

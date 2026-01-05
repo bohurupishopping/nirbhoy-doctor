@@ -191,4 +191,22 @@ class ConsultationController extends StateNotifier<ConsultationState> {
       return false;
     }
   }
+
+  // --- AI Summary ---
+  Future<void> generateSummary() async {
+    if (state.context == null) return;
+
+    state = state.copyWith(isLoading: true);
+    try {
+      final summary = await _repo.generateSummary(
+        appointmentId: _appointmentId,
+      );
+
+      // Update the context with new summary
+      final newContext = state.context!.copyWith(aiSummary: summary);
+      state = state.copyWith(isLoading: false, context: newContext);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
 }
