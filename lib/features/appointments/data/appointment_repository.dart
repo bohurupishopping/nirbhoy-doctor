@@ -40,6 +40,74 @@ class AppointmentRepository {
     }
   }
 
+  Future<List<Doctor>> getDoctors({String? clinicId, String? search}) async {
+    try {
+      final response = await _supabase.rpc(
+        'get_booking_init_data',
+        params: {'_clinic_id': clinicId},
+      );
+
+      List<dynamic> data;
+      if (response is Map && response.containsKey('doctors')) {
+        data = response['doctors'] as List<dynamic>;
+      } else if (response is List) {
+        data = response;
+      } else {
+        data = [];
+      }
+
+      if (search != null && search.isNotEmpty) {
+        data = data
+            .where(
+              (d) => d['full_name'].toString().toLowerCase().contains(
+                search.toLowerCase(),
+              ),
+            )
+            .toList();
+      }
+
+      return data.map((e) => Doctor.fromJson(e)).toList();
+    } catch (e) {
+      throw 'Fetch Doctors Error: $e';
+    }
+  }
+
+  Future<List<TimeSlot>> getAvailableSlots({
+    required String doctorId,
+    required DateTime date,
+  }) async {
+    try {
+      final dateStr = date.toIso8601String().split('T')[0];
+
+      final response = await _supabase.rpc(
+        'get_available_slots',
+        params: {'_doctor_id': doctorId, '_date': dateStr},
+      );
+
+      final List<dynamic> data = response as List<dynamic>;
+
+      return data.map((json) {
+        final timeStr = json['slot_time'] as String;
+        final isAvailable = json['is_available'] as bool;
+        final parts = timeStr.split(':');
+        final startTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          int.parse(parts[0]),
+          int.parse(parts[1]),
+        );
+        return TimeSlot(
+          startTime: startTime,
+          endTime: startTime.add(const Duration(minutes: 15)),
+          isAvailable: isAvailable,
+        );
+      }).toList();
+    } catch (e) {
+      throw 'Get Slots Error: $e';
+    }
+  }
+
   Future<RescheduleResult> rescheduleAppointment({
     required String appointmentId,
     required DateTime newStartTime,

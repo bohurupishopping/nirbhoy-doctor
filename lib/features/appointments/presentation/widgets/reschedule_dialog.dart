@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../booking/domain/booking_models.dart';
+
 import '../../domain/appointment_models.dart';
 import '../appointments_controller.dart';
 

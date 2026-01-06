@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../booking/domain/booking_models.dart';
+import '../../domain/appointment_models.dart';
 
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;

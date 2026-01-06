@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../patient/domain/patient_models.dart';
 import 'patient_details_controller.dart';
 import 'widgets/appointment_details_sheet.dart';
@@ -241,20 +241,6 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
               ),
             );
           },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          context.push('/patient/${widget.patientId}/booking');
-        },
-        backgroundColor: const Color(0xFFFF8A65),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        icon: const Icon(Icons.calendar_today_rounded, size: 18),
-        label: Text(
-          'New Booking',
-          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
         ),
       ),
     );

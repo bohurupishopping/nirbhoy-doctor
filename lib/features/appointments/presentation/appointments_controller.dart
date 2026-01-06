@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/domain/user_model.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../../booking/data/booking_repository.dart';
-import '../../booking/domain/booking_models.dart';
 import '../data/appointment_repository.dart';
 import '../domain/appointment_models.dart';
 
@@ -50,23 +48,17 @@ final appointmentsControllerProvider =
       AppointmentsState
     >((ref) {
       final repo = ref.watch(appointmentRepositoryProvider);
-      final bookingRepo = ref.watch(bookingRepositoryProvider);
       final user = ref.watch(currentUserProvider);
-      return AppointmentsController(repo, bookingRepo, user?.clinicId, user);
+      return AppointmentsController(repo, user?.clinicId, user);
     });
 
 class AppointmentsController extends StateNotifier<AppointmentsState> {
   final AppointmentRepository _repo;
-  final BookingRepository _bookingRepo;
   final String? _clinicId;
   final UserModel? _currentUser;
 
-  AppointmentsController(
-    this._repo,
-    this._bookingRepo,
-    this._clinicId,
-    this._currentUser,
-  ) : super(AppointmentsState(selectedDate: DateTime.now())) {
+  AppointmentsController(this._repo, this._clinicId, this._currentUser)
+    : super(AppointmentsState(selectedDate: DateTime.now())) {
     if (_clinicId != null) {
       loadAppointments();
     }
@@ -84,7 +76,7 @@ class AppointmentsController extends StateNotifier<AppointmentsState> {
     );
 
     try {
-      final doctors = await _bookingRepo.getDoctors(clinicId: _clinicId);
+      final doctors = await _repo.getDoctors(clinicId: _clinicId);
       final appointments = await _repo.getAppointments(targetDate);
 
       // Auto-select doctor if current user is a doctor
@@ -121,7 +113,7 @@ class AppointmentsController extends StateNotifier<AppointmentsState> {
 
   Future<List<Doctor>> getDoctorsList() async {
     if (_clinicId == null) return [];
-    return await _bookingRepo.getDoctors(clinicId: _clinicId);
+    return await _repo.getDoctors(clinicId: _clinicId);
   }
 
   Future<RescheduleResult?> rescheduleAppointment({
@@ -159,10 +151,7 @@ class AppointmentsController extends StateNotifier<AppointmentsState> {
     required DateTime date,
   }) async {
     try {
-      return await _bookingRepo.getAvailableSlots(
-        doctorId: doctorId,
-        date: date,
-      );
+      return await _repo.getAvailableSlots(doctorId: doctorId, date: date);
     } catch (e) {
       // Return empty list or rethrow depending on UI needs.
       // Re-throwing allows UI to show error.
