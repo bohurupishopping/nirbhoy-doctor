@@ -117,7 +117,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -132,9 +132,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                         color: Theme.of(context).primaryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.2),
+                          color: Colors.black.withOpacity(0.05),
                         ),
                       ),
                       child: Icon(
@@ -229,7 +227,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
@@ -245,7 +243,12 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                   onRemove: (val) => setState(() => allergies.remove(val)),
                   placeholder: 'Add new allergy...',
                 ),
-                const Divider(height: 1, indent: 20, endIndent: 20),
+                Divider(
+                  height: 1,
+                  indent: 20,
+                  endIndent: 20,
+                  color: Colors.black.withOpacity(0.05),
+                ),
                 _buildEditor(
                   title: '2. Update Chronic Conditions',
                   count: chronicConditions.length,
@@ -259,7 +262,12 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                       setState(() => chronicConditions.remove(val)),
                   placeholder: 'Add condition...',
                 ),
-                const Divider(height: 1, indent: 20, endIndent: 20),
+                Divider(
+                  height: 1,
+                  indent: 20,
+                  endIndent: 20,
+                  color: Colors.black.withOpacity(0.05),
+                ),
                 _buildEditor(
                   title: '3. Update Family History',
                   count: familyHistory.length,
@@ -272,7 +280,12 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                   onRemove: (val) => setState(() => familyHistory.remove(val)),
                   placeholder: 'Add family history...',
                 ),
-                const Divider(height: 1, indent: 20, endIndent: 20),
+                Divider(
+                  height: 1,
+                  indent: 20,
+                  endIndent: 20,
+                  color: Colors.black.withOpacity(0.05),
+                ),
                 _buildEditor(
                   title: '4. Update Lifestyle Factors',
                   count: lifestyle.length,
@@ -370,7 +383,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC), // Slate 50
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -567,7 +580,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      border: Border.all(color: Colors.black.withOpacity(0.05)),
                     ),
                     child: Text(
                       '+ $s',

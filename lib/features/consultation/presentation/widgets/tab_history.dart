@@ -34,7 +34,7 @@ class HistoryTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -53,9 +53,7 @@ class HistoryTab extends ConsumerWidget {
                           ).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Icon(
@@ -156,7 +154,7 @@ class HistoryTab extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: const Color(0xFFF1F5F9)),
+                      border: Border.all(color: Colors.black.withOpacity(0.05)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +211,7 @@ class HistoryTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
@@ -244,7 +242,12 @@ class HistoryTab extends ConsumerWidget {
                           },
                         ),
                 ),
-                const Divider(height: 1, indent: 20, endIndent: 20),
+                Divider(
+                  height: 1,
+                  indent: 20,
+                  endIndent: 20,
+                  color: Colors.black.withOpacity(0.05),
+                ),
                 _buildAccordionItem(
                   context,
                   title: '2. Archived Medical Documents',
@@ -295,7 +298,7 @@ class HistoryTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +339,7 @@ class HistoryTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
         // borderType: BorderType.dash (simplified)
       ),
       child: Column(
@@ -408,7 +411,7 @@ class HistoryTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -419,7 +422,7 @@ class HistoryTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -528,7 +531,9 @@ class HistoryTab extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         child: Text(
                           d.toString(),
@@ -598,10 +603,14 @@ class HistoryTab extends ConsumerWidget {
               // Header
               Container(
                 padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -678,7 +687,9 @@ class HistoryTab extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: const Color(0xFFF1F5F9)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -716,7 +727,7 @@ class HistoryTab extends ConsumerWidget {
                                       color: const Color(0xFFF8FAFC),
                                       borderRadius: BorderRadius.circular(6),
                                       border: Border.all(
-                                        color: const Color(0xFFE2E8F0),
+                                        color: Colors.black.withOpacity(0.05),
                                       ),
                                     ),
                                     child: Text(
@@ -771,7 +782,7 @@ class HistoryTab extends ConsumerWidget {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: const Color(0xFFF1F5F9),
+                                  color: Colors.black.withOpacity(0.05),
                                 ),
                               ),
                               child: Column(

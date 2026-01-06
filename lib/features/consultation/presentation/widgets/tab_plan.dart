@@ -36,7 +36,7 @@ class PlanTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -55,9 +55,7 @@ class PlanTab extends ConsumerWidget {
                           ).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Icon(
@@ -274,20 +272,20 @@ class PlanTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
                 // Header
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC), // Slate 50
-                    borderRadius: BorderRadius.vertical(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC), // Slate 50
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(32),
                     ),
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFF1F5F9)),
+                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
                     ),
                   ),
                   child: Row(
@@ -298,7 +296,9 @@ class PlanTab extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         child: const Icon(
                           Icons.edit_outlined,
@@ -405,7 +405,7 @@ class PlanTab extends ConsumerWidget {
                                         border: Border.all(
                                           color: isSelected
                                               ? Theme.of(context).primaryColor
-                                              : const Color(0xFFE2E8F0),
+                                              : Colors.black.withOpacity(0.05),
                                         ),
                                       ),
                                       child: Text(
@@ -474,9 +474,7 @@ class PlanTab extends ConsumerWidget {
                                           vertical: 14,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFFF1F5F9,
-                                          ).withOpacity(0.5),
+                                          color: Colors.black.withOpacity(0.05),
                                           borderRadius: BorderRadius.circular(
                                             100,
                                           ),
@@ -573,9 +571,7 @@ class PlanTab extends ConsumerWidget {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   filled: true,
-                                  fillColor: const Color(
-                                    0xFFF1F5F9,
-                                  ).withOpacity(0.5),
+                                  fillColor: Colors.black.withOpacity(0.05),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(24),
                                     borderSide: BorderSide.none,
@@ -669,7 +665,7 @@ class PlanTab extends ConsumerWidget {
           decoration: BoxDecoration(
             color: bgColor ?? const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFF1F5F9)),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
           ),
           child: content,
         ),
@@ -690,7 +686,7 @@ class PlanTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -738,7 +734,7 @@ class PlanTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       clipBehavior: Clip.antiAlias,
       child: Theme(

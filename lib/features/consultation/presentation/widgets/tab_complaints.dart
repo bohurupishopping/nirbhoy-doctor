@@ -50,7 +50,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -69,9 +69,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                           ).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Icon(
@@ -115,9 +113,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                           ).primaryColor.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(100),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.1),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Row(
@@ -177,7 +173,9 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFF8FAFC), // Slate 50
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: const Color(0xFFF1F5F9)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         constraints: const BoxConstraints(minHeight: 80),
                         child: state.chiefComplaint.isNotEmpty
@@ -237,7 +235,9 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                       decoration: BoxDecoration(
                         color: const Color(0xFFF8FAFC), // Slate 50
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: const Color(0xFFF1F5F9)),
+                        border: Border.all(
+                          color: Colors.black.withOpacity(0.05),
+                        ),
                       ),
                       constraints: const BoxConstraints(minHeight: 80),
                       child: state.diagnosis.isNotEmpty
@@ -254,7 +254,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(100),
                                     border: Border.all(
-                                      color: const Color(0xFFE2E8F0),
+                                      color: Colors.black.withOpacity(0.05),
                                     ),
                                   ),
                                   child: Text(
@@ -291,7 +291,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
@@ -299,9 +299,9 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                 // Section Header
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFF1F5F9)),
+                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
                     ),
                   ),
                   child: Row(
@@ -312,7 +312,9 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         child: const Icon(
                           Icons.assignment_outlined,
@@ -411,7 +413,9 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                           decoration: BoxDecoration(
                             color: const Color(0xFFF8FAFC),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFFF1F5F9)),
+                            border: Border.all(
+                              color: Colors.black.withOpacity(0.05),
+                            ),
                           ),
                           child: Wrap(
                             spacing: 8,
@@ -426,7 +430,7 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   border: Border.all(
-                                    color: const Color(0xFFE2E8F0),
+                                    color: Colors.black.withOpacity(0.05),
                                   ),
                                 ),
                                 child: Row(

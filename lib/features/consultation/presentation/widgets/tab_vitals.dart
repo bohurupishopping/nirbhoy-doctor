@@ -48,7 +48,7 @@ class VitalsTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
@@ -156,7 +156,7 @@ class VitalsTab extends ConsumerWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
               borderSide: BorderSide(
-                color: const Color(0xFFE2E8F0), // Slate 200
+                color: Colors.black.withOpacity(0.05),
                 width: 1,
               ),
             ),
@@ -174,7 +174,7 @@ class VitalsTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         children: [
@@ -206,9 +206,7 @@ class VitalsTab extends ConsumerWidget {
                         color: Theme.of(context).primaryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.2),
+                          color: Colors.black.withOpacity(0.05),
                         ),
                       ),
                       child: Icon(
@@ -249,9 +247,7 @@ class VitalsTab extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                    ),
+                    border: Border.all(color: Colors.black.withOpacity(0.05)),
                   ),
                   child: Row(
                     children: [
@@ -399,7 +395,7 @@ class VitalsTab extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC), // Slate 50
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)), // Slate 100
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

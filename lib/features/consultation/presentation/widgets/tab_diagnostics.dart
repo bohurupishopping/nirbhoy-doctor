@@ -89,7 +89,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -108,9 +108,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                           ).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Icon(
@@ -345,20 +343,20 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
                 // Header
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC), // Slate 50
-                    borderRadius: BorderRadius.vertical(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC), // Slate 50
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(32),
                     ),
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFF1F5F9)),
+                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
                     ),
                   ),
                   child: Row(
@@ -369,7 +367,9 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
                         child: const Icon(
                           Icons.dataset_outlined,
@@ -441,7 +441,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                                       color: Color(0xFF94A3B8),
                                     ),
                                     filled: true,
-                                    fillColor: const Color(0xFFF1F5F9),
+                                    fillColor: Colors.black.withOpacity(0.05),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 20,
                                       vertical: 14,
@@ -523,7 +523,9 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                                               100,
                                             ),
                                             border: Border.all(
-                                              color: const Color(0xFFE2E8F0),
+                                              color: Colors.black.withOpacity(
+                                                0.05,
+                                              ),
                                             ),
                                           ),
                                           child: Text(
@@ -543,11 +545,11 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                           ),
 
                           if (labs.isNotEmpty) ...[
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
                               child: Divider(
                                 height: 1,
-                                color: Color(0xFFF1F5F9),
+                                color: Colors.black.withOpacity(0.05),
                               ),
                             ),
                             Wrap(
@@ -629,7 +631,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                               color: const Color(0xFFF8FAFC),
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: const Color(0xFFE2E8F0),
+                                color: Colors.black.withOpacity(0.05),
                               ), // dashed ideal
                             ),
                             child: Column(
@@ -713,9 +715,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   filled: true,
-                                  fillColor: const Color(
-                                    0xFFF1F5F9,
-                                  ).withOpacity(0.5),
+                                  fillColor: Colors.black.withOpacity(0.02),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(24),
                                     borderSide: BorderSide.none,
@@ -796,7 +796,7 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
           decoration: BoxDecoration(
             color: bgColor ?? const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFF1F5F9)),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
           ),
           child: content,
         ),

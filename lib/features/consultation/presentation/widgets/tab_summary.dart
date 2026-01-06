@@ -29,15 +29,15 @@ class SummaryTab extends ConsumerWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(40),
-          border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+          border: Border.all(color: Colors.black.withOpacity(0.05)),
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
             // --- Header Section ---
             Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
@@ -45,7 +45,9 @@ class SummaryTab extends ConsumerWidget {
                     Colors.white,
                   ],
                 ),
-                border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+                border: Border(
+                  bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
+                ),
               ),
               padding: const EdgeInsets.all(24),
               child: Row(
@@ -110,7 +112,7 @@ class SummaryTab extends ConsumerWidget {
                       label: const Text('Regenerate'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF6D28D9), // Violet 700
-                        side: const BorderSide(color: Color(0xFFDDD6FE)),
+                        side: BorderSide(color: Colors.black.withOpacity(0.05)),
                         shape: const StadiumBorder(),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -196,7 +198,7 @@ class SummaryTab extends ConsumerWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFF8FAFC),
               borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: const Color(0xFFF1F5F9)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: const Center(
               child: Icon(
@@ -237,8 +239,8 @@ class SummaryTab extends ConsumerWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF7C3AED), // Violet 600
               foregroundColor: Colors.white,
-              elevation: 4,
-              shadowColor: const Color(0xFF7C3AED).withOpacity(0.4),
+              elevation: 0,
+              // shadowColor removed
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
               shape: const StadiumBorder(),
               textStyle: GoogleFonts.plusJakartaSans(
@@ -298,7 +300,7 @@ class SummaryTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 40),
-        const Divider(color: Color(0xFFE2E8F0)),
+        Divider(color: Colors.black.withOpacity(0.05)),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

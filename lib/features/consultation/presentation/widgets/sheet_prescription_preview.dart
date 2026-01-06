@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,7 +61,7 @@ class _PrescriptionPreviewSheetState
             height: 4,
             width: 40,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.black.withOpacity(0.05),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -82,7 +84,7 @@ class _PrescriptionPreviewSheetState
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Colors.black.withOpacity(0.05),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.close, size: 20),
@@ -91,7 +93,7 @@ class _PrescriptionPreviewSheetState
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1, color: Colors.black.withOpacity(0.05)),
 
           // Content
           Expanded(
@@ -262,7 +264,7 @@ class _PrescriptionPreviewSheetState
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50.withValues(alpha: 0.5),
-                  border: Border.all(color: Colors.green.shade100),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -310,7 +312,7 @@ class _PrescriptionPreviewSheetState
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.shade50.withValues(alpha: 0.5),
-                  border: Border.all(color: Colors.red.shade100),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -359,7 +361,7 @@ class _PrescriptionPreviewSheetState
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             border: Border.symmetric(
-              horizontal: BorderSide(color: Colors.grey.shade200),
+              horizontal: BorderSide(color: Colors.black.withOpacity(0.05)),
             ),
           ),
           child: Wrap(
@@ -457,7 +459,7 @@ class _PrescriptionPreviewSheetState
         // 6. Rx Table
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -469,7 +471,7 @@ class _PrescriptionPreviewSheetState
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Colors.black.withOpacity(0.02),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
@@ -524,7 +526,7 @@ class _PrescriptionPreviewSheetState
                     ),
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: Colors.grey.shade100),
+                        top: BorderSide(color: Colors.black.withOpacity(0.05)),
                       ),
                     ),
                     child: Row(
@@ -648,7 +650,7 @@ class _PrescriptionPreviewSheetState
           height: 32,
         ), // Push footer down with fixed space instead of Spacer()
         const SizedBox(height: 32),
-        const Divider(),
+        Divider(color: Colors.black.withOpacity(0.05)),
 
         // 8. Footer Advice & Sig
         Row(

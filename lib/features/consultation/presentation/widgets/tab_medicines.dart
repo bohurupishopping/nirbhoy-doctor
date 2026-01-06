@@ -127,7 +127,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)), // Slate 200
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -146,9 +146,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           ).primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.05),
                           ),
                         ),
                         child: Icon(
@@ -227,7 +225,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                   decoration: BoxDecoration(
                     color: const Color(0xFFF8FAFC), // Slate 50
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: const Color(0xFFF1F5F9)),
+                    border: Border.all(color: Colors.black.withOpacity(0.05)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,20 +280,20 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
             ),
             child: Column(
               children: [
                 // Header
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC), // Slate 50
-                    borderRadius: BorderRadius.vertical(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC), // Slate 50
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(32),
                     ),
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFF1F5F9)),
+                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
                     ),
                   ),
                   child: Row(
@@ -413,15 +411,9 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(24),
                                 border: Border.all(
-                                  color: const Color(0xFFE2E8F0),
+                                  color: Colors.black.withOpacity(0.05),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
+                                // boxShadow removed
                               ),
                               child: ListView.separated(
                                 padding: const EdgeInsets.symmetric(
@@ -429,11 +421,11 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                                 ),
                                 shrinkWrap: true,
                                 itemCount: _searchResults.length,
-                                separatorBuilder: (c, i) => const Divider(
+                                separatorBuilder: (c, i) => Divider(
                                   height: 1,
                                   indent: 20,
                                   endIndent: 20,
-                                  color: Color(0xFFF1F5F9),
+                                  color: Colors.black.withOpacity(0.05),
                                 ),
                                 itemBuilder: (context, index) {
                                   final item = _searchResults[index];
@@ -543,7 +535,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                               color: const Color(0xFFF8FAFC),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: const Color(0xFFE2E8F0),
+                                color: Colors.black.withOpacity(0.05),
                                 style: BorderStyle.none, // dashed logic complex
                               ),
                             ),
@@ -611,18 +603,10 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
         border: Border.all(
           color: isEditing
               ? Theme.of(context).primaryColor.withOpacity(0.5)
-              : const Color(0xFFE2E8F0),
+              : Colors.black.withOpacity(0.05),
           width: isEditing ? 1.5 : 1,
         ),
-        boxShadow: isEditing
-            ? [
-                BoxShadow(
-                  color: Theme.of(context).primaryColor.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ]
-            : [],
+        // boxShadow removed
       ),
       child: Column(
         children: [
@@ -643,7 +627,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      border: Border.all(color: Colors.black.withOpacity(0.05)),
                     ),
                     child: Icon(
                       Icons.medication,
@@ -739,7 +723,9 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(color: Color(0xFFE2E8F0)),
+                            side: BorderSide(
+                              color: Colors.black.withOpacity(0.05),
+                            ),
                           ),
                         ),
                       ),
@@ -758,7 +744,9 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(color: Color(0xFFE2E8F0)),
+                            side: BorderSide(
+                              color: Colors.black.withOpacity(0.05),
+                            ),
                           ),
                         ),
                       ),
