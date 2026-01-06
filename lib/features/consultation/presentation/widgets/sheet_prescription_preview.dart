@@ -136,20 +136,13 @@ class _PrescriptionPreviewSheetState
     final metaMap = headerData['meta'] as Map<String, dynamic>;
     final clinicMap = headerData['clinic'] as Map<String, dynamic>;
     final doctorMap = headerData['doctor'] as Map<String, dynamic>;
-    final patientBasics = headerData['patient_basics'] as Map<String, dynamic>;
+    final patientMap = headerData['patient'] as Map<String, dynamic>;
 
     return PrescriptionPrintData(
       meta: PrescriptionMeta.fromJson(metaMap),
       clinic: PrescriptionClinic.fromJson(clinicMap),
       doctor: PrescriptionDoctor.fromJson(doctorMap),
-      patient: PrescriptionPatient(
-        name: patientBasics['name'] ?? '',
-        uhid: patientBasics['uhid'] ?? '',
-        ageGender: patientBasics['age_gender'] ?? '',
-        phone: patientBasics['phone'] ?? '',
-        address: patientBasics['address'] ?? '',
-        knownAllergies: state.context?.safetyProfile.allergies ?? [],
-      ),
+      patient: PrescriptionPatient.fromJson(patientMap),
       clinical: PrescriptionClinical(
         vitals: state.vitals,
         chiefComplaint: state.chiefComplaint,
@@ -161,13 +154,13 @@ class _PrescriptionPreviewSheetState
           .map(
             (m) => PrescriptionMedicine(
               brandName: m.name,
-              // genericName: m.composition, // Not in model yet, but can adapt
+              genericName: m.composition,
               type: m.type,
               dosage:
                   m.frequency, // Mapping frequency -> dosage field for print
               duration: m.duration,
               instruction: m.instruction,
-              note: null,
+              note: m.specialInstructions,
             ),
           )
           .toList(),

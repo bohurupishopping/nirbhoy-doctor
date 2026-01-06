@@ -375,65 +375,21 @@ Generate the Clinical Snapshot now.
   Future<Map<String, dynamic>> getPrescriptionHeaderData(
     String appointmentId,
   ) async {
-    final dynamic apptRaw = await _supabase.rpc(
-      'get_appointment_details_by_id',
+    final dynamic response = await _supabase.rpc(
+      'get_prescription_print_data',
       params: {'_appointment_id': appointmentId},
     );
 
-    if (apptRaw == null) {
-      throw 'Appointment Details not found';
+    if (response == null) {
+      throw 'Prescription Print Data not found (null response)';
     }
 
-    Map<String, dynamic> apptResponse;
-    if (apptRaw is List) {
-      if (apptRaw.isEmpty) throw 'Appointment Details empty list';
-      apptResponse = Map<String, dynamic>.from(apptRaw.first);
-    } else {
-      apptResponse = Map<String, dynamic>.from(apptRaw);
+    if (response is List) {
+      if (response.isEmpty) throw 'Prescription Print Data empty list';
+      return Map<String, dynamic>.from(response.first);
     }
 
-    final appointment = apptResponse['appointment'] ?? {};
-    final clinic = apptResponse['clinic'] ?? {};
-    final doctor = apptResponse['doctor'] ?? {};
-    final patient = apptResponse['patient'] ?? {}; // Use for basic fallback
-
-    return {
-      'meta': {
-        'generated_at': DateTime.now().toIso8601String(),
-        'appointment_number': appointment['appointment_number'] ?? '',
-        'visit_type': appointment['type'] ?? 'Consultation',
-        'visit_date': appointment['date'] ?? '',
-      },
-      'clinic': {
-        'name': clinic['name'] ?? '',
-        'logo_url': clinic['logo_url'],
-        'header_image_url':
-            clinic['header_image_url'], // Ensure this field exists in RPC
-        'phone':
-            clinic['phone_number'] ??
-            clinic['phone'] ??
-            '', // Handle variations
-        'email': clinic['email'] ?? '',
-        'address': clinic['address'] ?? '',
-        // 'footer_text': clinic['footer_text'], // If available
-      },
-      'doctor': {
-        'name': doctor['name'] ?? '',
-        'specialty': doctor['specialty'] ?? '',
-        'qualifications': doctor['qualifications'] ?? '',
-        'reg_number': doctor['registration_number'] ?? '',
-        'signature_url': doctor['signature_url'],
-      },
-      // Include patient basics here just in case they differ slightly or we need extra fields
-      'patient_basics': {
-        'name': patient['full_name'] ?? appointment['patient_name'] ?? '',
-        'uhid': patient['uhid'] ?? '',
-        'age_gender': '${patient['age'] ?? '?'}/${patient['gender'] ?? '?'}',
-        'phone': patient['phone'] ?? '',
-        'address': patient['address'] ?? '',
-        'known_allergies': [], // Will be filled from state
-      },
-    };
+    return Map<String, dynamic>.from(response);
   }
 
   String _generateLocalSummary(ConsultationContext context) {
