@@ -176,6 +176,37 @@ class ConsultationRepository {
     }
   }
 
+  Future<String> createCustomMedicine({
+    required String name,
+    String? manufacturer,
+    String? saltComposition,
+    String? type,
+    String? packSize,
+    double? price,
+  }) async {
+    try {
+      final newId = await _supabase.rpc(
+        'create_new_medicine',
+        params: {
+          '_name': name,
+          '_manufacturer_name': manufacturer,
+          '_salt_composition': saltComposition,
+          '_type': type,
+          '_pack_size_label': packSize,
+          '_price': price,
+          // Optional fields left null for now as per minimal UI requirements
+          '_short_composition1': null,
+          '_short_composition2': null,
+          '_medicine_desc': null,
+          '_side_effects': null,
+        },
+      );
+      return newId;
+    } catch (e) {
+      throw 'Create Custom Medicine Error: $e';
+    }
+  }
+
   Future<void> submitPrescription({
     required String consultId,
     required ConsultationState state,

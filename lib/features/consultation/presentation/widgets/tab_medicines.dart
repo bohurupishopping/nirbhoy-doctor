@@ -8,6 +8,7 @@ import '../consultation_controller.dart';
 import '../../data/consultation_repository.dart';
 import '../../domain/consultation_models.dart';
 import 'sheet_add_medicine.dart';
+import 'sheet_create_medicine.dart';
 
 class MedicinesTab extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -121,6 +122,32 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
     );
   }
 
+  void _openCreateSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SheetCreateMedicine(
+          initialName: _searchController.text,
+          onCreated: (newMed) {
+            // 1. Clear search
+            _searchController.clear();
+            setState(() {
+              _searchResults = [];
+            });
+
+            // 2. Open Add Sheet for this new med
+            _addMedicine(newMed);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
@@ -174,26 +201,40 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Prescription Engine',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF0F172A),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Prescription Engine',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Search and manage medications',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF64748B),
+                            Text(
+                              'Search and manage medications',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF64748B),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _openCreateSheet,
+                        icon: const Icon(Icons.add_rounded),
+                        tooltip: 'Create Custom Medicine',
+                        style: IconButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.all(8),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
                       ),
                     ],
                   ),
@@ -264,7 +305,9 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                           ),
 
                           // Results Dropdown
-                          if (_searchResults.isNotEmpty)
+                          if (_searchResults.isNotEmpty ||
+                              (_isSearching == false &&
+                                  _searchController.text.length > 1))
                             Container(
                               margin: const EdgeInsets.only(top: 12),
                               constraints: const BoxConstraints(maxHeight: 250),
@@ -274,95 +317,162 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                                 border: Border.all(
                                   color: Colors.black.withOpacity(0.05),
                                 ),
-                                // boxShadow removed
                               ),
-                              child: ListView.separated(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                ),
-                                shrinkWrap: true,
-                                itemCount: _searchResults.length,
-                                separatorBuilder: (c, i) => Divider(
-                                  height: 1,
-                                  indent: 20,
-                                  endIndent: 20,
-                                  color: Colors.black.withOpacity(0.05),
-                                ),
-                                itemBuilder: (context, index) {
-                                  final item = _searchResults[index];
-                                  return InkWell(
-                                    onTap: () => _addMedicine(item),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 12,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                item.brandName,
-                                                style:
-                                                    GoogleFonts.plusJakartaSans(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 14,
-                                                      color: const Color(
-                                                        0xFF0F172A,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (_searchResults.isNotEmpty)
+                                    Flexible(
+                                      child: ListView.separated(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                        shrinkWrap: true,
+                                        itemCount: _searchResults.length,
+                                        separatorBuilder: (c, i) => Divider(
+                                          height: 1,
+                                          indent: 20,
+                                          endIndent: 20,
+                                          color: Colors.black.withOpacity(0.05),
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          final item = _searchResults[index];
+                                          return InkWell(
+                                            onTap: () => _addMedicine(item),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 12,
+                                                  ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        item.brandName,
+                                                        style:
+                                                            GoogleFonts.plusJakartaSans(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 14,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF0F172A,
+                                                                  ),
+                                                            ),
                                                       ),
-                                                    ),
-                                              ),
-                                              if (item.type != null)
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 2,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color(
-                                                      0xFFF1F5F9,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          100,
+                                                      if (item.type != null)
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 8,
+                                                                vertical: 2,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: const Color(
+                                                              0xFFF1F5F9,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  100,
+                                                                ),
+                                                          ),
+                                                          child: Text(
+                                                            item.type!
+                                                                .toUpperCase(),
+                                                            style: GoogleFonts.inter(
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF64748B,
+                                                                  ),
+                                                            ),
+                                                          ),
                                                         ),
+                                                    ],
                                                   ),
-                                                  child: Text(
-                                                    item.type!.toUpperCase(),
-                                                    style: GoogleFonts.inter(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: const Color(
-                                                        0xFF64748B,
+                                                  if (item.genericName != null)
+                                                    Text(
+                                                      item.genericName!,
+                                                      style: GoogleFonts.inter(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: const Color(
+                                                          0xFF64748B,
+                                                        ),
                                                       ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                          if (item.genericName != null)
-                                            Text(
-                                              item.genericName!,
-                                              style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: const Color(0xFF64748B),
+                                                ],
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+
+                                  // Add Custom Option
+                                  InkWell(
+                                    onTap: _openCreateSheet,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF8FAFC),
+                                        border: Border(
+                                          top: BorderSide(
+                                            color: Colors.black.withOpacity(
+                                              0.05,
+                                            ),
+                                          ),
+                                        ),
+                                        borderRadius: const BorderRadius.vertical(
+                                          bottom: Radius.circular(24),
+                                          top: Radius
+                                              .zero, // Only round bottom if results exist above?
+                                          // Actually if list is empty, this is the only child.
+                                          // We should handle border radius based on list presence.
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.add_circle_outline_rounded,
+                                            size: 18,
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Create "${_searchController.text}"',
+                                            style: GoogleFonts.plusJakartaSans(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Theme.of(
+                                                context,
+                                              ).primaryColor,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                  );
-                                },
+                                  ),
+                                ],
                               ),
                             ),
                         ],
