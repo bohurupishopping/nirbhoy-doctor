@@ -28,7 +28,7 @@ class AppointmentsPage extends ConsumerWidget {
         user?.role == 'doctor' && state.selectedDoctor?.id == user?.id;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFCF8),
+      backgroundColor: const Color(0xfffafcff),
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {

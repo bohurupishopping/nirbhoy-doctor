@@ -51,7 +51,7 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFCF8),
+      backgroundColor: const Color(0xfffafcff),
       body: SafeArea(
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -267,7 +267,7 @@ class _ConsultationPageState extends ConsumerState<ConsultationPage>
                             horizontal: 24,
                             vertical: 8,
                           ),
-                          color: const Color(0xFFFFFCF8),
+                          color: const Color(0xfffafcff),
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(

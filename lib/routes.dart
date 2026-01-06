@@ -8,7 +8,7 @@ import 'features/patient/presentation/patient_details_page.dart';
 import 'features/patient/presentation/patient_list_page.dart';
 // import 'features/shared/presentation/main_layout.dart';
 import 'features/appointments/presentation/appointments_page.dart';
-import 'features/finance/presentation/pages/finance_page.dart';
+import 'features/appointments/presentation/history_page.dart';
 import 'features/splash/presentation/splash_page.dart';
 import 'features/consultation/presentation/pages/consultation_page.dart';
 
@@ -16,6 +16,7 @@ class Routes {
   static const String login = '/login';
   static const String dashboard = '/';
   static const String splash = '/splash';
+  static const String history = '/history';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -78,8 +79,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const AppointmentsPage(),
           ),
           GoRoute(
-            path: 'finance', // /finance
-            builder: (context, state) => const FinancePage(),
+            path: 'history', // /history
+            builder: (context, state) => const HistoryPage(),
           ),
         ],
       ),

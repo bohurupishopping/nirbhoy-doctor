@@ -45,7 +45,7 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFCF8),
+      backgroundColor: const Color(0xfffafcff),
       body: SafeArea(
         child: asyncData.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -191,7 +191,7 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
                           horizontal: 24,
                           vertical: 8,
                         ),
-                        color: const Color(0xFFFFFCF8),
+                        color: const Color(0xfffafcff),
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(

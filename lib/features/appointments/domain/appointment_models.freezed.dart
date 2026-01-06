@@ -1251,3 +1251,758 @@ abstract class _RescheduleResult implements RescheduleResult {
   _$$RescheduleResultImplCopyWith<_$RescheduleResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+HistoryPatient _$HistoryPatientFromJson(Map<String, dynamic> json) {
+  return _HistoryPatient.fromJson(json);
+}
+
+/// @nodoc
+mixin _$HistoryPatient {
+  String get name => throw _privateConstructorUsedError;
+  String get uhid => throw _privateConstructorUsedError;
+  String get details => throw _privateConstructorUsedError;
+  String get phone => throw _privateConstructorUsedError;
+
+  /// Serializes this HistoryPatient to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of HistoryPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $HistoryPatientCopyWith<HistoryPatient> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $HistoryPatientCopyWith<$Res> {
+  factory $HistoryPatientCopyWith(
+    HistoryPatient value,
+    $Res Function(HistoryPatient) then,
+  ) = _$HistoryPatientCopyWithImpl<$Res, HistoryPatient>;
+  @useResult
+  $Res call({String name, String uhid, String details, String phone});
+}
+
+/// @nodoc
+class _$HistoryPatientCopyWithImpl<$Res, $Val extends HistoryPatient>
+    implements $HistoryPatientCopyWith<$Res> {
+  _$HistoryPatientCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of HistoryPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? uhid = null,
+    Object? details = null,
+    Object? phone = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            uhid: null == uhid
+                ? _value.uhid
+                : uhid // ignore: cast_nullable_to_non_nullable
+                      as String,
+            details: null == details
+                ? _value.details
+                : details // ignore: cast_nullable_to_non_nullable
+                      as String,
+            phone: null == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$HistoryPatientImplCopyWith<$Res>
+    implements $HistoryPatientCopyWith<$Res> {
+  factory _$$HistoryPatientImplCopyWith(
+    _$HistoryPatientImpl value,
+    $Res Function(_$HistoryPatientImpl) then,
+  ) = __$$HistoryPatientImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String uhid, String details, String phone});
+}
+
+/// @nodoc
+class __$$HistoryPatientImplCopyWithImpl<$Res>
+    extends _$HistoryPatientCopyWithImpl<$Res, _$HistoryPatientImpl>
+    implements _$$HistoryPatientImplCopyWith<$Res> {
+  __$$HistoryPatientImplCopyWithImpl(
+    _$HistoryPatientImpl _value,
+    $Res Function(_$HistoryPatientImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of HistoryPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? uhid = null,
+    Object? details = null,
+    Object? phone = null,
+  }) {
+    return _then(
+      _$HistoryPatientImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        uhid: null == uhid
+            ? _value.uhid
+            : uhid // ignore: cast_nullable_to_non_nullable
+                  as String,
+        details: null == details
+            ? _value.details
+            : details // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phone: null == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$HistoryPatientImpl implements _HistoryPatient {
+  const _$HistoryPatientImpl({
+    required this.name,
+    required this.uhid,
+    required this.details,
+    required this.phone,
+  });
+
+  factory _$HistoryPatientImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HistoryPatientImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String uhid;
+  @override
+  final String details;
+  @override
+  final String phone;
+
+  @override
+  String toString() {
+    return 'HistoryPatient(name: $name, uhid: $uhid, details: $details, phone: $phone)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HistoryPatientImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.uhid, uhid) || other.uhid == uhid) &&
+            (identical(other.details, details) || other.details == details) &&
+            (identical(other.phone, phone) || other.phone == phone));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, uhid, details, phone);
+
+  /// Create a copy of HistoryPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HistoryPatientImplCopyWith<_$HistoryPatientImpl> get copyWith =>
+      __$$HistoryPatientImplCopyWithImpl<_$HistoryPatientImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$HistoryPatientImplToJson(this);
+  }
+}
+
+abstract class _HistoryPatient implements HistoryPatient {
+  const factory _HistoryPatient({
+    required final String name,
+    required final String uhid,
+    required final String details,
+    required final String phone,
+  }) = _$HistoryPatientImpl;
+
+  factory _HistoryPatient.fromJson(Map<String, dynamic> json) =
+      _$HistoryPatientImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get uhid;
+  @override
+  String get details;
+  @override
+  String get phone;
+
+  /// Create a copy of HistoryPatient
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$HistoryPatientImplCopyWith<_$HistoryPatientImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AppointmentHistoryItem _$AppointmentHistoryItemFromJson(
+  Map<String, dynamic> json,
+) {
+  return _AppointmentHistoryItem.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AppointmentHistoryItem {
+  String get appointmentId => throw _privateConstructorUsedError;
+  String get appointmentNumber => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  HistoryPatient get patient => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _parseDiagnosis)
+  String? get diagnosis => throw _privateConstructorUsedError;
+  bool get canPrint => throw _privateConstructorUsedError;
+
+  /// Serializes this AppointmentHistoryItem to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AppointmentHistoryItemCopyWith<AppointmentHistoryItem> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AppointmentHistoryItemCopyWith<$Res> {
+  factory $AppointmentHistoryItemCopyWith(
+    AppointmentHistoryItem value,
+    $Res Function(AppointmentHistoryItem) then,
+  ) = _$AppointmentHistoryItemCopyWithImpl<$Res, AppointmentHistoryItem>;
+  @useResult
+  $Res call({
+    String appointmentId,
+    String appointmentNumber,
+    DateTime date,
+    String status,
+    String type,
+    HistoryPatient patient,
+    @JsonKey(fromJson: _parseDiagnosis) String? diagnosis,
+    bool canPrint,
+  });
+
+  $HistoryPatientCopyWith<$Res> get patient;
+}
+
+/// @nodoc
+class _$AppointmentHistoryItemCopyWithImpl<
+  $Res,
+  $Val extends AppointmentHistoryItem
+>
+    implements $AppointmentHistoryItemCopyWith<$Res> {
+  _$AppointmentHistoryItemCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appointmentId = null,
+    Object? appointmentNumber = null,
+    Object? date = null,
+    Object? status = null,
+    Object? type = null,
+    Object? patient = null,
+    Object? diagnosis = freezed,
+    Object? canPrint = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            appointmentId: null == appointmentId
+                ? _value.appointmentId
+                : appointmentId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            appointmentNumber: null == appointmentNumber
+                ? _value.appointmentNumber
+                : appointmentNumber // ignore: cast_nullable_to_non_nullable
+                      as String,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            patient: null == patient
+                ? _value.patient
+                : patient // ignore: cast_nullable_to_non_nullable
+                      as HistoryPatient,
+            diagnosis: freezed == diagnosis
+                ? _value.diagnosis
+                : diagnosis // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            canPrint: null == canPrint
+                ? _value.canPrint
+                : canPrint // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $HistoryPatientCopyWith<$Res> get patient {
+    return $HistoryPatientCopyWith<$Res>(_value.patient, (value) {
+      return _then(_value.copyWith(patient: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$AppointmentHistoryItemImplCopyWith<$Res>
+    implements $AppointmentHistoryItemCopyWith<$Res> {
+  factory _$$AppointmentHistoryItemImplCopyWith(
+    _$AppointmentHistoryItemImpl value,
+    $Res Function(_$AppointmentHistoryItemImpl) then,
+  ) = __$$AppointmentHistoryItemImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String appointmentId,
+    String appointmentNumber,
+    DateTime date,
+    String status,
+    String type,
+    HistoryPatient patient,
+    @JsonKey(fromJson: _parseDiagnosis) String? diagnosis,
+    bool canPrint,
+  });
+
+  @override
+  $HistoryPatientCopyWith<$Res> get patient;
+}
+
+/// @nodoc
+class __$$AppointmentHistoryItemImplCopyWithImpl<$Res>
+    extends
+        _$AppointmentHistoryItemCopyWithImpl<$Res, _$AppointmentHistoryItemImpl>
+    implements _$$AppointmentHistoryItemImplCopyWith<$Res> {
+  __$$AppointmentHistoryItemImplCopyWithImpl(
+    _$AppointmentHistoryItemImpl _value,
+    $Res Function(_$AppointmentHistoryItemImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appointmentId = null,
+    Object? appointmentNumber = null,
+    Object? date = null,
+    Object? status = null,
+    Object? type = null,
+    Object? patient = null,
+    Object? diagnosis = freezed,
+    Object? canPrint = null,
+  }) {
+    return _then(
+      _$AppointmentHistoryItemImpl(
+        appointmentId: null == appointmentId
+            ? _value.appointmentId
+            : appointmentId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        appointmentNumber: null == appointmentNumber
+            ? _value.appointmentNumber
+            : appointmentNumber // ignore: cast_nullable_to_non_nullable
+                  as String,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        patient: null == patient
+            ? _value.patient
+            : patient // ignore: cast_nullable_to_non_nullable
+                  as HistoryPatient,
+        diagnosis: freezed == diagnosis
+            ? _value.diagnosis
+            : diagnosis // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        canPrint: null == canPrint
+            ? _value.canPrint
+            : canPrint // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class _$AppointmentHistoryItemImpl implements _AppointmentHistoryItem {
+  const _$AppointmentHistoryItemImpl({
+    required this.appointmentId,
+    required this.appointmentNumber,
+    required this.date,
+    required this.status,
+    required this.type,
+    required this.patient,
+    @JsonKey(fromJson: _parseDiagnosis) this.diagnosis,
+    this.canPrint = false,
+  });
+
+  factory _$AppointmentHistoryItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppointmentHistoryItemImplFromJson(json);
+
+  @override
+  final String appointmentId;
+  @override
+  final String appointmentNumber;
+  @override
+  final DateTime date;
+  @override
+  final String status;
+  @override
+  final String type;
+  @override
+  final HistoryPatient patient;
+  @override
+  @JsonKey(fromJson: _parseDiagnosis)
+  final String? diagnosis;
+  @override
+  @JsonKey()
+  final bool canPrint;
+
+  @override
+  String toString() {
+    return 'AppointmentHistoryItem(appointmentId: $appointmentId, appointmentNumber: $appointmentNumber, date: $date, status: $status, type: $type, patient: $patient, diagnosis: $diagnosis, canPrint: $canPrint)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppointmentHistoryItemImpl &&
+            (identical(other.appointmentId, appointmentId) ||
+                other.appointmentId == appointmentId) &&
+            (identical(other.appointmentNumber, appointmentNumber) ||
+                other.appointmentNumber == appointmentNumber) &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.patient, patient) || other.patient == patient) &&
+            (identical(other.diagnosis, diagnosis) ||
+                other.diagnosis == diagnosis) &&
+            (identical(other.canPrint, canPrint) ||
+                other.canPrint == canPrint));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    appointmentId,
+    appointmentNumber,
+    date,
+    status,
+    type,
+    patient,
+    diagnosis,
+    canPrint,
+  );
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AppointmentHistoryItemImplCopyWith<_$AppointmentHistoryItemImpl>
+  get copyWith =>
+      __$$AppointmentHistoryItemImplCopyWithImpl<_$AppointmentHistoryItemImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AppointmentHistoryItemImplToJson(this);
+  }
+}
+
+abstract class _AppointmentHistoryItem implements AppointmentHistoryItem {
+  const factory _AppointmentHistoryItem({
+    required final String appointmentId,
+    required final String appointmentNumber,
+    required final DateTime date,
+    required final String status,
+    required final String type,
+    required final HistoryPatient patient,
+    @JsonKey(fromJson: _parseDiagnosis) final String? diagnosis,
+    final bool canPrint,
+  }) = _$AppointmentHistoryItemImpl;
+
+  factory _AppointmentHistoryItem.fromJson(Map<String, dynamic> json) =
+      _$AppointmentHistoryItemImpl.fromJson;
+
+  @override
+  String get appointmentId;
+  @override
+  String get appointmentNumber;
+  @override
+  DateTime get date;
+  @override
+  String get status;
+  @override
+  String get type;
+  @override
+  HistoryPatient get patient;
+  @override
+  @JsonKey(fromJson: _parseDiagnosis)
+  String? get diagnosis;
+  @override
+  bool get canPrint;
+
+  /// Create a copy of AppointmentHistoryItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AppointmentHistoryItemImplCopyWith<_$AppointmentHistoryItemImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+HistoryResponse _$HistoryResponseFromJson(Map<String, dynamic> json) {
+  return _HistoryResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$HistoryResponse {
+  List<AppointmentHistoryItem> get data => throw _privateConstructorUsedError;
+  Map<String, dynamic> get meta => throw _privateConstructorUsedError;
+
+  /// Serializes this HistoryResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of HistoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $HistoryResponseCopyWith<HistoryResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $HistoryResponseCopyWith<$Res> {
+  factory $HistoryResponseCopyWith(
+    HistoryResponse value,
+    $Res Function(HistoryResponse) then,
+  ) = _$HistoryResponseCopyWithImpl<$Res, HistoryResponse>;
+  @useResult
+  $Res call({List<AppointmentHistoryItem> data, Map<String, dynamic> meta});
+}
+
+/// @nodoc
+class _$HistoryResponseCopyWithImpl<$Res, $Val extends HistoryResponse>
+    implements $HistoryResponseCopyWith<$Res> {
+  _$HistoryResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of HistoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? data = null, Object? meta = null}) {
+    return _then(
+      _value.copyWith(
+            data: null == data
+                ? _value.data
+                : data // ignore: cast_nullable_to_non_nullable
+                      as List<AppointmentHistoryItem>,
+            meta: null == meta
+                ? _value.meta
+                : meta // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$HistoryResponseImplCopyWith<$Res>
+    implements $HistoryResponseCopyWith<$Res> {
+  factory _$$HistoryResponseImplCopyWith(
+    _$HistoryResponseImpl value,
+    $Res Function(_$HistoryResponseImpl) then,
+  ) = __$$HistoryResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<AppointmentHistoryItem> data, Map<String, dynamic> meta});
+}
+
+/// @nodoc
+class __$$HistoryResponseImplCopyWithImpl<$Res>
+    extends _$HistoryResponseCopyWithImpl<$Res, _$HistoryResponseImpl>
+    implements _$$HistoryResponseImplCopyWith<$Res> {
+  __$$HistoryResponseImplCopyWithImpl(
+    _$HistoryResponseImpl _value,
+    $Res Function(_$HistoryResponseImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of HistoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? data = null, Object? meta = null}) {
+    return _then(
+      _$HistoryResponseImpl(
+        data: null == data
+            ? _value._data
+            : data // ignore: cast_nullable_to_non_nullable
+                  as List<AppointmentHistoryItem>,
+        meta: null == meta
+            ? _value._meta
+            : meta // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class _$HistoryResponseImpl implements _HistoryResponse {
+  const _$HistoryResponseImpl({
+    final List<AppointmentHistoryItem> data = const [],
+    required final Map<String, dynamic> meta,
+  }) : _data = data,
+       _meta = meta;
+
+  factory _$HistoryResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HistoryResponseImplFromJson(json);
+
+  final List<AppointmentHistoryItem> _data;
+  @override
+  @JsonKey()
+  List<AppointmentHistoryItem> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  final Map<String, dynamic> _meta;
+  @override
+  Map<String, dynamic> get meta {
+    if (_meta is EqualUnmodifiableMapView) return _meta;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_meta);
+  }
+
+  @override
+  String toString() {
+    return 'HistoryResponse(data: $data, meta: $meta)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HistoryResponseImpl &&
+            const DeepCollectionEquality().equals(other._data, _data) &&
+            const DeepCollectionEquality().equals(other._meta, _meta));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_data),
+    const DeepCollectionEquality().hash(_meta),
+  );
+
+  /// Create a copy of HistoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HistoryResponseImplCopyWith<_$HistoryResponseImpl> get copyWith =>
+      __$$HistoryResponseImplCopyWithImpl<_$HistoryResponseImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$HistoryResponseImplToJson(this);
+  }
+}
+
+abstract class _HistoryResponse implements HistoryResponse {
+  const factory _HistoryResponse({
+    final List<AppointmentHistoryItem> data,
+    required final Map<String, dynamic> meta,
+  }) = _$HistoryResponseImpl;
+
+  factory _HistoryResponse.fromJson(Map<String, dynamic> json) =
+      _$HistoryResponseImpl.fromJson;
+
+  @override
+  List<AppointmentHistoryItem> get data;
+  @override
+  Map<String, dynamic> get meta;
+
+  /// Create a copy of HistoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$HistoryResponseImplCopyWith<_$HistoryResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

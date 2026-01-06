@@ -75,3 +75,56 @@ class RescheduleResult with _$RescheduleResult {
   factory RescheduleResult.fromJson(Map<String, dynamic> json) =>
       _$RescheduleResultFromJson(json);
 }
+
+@freezed
+class HistoryPatient with _$HistoryPatient {
+  const factory HistoryPatient({
+    required String name,
+    required String uhid,
+    required String details,
+    required String phone,
+  }) = _HistoryPatient;
+
+  factory HistoryPatient.fromJson(Map<String, dynamic> json) =>
+      _$HistoryPatientFromJson(json);
+}
+
+@freezed
+class AppointmentHistoryItem with _$AppointmentHistoryItem {
+  @JsonSerializable(fieldRename: FieldRename.snake)
+  const factory AppointmentHistoryItem({
+    required String appointmentId,
+    required String appointmentNumber,
+    required DateTime date,
+    required String status,
+    required String type,
+    required HistoryPatient patient,
+    @JsonKey(fromJson: _parseDiagnosis) String? diagnosis,
+    @Default(false) bool canPrint,
+  }) = _AppointmentHistoryItem;
+
+  factory AppointmentHistoryItem.fromJson(Map<String, dynamic> json) =>
+      _$AppointmentHistoryItemFromJson(json);
+}
+
+String? _parseDiagnosis(dynamic value) {
+  if (value == null) return null;
+  if (value is String) return value;
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value.join(', ');
+  }
+  return value.toString();
+}
+
+@freezed
+class HistoryResponse with _$HistoryResponse {
+  @JsonSerializable(fieldRename: FieldRename.snake)
+  const factory HistoryResponse({
+    @Default([]) List<AppointmentHistoryItem> data,
+    required Map<String, dynamic> meta,
+  }) = _HistoryResponse;
+
+  factory HistoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$HistoryResponseFromJson(json);
+}

@@ -103,3 +103,63 @@ Map<String, dynamic> _$$RescheduleResultImplToJson(
   'message': instance.message,
   'financial_warning': instance.financialWarning,
 };
+
+_$HistoryPatientImpl _$$HistoryPatientImplFromJson(Map<String, dynamic> json) =>
+    _$HistoryPatientImpl(
+      name: json['name'] as String,
+      uhid: json['uhid'] as String,
+      details: json['details'] as String,
+      phone: json['phone'] as String,
+    );
+
+Map<String, dynamic> _$$HistoryPatientImplToJson(
+  _$HistoryPatientImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'uhid': instance.uhid,
+  'details': instance.details,
+  'phone': instance.phone,
+};
+
+_$AppointmentHistoryItemImpl _$$AppointmentHistoryItemImplFromJson(
+  Map<String, dynamic> json,
+) => _$AppointmentHistoryItemImpl(
+  appointmentId: json['appointment_id'] as String,
+  appointmentNumber: json['appointment_number'] as String,
+  date: DateTime.parse(json['date'] as String),
+  status: json['status'] as String,
+  type: json['type'] as String,
+  patient: HistoryPatient.fromJson(json['patient'] as Map<String, dynamic>),
+  diagnosis: _parseDiagnosis(json['diagnosis']),
+  canPrint: json['can_print'] as bool? ?? false,
+);
+
+Map<String, dynamic> _$$AppointmentHistoryItemImplToJson(
+  _$AppointmentHistoryItemImpl instance,
+) => <String, dynamic>{
+  'appointment_id': instance.appointmentId,
+  'appointment_number': instance.appointmentNumber,
+  'date': instance.date.toIso8601String(),
+  'status': instance.status,
+  'type': instance.type,
+  'patient': instance.patient,
+  'diagnosis': instance.diagnosis,
+  'can_print': instance.canPrint,
+};
+
+_$HistoryResponseImpl _$$HistoryResponseImplFromJson(
+  Map<String, dynamic> json,
+) => _$HistoryResponseImpl(
+  data:
+      (json['data'] as List<dynamic>?)
+          ?.map(
+            (e) => AppointmentHistoryItem.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      const [],
+  meta: json['meta'] as Map<String, dynamic>,
+);
+
+Map<String, dynamic> _$$HistoryResponseImplToJson(
+  _$HistoryResponseImpl instance,
+) => <String, dynamic>{'data': instance.data, 'meta': instance.meta};

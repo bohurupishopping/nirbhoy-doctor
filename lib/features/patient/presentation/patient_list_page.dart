@@ -59,7 +59,7 @@ class _PatientListPageState extends ConsumerState<PatientListPage> {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFCF8),
+      backgroundColor: const Color(0xfffafcff),
       body: SafeArea(
         child: Column(
           children: [

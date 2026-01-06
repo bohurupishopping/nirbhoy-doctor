@@ -139,4 +139,31 @@ class AppointmentRepository {
       );
     }
   }
+
+  Future<HistoryResponse> getAppointmentHistory({
+    required int page,
+    required int pageSize,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? searchText,
+    String? statusFilter,
+  }) async {
+    try {
+      final response = await _supabase.rpc(
+        'get_doctor_appointments_history',
+        params: {
+          '_page': page,
+          '_page_size': pageSize,
+          '_start_date': startDate?.toIso8601String().split('T')[0],
+          '_end_date': endDate?.toIso8601String().split('T')[0],
+          '_search_text': searchText ?? '',
+          '_status_filter': statusFilter ?? 'all',
+        },
+      );
+
+      return HistoryResponse.fromJson(response as Map<String, dynamic>);
+    } catch (e) {
+      throw 'Error fetching appointment history: $e';
+    }
+  }
 }

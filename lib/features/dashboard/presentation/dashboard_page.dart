@@ -26,14 +26,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
         state.queue.active.isEmpty &&
         state.stats.waitingCount == 0) {
       return const Scaffold(
-        backgroundColor: Color(0xFFFFFCF8),
+        backgroundColor: Color(0xfffafcff),
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (state.error != null && !state.isLoading && state.queue.active.isEmpty) {
       return Scaffold(
-        backgroundColor: const Color(0xFFFFFCF8),
+        backgroundColor: const Color(0xfffafcff),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -71,7 +71,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFCF8),
+      backgroundColor: const Color(0xfffafcff),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -179,10 +179,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: _NavMenuCard(
-                          label: 'Finance',
-                          icon: Icons.account_balance_wallet_rounded,
-                          color: const Color(0xFF10B981),
-                          onTap: () => context.push('/finance'),
+                          label: 'History',
+                          icon: Icons.history_rounded,
+                          color: Colors.teal,
+                          onTap: () => context.push('/history'),
                         ),
                       ),
                     ],
