@@ -196,7 +196,7 @@ class ConsultationController extends StateNotifier<ConsultationState> {
   Future<void> generateSummary() async {
     if (state.context == null) return;
 
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isGeneratingSummary: true);
     try {
       final summary = await _repo.generateSummary(
         appointmentId: _appointmentId,
@@ -204,9 +204,9 @@ class ConsultationController extends StateNotifier<ConsultationState> {
 
       // Update the context with new summary
       final newContext = state.context!.copyWith(aiSummary: summary);
-      state = state.copyWith(isLoading: false, context: newContext);
+      state = state.copyWith(isGeneratingSummary: false, context: newContext);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(isGeneratingSummary: false, error: e.toString());
     }
   }
 }

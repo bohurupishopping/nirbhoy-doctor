@@ -2862,6 +2862,7 @@ mixin _$ConsultationState {
   // Status
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isSaving => throw _privateConstructorUsedError;
+  bool get isGeneratingSummary => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError; // Core Data
   ConsultationContext? get context =>
       throw _privateConstructorUsedError; // Form Fields
@@ -2895,6 +2896,7 @@ abstract class $ConsultationStateCopyWith<$Res> {
   $Res call({
     bool isLoading,
     bool isSaving,
+    bool isGeneratingSummary,
     String? error,
     ConsultationContext? context,
     Map<String, String> vitals,
@@ -2927,6 +2929,7 @@ class _$ConsultationStateCopyWithImpl<$Res, $Val extends ConsultationState>
   $Res call({
     Object? isLoading = null,
     Object? isSaving = null,
+    Object? isGeneratingSummary = null,
     Object? error = freezed,
     Object? context = freezed,
     Object? vitals = null,
@@ -2947,6 +2950,10 @@ class _$ConsultationStateCopyWithImpl<$Res, $Val extends ConsultationState>
             isSaving: null == isSaving
                 ? _value.isSaving
                 : isSaving // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isGeneratingSummary: null == isGeneratingSummary
+                ? _value.isGeneratingSummary
+                : isGeneratingSummary // ignore: cast_nullable_to_non_nullable
                       as bool,
             error: freezed == error
                 ? _value.error
@@ -3020,6 +3027,7 @@ abstract class _$$ConsultationStateImplCopyWith<$Res>
   $Res call({
     bool isLoading,
     bool isSaving,
+    bool isGeneratingSummary,
     String? error,
     ConsultationContext? context,
     Map<String, String> vitals,
@@ -3052,6 +3060,7 @@ class __$$ConsultationStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? isSaving = null,
+    Object? isGeneratingSummary = null,
     Object? error = freezed,
     Object? context = freezed,
     Object? vitals = null,
@@ -3072,6 +3081,10 @@ class __$$ConsultationStateImplCopyWithImpl<$Res>
         isSaving: null == isSaving
             ? _value.isSaving
             : isSaving // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isGeneratingSummary: null == isGeneratingSummary
+            ? _value.isGeneratingSummary
+            : isGeneratingSummary // ignore: cast_nullable_to_non_nullable
                   as bool,
         error: freezed == error
             ? _value.error
@@ -3126,6 +3139,7 @@ class _$ConsultationStateImpl
   const _$ConsultationStateImpl({
     this.isLoading = true,
     this.isSaving = false,
+    this.isGeneratingSummary = false,
     this.error,
     this.context,
     final Map<String, String> vitals = const {
@@ -3157,6 +3171,9 @@ class _$ConsultationStateImpl
   @override
   @JsonKey()
   final bool isSaving;
+  @override
+  @JsonKey()
+  final bool isGeneratingSummary;
   @override
   final String? error;
   // Core Data
@@ -3221,7 +3238,7 @@ class _$ConsultationStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ConsultationState(isLoading: $isLoading, isSaving: $isSaving, error: $error, context: $context, vitals: $vitals, chiefComplaint: $chiefComplaint, symptoms: $symptoms, diagnosis: $diagnosis, medicines: $medicines, labOrders: $labOrders, nextVisitDate: $nextVisitDate, adviceNotes: $adviceNotes)';
+    return 'ConsultationState(isLoading: $isLoading, isSaving: $isSaving, isGeneratingSummary: $isGeneratingSummary, error: $error, context: $context, vitals: $vitals, chiefComplaint: $chiefComplaint, symptoms: $symptoms, diagnosis: $diagnosis, medicines: $medicines, labOrders: $labOrders, nextVisitDate: $nextVisitDate, adviceNotes: $adviceNotes)';
   }
 
   @override
@@ -3231,6 +3248,7 @@ class _$ConsultationStateImpl
       ..add(DiagnosticsProperty('type', 'ConsultationState'))
       ..add(DiagnosticsProperty('isLoading', isLoading))
       ..add(DiagnosticsProperty('isSaving', isSaving))
+      ..add(DiagnosticsProperty('isGeneratingSummary', isGeneratingSummary))
       ..add(DiagnosticsProperty('error', error))
       ..add(DiagnosticsProperty('context', context))
       ..add(DiagnosticsProperty('vitals', vitals))
@@ -3252,6 +3270,8 @@ class _$ConsultationStateImpl
                 other.isLoading == isLoading) &&
             (identical(other.isSaving, isSaving) ||
                 other.isSaving == isSaving) &&
+            (identical(other.isGeneratingSummary, isGeneratingSummary) ||
+                other.isGeneratingSummary == isGeneratingSummary) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.context, context) || other.context == context) &&
             const DeepCollectionEquality().equals(other._vitals, _vitals) &&
@@ -3282,6 +3302,7 @@ class _$ConsultationStateImpl
     runtimeType,
     isLoading,
     isSaving,
+    isGeneratingSummary,
     error,
     context,
     const DeepCollectionEquality().hash(_vitals),
@@ -3315,6 +3336,7 @@ abstract class _ConsultationState implements ConsultationState {
   const factory _ConsultationState({
     final bool isLoading,
     final bool isSaving,
+    final bool isGeneratingSummary,
     final String? error,
     final ConsultationContext? context,
     final Map<String, String> vitals,
@@ -3335,6 +3357,8 @@ abstract class _ConsultationState implements ConsultationState {
   bool get isLoading;
   @override
   bool get isSaving;
+  @override
+  bool get isGeneratingSummary;
   @override
   String? get error; // Core Data
   @override

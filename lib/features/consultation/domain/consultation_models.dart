@@ -160,6 +160,7 @@ class ConsultationState with _$ConsultationState {
     // Status
     @Default(true) bool isLoading,
     @Default(false) bool isSaving,
+    @Default(false) bool isGeneratingSummary,
     String? error,
 
     // Core Data

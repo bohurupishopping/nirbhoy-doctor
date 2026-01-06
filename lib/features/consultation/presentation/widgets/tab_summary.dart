@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../consultation_controller.dart';
+import 'ai_processing_indicator.dart';
 
 class SummaryTab extends ConsumerWidget {
   final String appointmentId;
@@ -20,8 +21,7 @@ class SummaryTab extends ConsumerWidget {
       consultationControllerProvider(appointmentId).notifier,
     );
     final summary = state.context?.aiSummary;
-    final isGenerating = state
-        .isLoading; // Assuming state.isLoading covers the generation process
+    final isGenerating = state.isGeneratingSummary;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -150,38 +150,9 @@ class SummaryTab extends ConsumerWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 40),
-          Container(
-            width: 60,
-            height: 60,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F3FF),
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: const CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B5CF6)),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Analyzing clinical data points...',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF6D28D9),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Reviewing patient history, vitals, and trends.',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF64748B),
-            ),
-          ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
+          const AiProcessingIndicator(),
+          const SizedBox(height: 20),
         ],
       );
     }

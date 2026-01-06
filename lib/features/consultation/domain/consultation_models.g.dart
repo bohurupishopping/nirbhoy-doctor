@@ -238,6 +238,7 @@ _$ConsultationStateImpl _$$ConsultationStateImplFromJson(
 ) => _$ConsultationStateImpl(
   isLoading: json['isLoading'] as bool? ?? true,
   isSaving: json['isSaving'] as bool? ?? false,
+  isGeneratingSummary: json['isGeneratingSummary'] as bool? ?? false,
   error: json['error'] as String?,
   context: json['context'] == null
       ? null
@@ -275,6 +276,7 @@ Map<String, dynamic> _$$ConsultationStateImplToJson(
 ) => <String, dynamic>{
   'isLoading': instance.isLoading,
   'isSaving': instance.isSaving,
+  'isGeneratingSummary': instance.isGeneratingSummary,
   'error': instance.error,
   'context': instance.context,
   'vitals': instance.vitals,
