@@ -99,7 +99,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                               image: DecorationImage(
                                 image: NetworkImage(
                                   user?.avatarUrl ??
-                                      'https://i.pravatar.cc/150?img=12',
+                                      'https://cdn.nirbhoy.de/avatars/247b6bbf-021e-43ec-8c8c-151218a6b9b3/035da0e7-4158-4ca9-881a-7fab018343bb-gemini-fused-image-1__14_.webp',
                                 ), // Placeholder Avatar
                                 fit: BoxFit.cover,
                               ),

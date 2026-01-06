@@ -84,260 +84,6 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- Labs Overview Section ---
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.black.withOpacity(0.05)),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                // Header
-                Container(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.black.withOpacity(0.05),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.biotech_outlined, // Microscope alt
-                          color: Theme.of(context).primaryColor,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Labs Overview',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF0F172A),
-                              ),
-                            ),
-                            Text(
-                              'Diagnostics summary',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF64748B),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.1),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.cloud_sync,
-                              size: 14,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Cloud Sync Active',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF0F172A),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 1. Clinical Observations Block
-                _buildOverviewBlock(
-                  context,
-                  title: 'Clinical Observations',
-                  icon: Icons.monitor_heart_outlined,
-                  content: _localNotes.isNotEmpty
-                      ? Text(
-                          _localNotes,
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF334155),
-                            height: 1.5,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : Text(
-                          'No notes added',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: const Color(0xFF94A3B8),
-                          ),
-                        ),
-                ),
-                const SizedBox(height: 16),
-
-                // 2. Ordered Tests Block
-                _buildOverviewBlock(
-                  context,
-                  title: 'Ordered Tests',
-                  icon: Icons.science_outlined,
-                  iconColor: const Color(0xFF10B981), // Emerald
-                  content: labs.isNotEmpty
-                      ? Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: labs
-                              .map(
-                                (l) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                      color: const Color(0xFFD1FAE5),
-                                    ), // Emerald 100
-                                  ),
-                                  child: Text(
-                                    l.testName,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(
-                                        0xFF047857,
-                                      ), // Emerald 700
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        )
-                      : Row(
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFCBD5E1),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'No tests requested',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic,
-                                color: const Color(0xFF94A3B8),
-                              ),
-                            ),
-                          ],
-                        ),
-                  bgColor: const Color(
-                    0xFFF0FDF4,
-                  ).withOpacity(0.5), // Emerald 50ish
-                ),
-                const SizedBox(height: 16),
-
-                // 3. Recently Uploaded Block
-                _buildOverviewBlock(
-                  context,
-                  title: 'Recently Uploaded',
-                  icon: Icons.upload_file_outlined,
-                  content: _localUploads.isNotEmpty
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _localUploads
-                              .map(
-                                (u) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        size: 14,
-                                        color: const Color(0xFF10B981),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        u,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color(0xFF334155),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        )
-                      : Row(
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFCBD5E1),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'No new uploads',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic,
-                                color: const Color(0xFF94A3B8),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
           // --- Clinical Investigations Section (Accordion) ---
           Container(
             decoration: BoxDecoration(
@@ -750,6 +496,260 @@ class _DiagnosticsTabState extends ConsumerState<DiagnosticsTab> {
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // --- Labs Overview Section ---
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.biotech_outlined, // Microscope alt
+                          color: Theme.of(context).primaryColor,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Labs Overview',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
+                            ),
+                            Text(
+                              'Diagnostics summary',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.cloud_sync,
+                              size: 14,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Cloud Sync Active',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // 1. Clinical Observations Block
+                _buildOverviewBlock(
+                  context,
+                  title: 'Clinical Observations',
+                  icon: Icons.monitor_heart_outlined,
+                  content: _localNotes.isNotEmpty
+                      ? Text(
+                          _localNotes,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF334155),
+                            height: 1.5,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Text(
+                          'No notes added',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 16),
+
+                // 2. Ordered Tests Block
+                _buildOverviewBlock(
+                  context,
+                  title: 'Ordered Tests',
+                  icon: Icons.science_outlined,
+                  iconColor: const Color(0xFF10B981), // Emerald
+                  content: labs.isNotEmpty
+                      ? Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: labs
+                              .map(
+                                (l) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: const Color(0xFFD1FAE5),
+                                    ), // Emerald 100
+                                  ),
+                                  child: Text(
+                                    l.testName,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(
+                                        0xFF047857,
+                                      ), // Emerald 700
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        )
+                      : Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFCBD5E1),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'No tests requested',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                fontStyle: FontStyle.italic,
+                                color: const Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ],
+                        ),
+                  bgColor: const Color(
+                    0xFFF0FDF4,
+                  ).withOpacity(0.5), // Emerald 50ish
+                ),
+                const SizedBox(height: 16),
+
+                // 3. Recently Uploaded Block
+                _buildOverviewBlock(
+                  context,
+                  title: 'Recently Uploaded',
+                  icon: Icons.upload_file_outlined,
+                  content: _localUploads.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _localUploads
+                              .map(
+                                (u) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle,
+                                        size: 14,
+                                        color: Color(0xFF10B981),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        u,
+                                        style: GoogleFonts.inter(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: const Color(0xFF334155),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        )
+                      : Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFCBD5E1),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'No new uploads',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                fontStyle: FontStyle.italic,
+                                color: const Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ],
             ),

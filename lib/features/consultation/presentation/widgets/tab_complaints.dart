@@ -45,6 +45,194 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // --- Clinical Assessment Editor Section ---
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              children: [
+                // Section Header
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.assignment_outlined,
+                          size: 20,
+                          color: Color(0xFF475569),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Clinical Assessment',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF0F172A),
+                            ),
+                          ),
+                          Text(
+                            'Document signs, symptoms and findings',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF64748B),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // 1. Chief Complaint Editor
+                _buildAccordionItem(
+                  context,
+                  title: '1. Chief Complaint',
+                  subtitle: 'Primary reason for visit',
+                  icon: Icons.local_hospital_outlined,
+                  iconColor: const Color(0xFFDC2626), // Red 600
+                  iconBg: const Color(0xFFFEF2F2), // Red 50
+                  initiallyExpanded: true,
+                  child: _buildTextField(
+                    context,
+                    initialValue: state.chiefComplaint,
+                    hint: "What is the patient's primary concern?...",
+                    onChanged: (val) => controller.updateChiefComplaint(val),
+                    maxLines: 4,
+                  ),
+                ),
+
+                const Divider(height: 1, indent: 20, endIndent: 20),
+
+                // 2. Diagnosis Editor
+                _buildAccordionItem(
+                  context,
+                  title: '2. Diagnosis',
+                  subtitle: 'Clinical diagnosis and findings',
+                  icon: Icons.monitor_heart_outlined,
+                  iconColor: const Color(0xFF059669), // Emerald 600
+                  iconBg: const Color(0xFFECFDF5), // Emerald 50
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildTextField(
+                              context,
+                              controller: _symptomController,
+                              hint: 'Type diagnosis...',
+                              onSubmitted: (_) => _addDiagnosis(controller),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton.filled(
+                            onPressed: () => _addDiagnosis(controller),
+                            style: IconButton.styleFrom(
+                              backgroundColor: const Color(
+                                0xFF059669,
+                              ), // Emerald 600
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              fixedSize: const Size(48, 48),
+                            ),
+                            icon: const Icon(Icons.add, size: 20),
+                          ),
+                        ],
+                      ),
+                      if (state.diagnosis.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.black.withOpacity(0.05),
+                            ),
+                          ),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: state.diagnosis.map((d) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(
+                                    color: Colors.black.withOpacity(0.05),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      d,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF334155),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    InkWell(
+                                      onTap: () =>
+                                          controller.removeDiagnosis(d),
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(2),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: Color(0xFF94A3B8),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
           // --- Overview Section ---
           Container(
             decoration: BoxDecoration(
@@ -279,194 +467,6 @@ class _ComplaintsTabState extends ConsumerState<ComplaintsTab> {
                             ),
                     ),
                   ],
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // --- Clinical Assessment Editor Section ---
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.black.withOpacity(0.05)),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                // Section Header
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.black.withOpacity(0.05)),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.black.withOpacity(0.05),
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.assignment_outlined,
-                          size: 20,
-                          color: Color(0xFF475569),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Clinical Assessment',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF0F172A),
-                            ),
-                          ),
-                          Text(
-                            'Document signs, symptoms and findings',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF64748B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 1. Chief Complaint Editor
-                _buildAccordionItem(
-                  context,
-                  title: '1. Chief Complaint',
-                  subtitle: 'Primary reason for visit',
-                  icon: Icons.local_hospital_outlined,
-                  iconColor: const Color(0xFFDC2626), // Red 600
-                  iconBg: const Color(0xFFFEF2F2), // Red 50
-                  initiallyExpanded: true,
-                  child: _buildTextField(
-                    context,
-                    initialValue: state.chiefComplaint,
-                    hint: "What is the patient's primary concern?...",
-                    onChanged: (val) => controller.updateChiefComplaint(val),
-                    maxLines: 4,
-                  ),
-                ),
-
-                const Divider(height: 1, indent: 20, endIndent: 20),
-
-                // 2. Diagnosis Editor
-                _buildAccordionItem(
-                  context,
-                  title: '2. Diagnosis',
-                  subtitle: 'Clinical diagnosis and findings',
-                  icon: Icons.monitor_heart_outlined,
-                  iconColor: const Color(0xFF059669), // Emerald 600
-                  iconBg: const Color(0xFFECFDF5), // Emerald 50
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              controller: _symptomController,
-                              hint: 'Type diagnosis...',
-                              onSubmitted: (_) => _addDiagnosis(controller),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          IconButton.filled(
-                            onPressed: () => _addDiagnosis(controller),
-                            style: IconButton.styleFrom(
-                              backgroundColor: const Color(
-                                0xFF059669,
-                              ), // Emerald 600
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              fixedSize: const Size(48, 48),
-                            ),
-                            icon: const Icon(Icons.add, size: 20),
-                          ),
-                        ],
-                      ),
-                      if (state.diagnosis.isNotEmpty) ...[
-                        const SizedBox(height: 16),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF8FAFC),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.black.withOpacity(0.05),
-                            ),
-                          ),
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: state.diagnosis.map((d) {
-                              return Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(
-                                    color: Colors.black.withOpacity(0.05),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      d,
-                                      style: GoogleFonts.inter(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF334155),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    InkWell(
-                                      onTap: () =>
-                                          controller.removeDiagnosis(d),
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(2),
-                                        child: Icon(
-                                          Icons.close,
-                                          size: 14,
-                                          color: Color(0xFF94A3B8),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
                 ),
               ],
             ),

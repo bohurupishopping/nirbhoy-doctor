@@ -112,97 +112,6 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- Overview Section (Safety Profile) ---
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.black.withOpacity(0.05)),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.black.withOpacity(0.05),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.shield_outlined,
-                        color: Theme.of(context).primaryColor,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Safety Profile',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF0F172A),
-                          ),
-                        ),
-                        Text(
-                          'Current medical summary and alerts',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF64748B),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                _buildOverviewItem(
-                  title: 'Known Allergies',
-                  items: allergies,
-                  icon: Icons.warning_amber_rounded,
-                  color: Colors.red,
-                  emptyText: 'No allergies recorded',
-                ),
-                const SizedBox(height: 16),
-                _buildOverviewItem(
-                  title: 'Chronic Conditions',
-                  items: chronicConditions,
-                  icon: Icons.monitor_heart_outlined,
-                  color: Colors.orange,
-                  emptyText: 'No conditions recorded',
-                ),
-                const SizedBox(height: 16),
-                _buildOverviewItem(
-                  title: 'Family Health History',
-                  items: familyHistory,
-                  icon: Icons.people_outline,
-                  color: Theme.of(context).primaryColor,
-                  emptyText: 'No family history recorded',
-                ),
-                const SizedBox(height: 16),
-                _buildOverviewItem(
-                  title: 'Lifestyle & Habits',
-                  items: lifestyle,
-                  icon: Icons.favorite_outline,
-                  color: const Color(0xFFE11D48), // Rose 600
-                  emptyText: 'No lifestyle factors recorded',
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 32),
-
           // --- Editor Section ---
           Text(
             'Patient Record Editor',
@@ -297,6 +206,97 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                   onAdd: (val) => setState(() => lifestyle.add(val)),
                   onRemove: (val) => setState(() => lifestyle.remove(val)),
                   placeholder: 'Add lifestyle tag...',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 32),
+
+          // --- Overview Section (Safety Profile) ---
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 48,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.black.withOpacity(0.05),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.shield_outlined,
+                        color: Theme.of(context).primaryColor,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Safety Profile',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF0F172A),
+                          ),
+                        ),
+                        Text(
+                          'Current medical summary and alerts',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF64748B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _buildOverviewItem(
+                  title: 'Known Allergies',
+                  items: allergies,
+                  icon: Icons.warning_amber_rounded,
+                  color: Colors.red,
+                  emptyText: 'No allergies recorded',
+                ),
+                const SizedBox(height: 16),
+                _buildOverviewItem(
+                  title: 'Chronic Conditions',
+                  items: chronicConditions,
+                  icon: Icons.monitor_heart_outlined,
+                  color: Colors.orange,
+                  emptyText: 'No conditions recorded',
+                ),
+                const SizedBox(height: 16),
+                _buildOverviewItem(
+                  title: 'Family Health History',
+                  items: familyHistory,
+                  icon: Icons.people_outline,
+                  color: Theme.of(context).primaryColor,
+                  emptyText: 'No family history recorded',
+                ),
+                const SizedBox(height: 16),
+                _buildOverviewItem(
+                  title: 'Lifestyle & Habits',
+                  items: lifestyle,
+                  icon: Icons.favorite_outline,
+                  color: const Color(0xFFE11D48), // Rose 600
+                  emptyText: 'No lifestyle factors recorded',
                 ),
               ],
             ),

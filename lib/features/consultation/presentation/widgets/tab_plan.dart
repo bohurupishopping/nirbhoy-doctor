@@ -31,242 +31,6 @@ class PlanTab extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- Master Plan Overview ---
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.black.withOpacity(0.05)),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                // Header
-                Container(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.black.withOpacity(0.05),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.assignment_turned_in_outlined,
-                          color: Theme.of(context).primaryColor,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Master Plan',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF0F172A),
-                              ),
-                            ),
-                            Text(
-                              'Preview of final result',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF64748B),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFECFDF5), // Emerald 50
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(
-                            color: const Color(0xFFD1FAE5),
-                          ), // Emerald 100
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.description_outlined,
-                              size: 14,
-                              color: Color(0xFF059669), // Emerald 600
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Ready to Generate',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF064E3B), // Emerald 900
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 1. Final Diagnosis Block
-                _buildOverviewBlock(
-                  context,
-                  title: 'Final Diagnosis',
-                  icon: Icons.medical_services_outlined,
-                  content: state.diagnosis.isNotEmpty
-                      ? Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: state.diagnosis
-                              .map(
-                                (d) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                      color: const Color(0xFFF1F5F9),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    d,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF334155),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        )
-                      : Text(
-                          'No diagnosis entered',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: const Color(0xFF94A3B8),
-                          ),
-                        ),
-                ),
-                const SizedBox(height: 12),
-
-                // 2. Summary Stats Grid
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        title: 'Medicines',
-                        count: state.medicines.length.toString(),
-                        icon: Icons.medication_outlined,
-                        color: const Color(0xFF4F46E5), // Indigo
-                        bgColor: const Color(0xFFEEF2FF), // Indigo 50
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        title: 'Investigations',
-                        count: state.labOrders.length.toString(),
-                        icon: Icons.science_outlined,
-                        color: const Color(0xFF059669), // Emerald
-                        bgColor: const Color(0xFFECFDF5), // Emerald 50
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // 3. Scheduled Visit Block
-                _buildOverviewBlock(
-                  context,
-                  title: 'Scheduled Visit',
-                  icon: Icons.calendar_today_outlined,
-                  iconColor: const Color(0xFFF97316), // Orange
-                  content: state.nextVisitDate != null
-                      ? Row(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.calendar_today_outlined,
-                                color: Color(0xFFEA580C),
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  DateFormat(
-                                    'MMM dd, yyyy',
-                                  ).format(state.nextVisitDate!),
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF0F172A),
-                                  ),
-                                ),
-                                Text(
-                                  'Return Appointment',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(
-                                      0xFFEA580C,
-                                    ).withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Text(
-                          'No follow-up date set',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: const Color(0xFF94A3B8),
-                          ),
-                        ),
-                  bgColor: const Color(
-                    0xFFFFF7ED,
-                  ).withOpacity(0.5), // Orange 50ish
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
           // --- Finalize Treatment Plan Section (Accordion) ---
           Container(
             decoration: BoxDecoration(
@@ -619,6 +383,242 @@ class PlanTab extends ConsumerWidget {
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // --- Master Plan Overview ---
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.assignment_turned_in_outlined,
+                          color: Theme.of(context).primaryColor,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Master Plan',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
+                            ),
+                            Text(
+                              'Preview of final result',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFECFDF5), // Emerald 50
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: const Color(0xFFD1FAE5),
+                          ), // Emerald 100
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.description_outlined,
+                              size: 14,
+                              color: Color(0xFF059669), // Emerald 600
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Ready to Generate',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF064E3B), // Emerald 900
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // 1. Final Diagnosis Block
+                _buildOverviewBlock(
+                  context,
+                  title: 'Final Diagnosis',
+                  icon: Icons.medical_services_outlined,
+                  content: state.diagnosis.isNotEmpty
+                      ? Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: state.diagnosis
+                              .map(
+                                (d) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: const Color(0xFFF1F5F9),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    d,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF334155),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        )
+                      : Text(
+                          'No diagnosis entered',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 12),
+
+                // 2. Summary Stats Grid
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        context,
+                        title: 'Medicines',
+                        count: state.medicines.length.toString(),
+                        icon: Icons.medication_outlined,
+                        color: const Color(0xFF4F46E5), // Indigo
+                        bgColor: const Color(0xFFEEF2FF), // Indigo 50
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildStatCard(
+                        context,
+                        title: 'Investigations',
+                        count: state.labOrders.length.toString(),
+                        icon: Icons.science_outlined,
+                        color: const Color(0xFF059669), // Emerald
+                        bgColor: const Color(0xFFECFDF5), // Emerald 50
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // 3. Scheduled Visit Block
+                _buildOverviewBlock(
+                  context,
+                  title: 'Scheduled Visit',
+                  icon: Icons.calendar_today_outlined,
+                  iconColor: const Color(0xFFF97316), // Orange
+                  content: state.nextVisitDate != null
+                      ? Row(
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.calendar_today_outlined,
+                                color: Color(0xFFEA580C),
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  DateFormat(
+                                    'MMM dd, yyyy',
+                                  ).format(state.nextVisitDate!),
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF0F172A),
+                                  ),
+                                ),
+                                Text(
+                                  'Return Appointment',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(
+                                      0xFFEA580C,
+                                    ).withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Text(
+                          'No follow-up date set',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
+                  bgColor: const Color(
+                    0xFFFFF7ED,
+                  ).withOpacity(0.5), // Orange 50ish
                 ),
               ],
             ),
