@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict xK0qVo82htivrXxhtvEaKwdqceCeMfcJ8KQYXFelVTrwxEotgQUqtSq9pM1DNox
+\restrict 6F8cAoPbZC6ddq5bPcbOZFniGxhwPOeQCLT7AWrJhPBTk4UiLoxz8TCz5DcgSVB
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 18.1 (Debian 18.1-1.pgdg13+2)
@@ -200,52 +200,84 @@ $$;
 -- Name: book_appointment_atomic(uuid, uuid, uuid, timestamp with time zone, numeric); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.book_appointment_atomic(_patient_id uuid, _doctor_id uuid, _clinic_id uuid, _slot_time timestamp with time zone, _consult_fee numeric) RETURNS jsonb
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
+CREATE OR REPLACE FUNCTION public.book_appointment_atomic(
+    _patient_id uuid, 
+    _doctor_id uuid, 
+    _clinic_id uuid, 
+    _slot_time timestamp with time zone, 
+    _consult_fee numeric
+) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER -- ⚠️ Runs with Owner privileges (Bypasses RLS)
+SET search_path TO 'public', 'pg_temp' -- 🛡️ Prevents search_path hijacking
+AS $$
 DECLARE
     _appt_id UUID;
     _appt_num TEXT;
     _invoice_id UUID;
     _invoice_num TEXT;
     _doc_name TEXT;
+    _requester_clinic_id UUID;
 BEGIN
-    -- 1. Concurrency Guard
-    IF EXISTS (SELECT 1 FROM appointments WHERE doctor_id = _doctor_id AND start_time = _slot_time AND status != 'cancelled') THEN
+    -- ==============================================================================
+    -- 🛡️ SECURITY PATCH: VALIDATE CLINIC CONTEXT
+    -- ==============================================================================
+    -- Because this is SECURITY DEFINER, we must manually verify that the caller
+    -- actually belongs to the clinic they are trying to insert data into.
+    
+    -- 1. Fetch the clinic_id of the logged-in user
+    SELECT clinic_id INTO _requester_clinic_id
+    FROM profiles
+    WHERE id = auth.uid();
+
+    -- 2. Guard Clause: Block if IDs do not match (and user is not a Super Admin)
+    -- We use IS DISTINCT FROM to handle potential NULLs safely
+    IF _requester_clinic_id IS DISTINCT FROM _clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: You do not have permission to book appointments for this clinic.';
+    END IF;
+    -- ==============================================================================
+
+    -- 3. Concurrency Guard: Ensure the slot wasn't taken milliseconds ago
+    IF EXISTS (
+        SELECT 1 FROM appointments 
+        WHERE doctor_id = _doctor_id 
+        AND start_time = _slot_time 
+        AND status != 'cancelled'
+    ) THEN
         RAISE EXCEPTION 'Slot already booked';
     END IF;
 
-    -- 2. Create Appointment
-    -- Use RETURNING to get the UUID *and* the auto-generated Number
+    -- 4. Create Appointment
+    -- We calculate end_time based on the doctor's average consult time (default 15m)
     INSERT INTO appointments (
         clinic_id, patient_id, doctor_id, start_time, end_time, status, checked_in_at, created_by
     )
     VALUES (
         _clinic_id, _patient_id, _doctor_id, _slot_time, 
-        _slot_time + (SELECT avg_consult_time_min FROM doctors WHERE profile_id=_doctor_id) * interval '1 minute',
+        _slot_time + (
+            COALESCE((SELECT avg_consult_time_min FROM doctors WHERE profile_id=_doctor_id), 15)
+        ) * interval '1 minute',
         'scheduled', NULL, auth.uid()
     ) 
     RETURNING id, appointment_number INTO _appt_id, _appt_num;
 
-    -- 3. Create Invoice
+    -- 5. Create Invoice (Status: Pending)
     INSERT INTO invoices (appointment_id, sub_total, grand_total, payment_status)
     VALUES (_appt_id, _consult_fee, _consult_fee, 'pending')
     RETURNING id, invoice_number INTO _invoice_id, _invoice_num;
 
-    -- 4. Create Line Item
+    -- 6. Create Invoice Line Item
     INSERT INTO invoice_items (invoice_id, description, unit_price, total_price)
     VALUES (_invoice_id, 'Consultation Fee', _consult_fee, _consult_fee);
 
-    -- 5. Fetch Metadata
+    -- 7. Fetch Metadata (Doctor Name) for frontend display
     SELECT full_name INTO _doc_name FROM profiles WHERE id = _doctor_id;
 
-    -- 6. Return Hybrid Object (UUIDs for Logic, Numbers for Display)
+    -- 8. Return Hybrid Object (UUIDs for Logic, Numbers for Display)
     RETURN jsonb_build_object(
-        'appointment_id', _appt_id,     -- UUID (Keep for logic)
-        'appointment_number', _appt_num, -- NEW (Display)
-        'invoice_id', _invoice_id,      -- UUID (Keep for logic)
-        'invoice_number', _invoice_num,  -- NEW (Display)
+        'appointment_id', _appt_id,
+        'appointment_number', _appt_num,
+        'invoice_id', _invoice_id,
+        'invoice_number', _invoice_num,
         'doctor_name', _doc_name,
         'amount_due', _consult_fee
     );
@@ -529,6 +561,48 @@ BEGIN
     END IF;
 
     RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: get_active_api_key(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_active_api_key(_provider text) RETURNS text
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
+DECLARE
+    _key text;
+    _clinic_id uuid;
+    _user_role public.user_role;
+BEGIN
+    -- 1. Get Context
+    _clinic_id := public.auth_my_clinic_id();
+    _user_role := public.auth_user_role();
+
+    -- 2. Security Gate
+    -- Allow Super Admin, OR valid roles within the clinic
+    IF NOT public.is_super_admin() THEN
+        IF _clinic_id IS NULL OR _user_role NOT IN ('admin', 'doctor', 'staff') THEN
+            RAISE EXCEPTION 'Access Denied: You do not have permission to view API keys.';
+        END IF;
+    END IF;
+
+    -- 3. Fetch the Key
+    SELECT api_key INTO _key
+    FROM clinic_api_keys
+    WHERE provider = _provider
+    AND is_active = true
+    AND (
+        public.is_super_admin() -- Returns first key found (Logic varies for SA)
+        OR 
+        clinic_id = _clinic_id
+    )
+    LIMIT 1;
+
+    RETURN _key;
 END;
 $$;
 
@@ -4152,83 +4226,12 @@ $$;
 
 
 --
--- Name: submit_prescription_complete(uuid, jsonb, text, jsonb, jsonb, jsonb, date, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.submit_prescription_complete(_consult_id uuid, _diagnosis jsonb, _notes text, _vitals jsonb, _meds jsonb, _labs jsonb, _next_visit_date date DEFAULT NULL::date, _next_visit_text text DEFAULT NULL::text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    _med JSONB;
-    _lab JSONB;
-    _appt_id UUID;
-    _sort_idx INTEGER := 0; -- Variable to track the order of medicines
-BEGIN
-    -- 1. Update Consultation Header
-    UPDATE consultations 
-    SET diagnosis_codes = _diagnosis,
-        clinical_notes_internal = _notes,
-        vitals_snapshot = _vitals,
-        next_visit_date = _next_visit_date,
-        next_visit_text = _next_visit_text
-    WHERE id = _consult_id
-    RETURNING appointment_id INTO _appt_id;
-
-    -- 2. Insert Medicines (Loop)
-    FOR _med IN SELECT * FROM jsonb_array_elements(_meds)
-    LOOP
-        _sort_idx := _sort_idx + 1; -- Increment counter for every item
-
-        INSERT INTO prescription_items (
-            consultation_id, 
-            medicine_master_id,
-            medicine_name_manual, 
-            frequency, 
-            duration, 
-            instructions_timing,
-            special_instructions,  -- ✅ ADDED THIS
-            sort_order,            -- ✅ ADDED THIS
-            cached_composition     -- ✅ ADDED THIS (Optional, but good practice)
-        )
-        VALUES (
-            _consult_id, 
-            (_med->>'master_id')::uuid,
-            _med->>'name', 
-            _med->>'frequency', 
-            _med->>'duration', 
-            _med->>'instruction',
-            _med->>'special_instructions', -- ✅ Extracting note from JSON
-            _sort_idx,                     -- ✅ Saving the order index
-            _med->>'composition'           -- ✅ Saving composition if sent by frontend
-        );
-    END LOOP;
-
-    -- 3. Insert Labs (Loop)
-    FOR _lab IN SELECT * FROM jsonb_array_elements(_labs)
-    LOOP
-        INSERT INTO lab_orders (consultation_id, test_name, instruction)
-        VALUES (_consult_id, _lab->>'test_name', _lab->>'instruction');
-    END LOOP;
-
-    -- 4. Close the Loop
-    UPDATE appointments 
-    SET status = 'completed', 
-        consult_ended_at = NOW() 
-    WHERE id = _appt_id;
-
-    UPDATE queue_tokens 
-    SET status = 'completed' 
-    WHERE appointment_id = _appt_id;
-END;
-$$;
-
-
---
 -- Name: submit_prescription_complete(uuid, jsonb, text, text, jsonb, jsonb, jsonb, date, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.submit_prescription_complete(_consult_id uuid, _diagnosis jsonb, _chief_complaint text, _notes text, _vitals jsonb, _meds jsonb, _labs jsonb, _next_visit_date date DEFAULT NULL::date, _next_visit_text text DEFAULT NULL::text) RETURNS void
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     _med JSONB;
@@ -4236,23 +4239,39 @@ DECLARE
     _appt_id UUID;
     _sort_idx INTEGER := 0;
 BEGIN
-    -- 1. Update Consultation Header
+    -- MANUAL SECURITY CHECK
+    -- Ensure the consultation belongs to the user's clinic
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM consultations c
+        JOIN appointments a ON c.appointment_id = a.id
+        WHERE c.id = _consult_id
+        AND a.clinic_id = public.auth_my_clinic_id()
+    ) THEN
+        RAISE EXCEPTION 'Access Denied: Consultation not found or belongs to another clinic.';
+    END IF;
+
+    -- Update Consultation Header
     UPDATE consultations 
     SET diagnosis_codes = _diagnosis,
-        chief_complaint = _chief_complaint,  -- ✅ Saving Chief Complaint Separately
-        clinical_notes_internal = _notes,    -- ✅ Saving Clinical Notes Separately
+        chief_complaint = _chief_complaint,
+        clinical_notes_internal = _notes,
         vitals_snapshot = _vitals,
         next_visit_date = _next_visit_date,
-        next_visit_text = _next_visit_text   -- ✅ This stores the Advice/Instructions
+        next_visit_text = _next_visit_text
     WHERE id = _consult_id
     RETURNING appointment_id INTO _appt_id;
 
-    -- 2. Insert Medicines (Loop)
-    DELETE FROM prescription_items WHERE consultation_id = _consult_id; -- Safety clean prior items if re-saving behavior (optional but safe)
+    IF _appt_id IS NULL THEN
+        RAISE EXCEPTION 'Consultation ID invalid.';
+    END IF;
+
+    -- Insert Medicines (Clean & Insert)
+    DELETE FROM prescription_items WHERE consultation_id = _consult_id;
 
     FOR _med IN SELECT * FROM jsonb_array_elements(_meds)
     LOOP
-        _sort_idx := _sort_idx + 1; -- Increment counter for every item
+        _sort_idx := _sort_idx + 1;
 
         INSERT INTO prescription_items (
             consultation_id, 
@@ -4278,8 +4297,8 @@ BEGIN
         );
     END LOOP;
 
-    -- 3. Insert Labs (Loop)
-    DELETE FROM lab_orders WHERE consultation_id = _consult_id; -- Safety clean
+    -- Insert Labs (Clean & Insert)
+    DELETE FROM lab_orders WHERE consultation_id = _consult_id;
 
     FOR _lab IN SELECT * FROM jsonb_array_elements(_labs)
     LOOP
@@ -4295,7 +4314,7 @@ BEGIN
         );
     END LOOP;
 
-    -- 4. Close the Loop
+    -- Update Status
     UPDATE appointments 
     SET status = 'completed', 
         consult_ended_at = NOW() 
@@ -4803,6 +4822,22 @@ CREATE TABLE public.audit_logs (
 
 
 --
+-- Name: clinic_api_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.clinic_api_keys (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    clinic_id uuid NOT NULL,
+    provider text NOT NULL,
+    api_key text NOT NULL,
+    label text,
+    is_active boolean DEFAULT true,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+--
 -- Name: clinic_integrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5183,6 +5218,22 @@ ALTER TABLE ONLY public.audit_logs
 
 
 --
+-- Name: clinic_api_keys clinic_api_keys_clinic_id_provider_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clinic_api_keys
+    ADD CONSTRAINT clinic_api_keys_clinic_id_provider_key UNIQUE (clinic_id, provider);
+
+
+--
+-- Name: clinic_api_keys clinic_api_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clinic_api_keys
+    ADD CONSTRAINT clinic_api_keys_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: clinic_integrations clinic_integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5537,6 +5588,13 @@ CREATE INDEX idx_subs_lookup ON public.clinic_subscriptions USING btree (clinic_
 
 
 --
+-- Name: clinic_api_keys handle_updated_at; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.clinic_api_keys FOR EACH ROW EXECUTE FUNCTION public.moddatetime('updated_at');
+
+
+--
 -- Name: doctors handle_updated_at; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5562,6 +5620,13 @@ CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.patient_medical_profile
 --
 
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.patients FOR EACH ROW EXECUTE FUNCTION public.moddatetime('updated_at');
+
+
+--
+-- Name: clinic_api_keys trg_audit_api_keys; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_audit_api_keys AFTER INSERT OR DELETE OR UPDATE ON public.clinic_api_keys FOR EACH ROW EXECUTE FUNCTION public.trigger_audit_log();
 
 
 --
@@ -5693,6 +5758,14 @@ ALTER TABLE ONLY public.appointments
 
 ALTER TABLE ONLY public.audit_logs
     ADD CONSTRAINT audit_logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id);
+
+
+--
+-- Name: clinic_api_keys clinic_api_keys_clinic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clinic_api_keys
+    ADD CONSTRAINT clinic_api_keys_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES public.clinics(id) ON DELETE CASCADE;
 
 
 --
@@ -5919,6 +5992,13 @@ CREATE POLICY "Admin view integrations" ON public.clinic_integrations FOR SELECT
 
 
 --
+-- Name: clinic_api_keys Admins manage keys; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY "Admins manage keys" ON public.clinic_api_keys USING ((public.is_super_admin() OR ((clinic_id = public.auth_my_clinic_id()) AND (public.auth_user_role() = 'admin'::public.user_role))));
+
+
+--
 -- Name: clinics Admins update their own clinic; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -5946,6 +6026,13 @@ CREATE POLICY "Audit Insert" ON public.audit_logs FOR INSERT WITH CHECK ((auth.u
 CREATE POLICY "Audit View" ON public.audit_logs FOR SELECT USING ((public.is_super_admin() OR ((public.auth_user_role() = 'admin'::public.user_role) AND (EXISTS ( SELECT 1
    FROM public.profiles p
   WHERE ((p.id = audit_logs.user_id) AND (p.clinic_id = public.auth_my_clinic_id())))))));
+
+
+--
+-- Name: clinic_api_keys Authorized users view keys; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY "Authorized users view keys" ON public.clinic_api_keys FOR SELECT USING ((public.is_super_admin() OR ((clinic_id = public.auth_my_clinic_id()) AND (public.auth_user_role() = ANY (ARRAY['admin'::public.user_role, 'doctor'::public.user_role, 'staff'::public.user_role])))));
 
 
 --
@@ -6229,6 +6316,12 @@ ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: clinic_api_keys; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.clinic_api_keys ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: clinic_integrations; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6358,5 +6451,5 @@ ALTER TABLE public.service_master ENABLE ROW LEVEL SECURITY;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict xK0qVo82htivrXxhtvEaKwdqceCeMfcJ8KQYXFelVTrwxEotgQUqtSq9pM1DNox
+\unrestrict 6F8cAoPbZC6ddq5bPcbOZFniGxhwPOeQCLT7AWrJhPBTk4UiLoxz8TCz5DcgSVB
 

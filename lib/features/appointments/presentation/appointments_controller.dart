@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth/domain/user_model.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../booking/data/booking_repository.dart';
 import '../../booking/domain/booking_models.dart';
@@ -51,16 +52,21 @@ final appointmentsControllerProvider =
       final repo = ref.watch(appointmentRepositoryProvider);
       final bookingRepo = ref.watch(bookingRepositoryProvider);
       final user = ref.watch(currentUserProvider);
-      return AppointmentsController(repo, bookingRepo, user?.clinicId);
+      return AppointmentsController(repo, bookingRepo, user?.clinicId, user);
     });
 
 class AppointmentsController extends StateNotifier<AppointmentsState> {
   final AppointmentRepository _repo;
   final BookingRepository _bookingRepo;
   final String? _clinicId;
+  final UserModel? _currentUser;
 
-  AppointmentsController(this._repo, this._bookingRepo, this._clinicId)
-    : super(AppointmentsState(selectedDate: DateTime.now())) {
+  AppointmentsController(
+    this._repo,
+    this._bookingRepo,
+    this._clinicId,
+    this._currentUser,
+  ) : super(AppointmentsState(selectedDate: DateTime.now())) {
     if (_clinicId != null) {
       loadAppointments();
     }
@@ -79,10 +85,27 @@ class AppointmentsController extends StateNotifier<AppointmentsState> {
 
     try {
       final doctors = await _bookingRepo.getDoctors(clinicId: _clinicId);
-      final appointments = await _repo.getAppointments(_clinicId, targetDate);
+      final appointments = await _repo.getAppointments(targetDate);
+
+      // Auto-select doctor if current user is a doctor
+      Doctor? preselectedDoctor;
+      if (_currentUser != null) {
+        try {
+          // Find matching doctor
+          preselectedDoctor = doctors.firstWhere(
+            (d) => d.id == _currentUser.id,
+          );
+        } catch (_) {
+          // No match found
+        }
+      }
+
       state = state.copyWith(
         appointments: appointments,
         doctors: doctors,
+        selectedDoctor: preselectedDoctor != null
+            ? () => preselectedDoctor
+            : null,
         isLoading: false,
       );
     } catch (e) {

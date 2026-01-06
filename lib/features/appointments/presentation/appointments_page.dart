@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../auth/presentation/auth_controller.dart';
 import 'appointments_controller.dart';
 import 'widgets/appointment_card.dart';
 import 'widgets/doctor_card.dart';
@@ -22,6 +23,9 @@ class AppointmentsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appointmentsControllerProvider);
     final controller = ref.read(appointmentsControllerProvider.notifier);
+    final user = ref.watch(currentUserProvider);
+    final isDoctorRestricted =
+        user?.role == 'doctor' && state.selectedDoctor?.id == user?.id;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFCF8),
@@ -41,9 +45,15 @@ class AppointmentsPage extends ConsumerWidget {
                           children: [
                             _HeaderActionButton(
                               icon: Icons.arrow_back_rounded,
-                              onTap: state.selectedDoctor != null
-                                  ? () => controller.selectDoctor(null)
-                                  : () => Navigator.pop(context),
+                              onTap: () {
+                                if (isDoctorRestricted) {
+                                  Navigator.pop(context);
+                                } else if (state.selectedDoctor != null) {
+                                  controller.selectDoctor(null);
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              },
                             ),
                             const SizedBox(width: 16),
                             Flexible(

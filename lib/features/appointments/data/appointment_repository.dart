@@ -11,15 +11,12 @@ class AppointmentRepository {
 
   AppointmentRepository(this._supabase);
 
-  Future<List<AppointmentGridItem>> getAppointments(
-    String clinicId,
-    DateTime date,
-  ) async {
+  Future<List<AppointmentGridItem>> getAppointments(DateTime date) async {
     try {
       final dateStr = date.toIso8601String().split('T')[0];
       final response = await _supabase.rpc(
-        'get_appointments_grid',
-        params: {'_clinic_id': clinicId, '_date': dateStr},
+        'get_my_appointments_grid',
+        params: {'_date': dateStr},
       );
 
       return (response as List)
