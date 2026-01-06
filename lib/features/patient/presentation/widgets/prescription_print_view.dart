@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,13 +32,13 @@ class PrescriptionPrintView extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // Drag Handle
+          // Handle
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12),
             height: 4,
             width: 40,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.black.withOpacity(0.05),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -60,7 +62,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Colors.black.withOpacity(0.05),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.close, size: 20),
@@ -69,7 +71,7 @@ class PrescriptionPrintView extends ConsumerWidget {
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1, color: Colors.black.withOpacity(0.05)),
 
           // Scrollable Content
           Expanded(
@@ -100,7 +102,8 @@ class PrescriptionPrintView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // 1. Header (Logo or Text)
-        if (data.clinic.headerImageUrl != null)
+        if (data.clinic.headerImageUrl != null &&
+            data.clinic.headerImageUrl!.isNotEmpty)
           Image.network(
             data.clinic.headerImageUrl!,
             height: 100,
@@ -134,7 +137,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                     const SizedBox(height: 4),
                     if (data.clinic.phone != null || data.clinic.email != null)
                       Text(
-                        "${data.clinic.phone != null ? 'Ph: ${data.clinic.phone}  ' : ''}${data.clinic.email != null ? 'Email: ${data.clinic.email}' : ''}",
+                        "${data.clinic.phone != null && data.clinic.phone!.isNotEmpty ? 'Ph: ${data.clinic.phone}  ' : ''}${data.clinic.email != null && data.clinic.email!.isNotEmpty ? 'Email: ${data.clinic.email}' : ''}",
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -144,7 +147,8 @@ class PrescriptionPrintView extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (data.clinic.logoUrl != null)
+              if (data.clinic.logoUrl != null &&
+                  data.clinic.logoUrl!.isNotEmpty)
                 Image.network(
                   data.clinic.logoUrl!,
                   width: 80,
@@ -167,7 +171,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50.withValues(alpha: 0.5),
-                  border: Border.all(color: Colors.green.shade100),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -215,7 +219,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.shade50.withValues(alpha: 0.5),
-                  border: Border.all(color: Colors.red.shade100),
+                  border: Border.all(color: Colors.black.withOpacity(0.05)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -264,7 +268,7 @@ class PrescriptionPrintView extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             border: Border.symmetric(
-              horizontal: BorderSide(color: Colors.grey.shade200),
+              horizontal: BorderSide(color: Colors.black.withOpacity(0.05)),
             ),
           ),
           child: Wrap(
@@ -275,7 +279,8 @@ class PrescriptionPrintView extends ConsumerWidget {
               _MetaItem("Date", data.meta.visitDate),
               _MetaItem("Appt #", data.meta.appointmentNumber),
               _MetaItem("Type", data.meta.visitType.toUpperCase()),
-              if (data.clinical?.vitals != null) ...[
+              if (data.clinical?.vitals != null &&
+                  data.clinical!.vitals!.isNotEmpty) ...[
                 Container(width: 1, height: 12, color: Colors.grey.shade300),
                 ...data.clinical!.vitals!.entries.map(
                   (e) => Row(
@@ -307,19 +312,19 @@ class PrescriptionPrintView extends ConsumerWidget {
         // 4. Clinical Snapshot
         if (data.clinical != null) ...[
           const SizedBox(height: 16),
-          if (data.clinical!.chiefComplaint != null)
+          if (data.clinical!.chiefComplaint != null &&
+              data.clinical!.chiefComplaint!.isNotEmpty)
             _ClinicalSection(
               title: "Chief Complaint",
               content: data.clinical!.chiefComplaint!,
             ),
-          if (data.clinical!.diagnosis != null)
+          if (data.clinical!.diagnosis != null &&
+              (data.clinical!.diagnosis as List).isNotEmpty)
             _ClinicalSection(
               title: "Diagnosis",
-              content: data.clinical!.diagnosis is List
-                  ? (data.clinical!.diagnosis as List).join(', ')
-                  : data.clinical!.diagnosis.toString(),
+              content: (data.clinical!.diagnosis as List).join(', '),
             ),
-          if (data.clinical!.notes != null)
+          if (data.clinical!.notes != null && data.clinical!.notes!.isNotEmpty)
             _ClinicalSection(title: "Notes", content: data.clinical!.notes!),
         ],
 
@@ -361,7 +366,7 @@ class PrescriptionPrintView extends ConsumerWidget {
         // 6. Rx Table
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: Colors.black.withOpacity(0.05)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -373,7 +378,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Colors.black.withOpacity(0.02),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
@@ -428,7 +433,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                     ),
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: Colors.grey.shade100),
+                        top: BorderSide(color: Colors.black.withOpacity(0.05)),
                       ),
                     ),
                     child: Row(
@@ -446,7 +451,8 @@ class PrescriptionPrintView extends ConsumerWidget {
                                   fontSize: 13,
                                 ),
                               ),
-                              if (med.genericName != null)
+                              if (med.genericName != null &&
+                                  med.genericName!.isNotEmpty)
                                 Text(
                                   med.genericName!,
                                   style: GoogleFonts.inter(
@@ -455,7 +461,7 @@ class PrescriptionPrintView extends ConsumerWidget {
                                     color: Colors.grey.shade500,
                                   ),
                                 ),
-                              if (med.note != null)
+                              if (med.note != null && med.note!.isNotEmpty)
                                 Container(
                                   margin: const EdgeInsets.only(top: 4),
                                   padding: const EdgeInsets.symmetric(
@@ -551,7 +557,7 @@ class PrescriptionPrintView extends ConsumerWidget {
           height: 32,
         ), // Push footer down with fixed space instead of Spacer()
         const SizedBox(height: 32),
-        const Divider(),
+        Divider(color: Colors.black.withOpacity(0.05)),
 
         // 8. Footer Advice & Sig
         Row(
@@ -561,7 +567,8 @@ class PrescriptionPrintView extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (data.advice.nextVisitText != null) ...[
+                  if (data.advice.nextVisitText != null &&
+                      data.advice.nextVisitText!.isNotEmpty) ...[
                     Text(
                       "ADVICE",
                       style: GoogleFonts.inter(
@@ -575,7 +582,8 @@ class PrescriptionPrintView extends ConsumerWidget {
                       style: GoogleFonts.inter(fontSize: 12, height: 1.4),
                     ),
                   ],
-                  if (data.advice.nextVisitDate != null)
+                  if (data.advice.nextVisitDate != null &&
+                      data.advice.nextVisitDate!.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
@@ -592,7 +600,8 @@ class PrescriptionPrintView extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (data.doctor.signatureUrl != null)
+                if (data.doctor.signatureUrl != null &&
+                    data.doctor.signatureUrl!.isNotEmpty)
                   Image.network(
                     data.doctor.signatureUrl!,
                     height: 40,
@@ -619,7 +628,8 @@ class PrescriptionPrintView extends ConsumerWidget {
         ),
 
         // 9. Footer Text
-        if (data.clinic.footerText != null) ...[
+        if (data.clinic.footerText != null &&
+            data.clinic.footerText!.isNotEmpty) ...[
           const SizedBox(height: 16),
           Text(
             data.clinic.footerText!,
