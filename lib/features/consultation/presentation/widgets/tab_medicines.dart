@@ -3,10 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uuid/uuid.dart';
+
 import '../consultation_controller.dart';
 import '../../data/consultation_repository.dart';
 import '../../domain/consultation_models.dart';
+import 'sheet_add_medicine.dart';
 
 class MedicinesTab extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -21,7 +22,6 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
   final _searchController = TextEditingController();
   List<MedicineSearchResult> _searchResults = [];
   bool _isSearching = false;
-  final Set<String> _editingIds = {};
 
   void _onSearch(String query) async {
     if (query.length < 2) {
@@ -62,7 +62,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
             label: "ADD ANYWAY",
             textColor: Colors.white,
             onPressed: () {
-              _doAdd(master, controller);
+              _openSheet(master, controller);
             },
           ),
         ),
@@ -70,41 +70,55 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
       return;
     }
 
-    _doAdd(master, controller);
+    _openSheet(master, controller);
   }
 
-  void _doAdd(MedicineSearchResult master, ConsultationController controller) {
-    final tempId = const Uuid().v4();
-
-    final med = ConsultationMedicine(
-      tempId: tempId,
-      masterId: master.id,
-      name: master.brandName,
-      composition: master.genericName,
-      type: master.type,
-      frequency: '1-0-1', // Default
-      duration: '5 Days',
-      instruction: 'After Food',
-      specialInstructions: '',
+  void _openSheet(
+    MedicineSearchResult master,
+    ConsultationController controller,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SheetAddMedicine(
+          master: master,
+          onSave: (med) {
+            controller.addMedicine(med);
+            _searchController.clear();
+            setState(() {
+              _searchResults = [];
+            });
+          },
+        ),
+      ),
     );
-
-    controller.addMedicine(med);
-    _searchController.clear();
-    // Auto-enter edit mode for new med
-    setState(() {
-      _searchResults = [];
-      _editingIds.add(tempId);
-    });
   }
 
-  void _toggleEdit(String tempId) {
-    setState(() {
-      if (_editingIds.contains(tempId)) {
-        _editingIds.remove(tempId);
-      } else {
-        _editingIds.add(tempId);
-      }
-    });
+  void _openEditSheet(
+    ConsultationMedicine med,
+    ConsultationController controller,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SheetAddMedicine(
+          editMedicine: med,
+          onSave: (updatedMed) {
+            controller.updateMedicine(updatedMed);
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -415,13 +429,7 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                         separatorBuilder: (c, i) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final med = meds[index];
-                          final isEditing = _editingIds.contains(med.tempId);
-                          return _buildMedicineCard(
-                            context,
-                            med,
-                            controller,
-                            isEditing,
-                          );
+                          return _buildMedicineCard(context, med, controller);
                         },
                       ),
                     ],
@@ -592,31 +600,19 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
     BuildContext context,
     ConsultationMedicine med,
     ConsultationController controller,
-    bool isEditing,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: isEditing
-            ? Colors.white
-            : const Color(0xFFF8FAFC), // White if editing, Slate 50 if distinct
+        color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: isEditing
-              ? Theme.of(context).primaryColor.withOpacity(0.5)
-              : Colors.black.withOpacity(0.05),
-          width: isEditing ? 1.5 : 1,
-        ),
-        // boxShadow removed
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
       child: Column(
         children: [
           // Card Header / Summary Row
           InkWell(
-            onTap: () => _toggleEdit(med.tempId),
-            borderRadius: BorderRadius.vertical(
-              top: const Radius.circular(24),
-              bottom: Radius.circular(isEditing ? 0 : 24),
-            ),
+            onTap: () => _openEditSheet(med, controller),
+            borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -648,21 +644,36 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                             color: const Color(0xFF0F172A),
                           ),
                         ),
-                        if (!isEditing) // Show summary badges when not editing
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                _buildBadge(
-                                  med.frequency ?? 'N/A',
-                                  Theme.of(
-                                    context,
-                                  ).primaryColor.withOpacity(0.1),
-                                  Theme.of(context).primaryColor,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Wrap(
+                            spacing: 6,
+                            runSpacing: 6,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              _buildBadge(
+                                med.frequency ?? 'N/A',
+                                Theme.of(context).primaryColor.withOpacity(0.1),
+                                Theme.of(context).primaryColor,
+                              ),
+                              Container(
+                                height: 4,
+                                width: 4,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFCBD5E1),
+                                  shape: BoxShape.circle,
                                 ),
+                              ),
+                              Text(
+                                med.duration ?? 'N/A',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF64748B),
+                                ),
+                              ),
+                              if (med.instruction != null &&
+                                  med.instruction!.isNotEmpty) ...[
                                 Container(
                                   height: 4,
                                   width: 4,
@@ -672,49 +683,29 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
                                   ),
                                 ),
                                 Text(
-                                  med.duration ?? 'N/A',
+                                  med.instruction!,
                                   style: GoogleFonts.inter(
                                     fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF64748B),
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FontStyle.italic,
+                                    color: const Color(0xFF94A3B8),
                                   ),
                                 ),
-                                if (med.instruction != null &&
-                                    med.instruction!.isNotEmpty) ...[
-                                  Container(
-                                    height: 4,
-                                    width: 4,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFCBD5E1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Text(
-                                    med.instruction!,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FontStyle.italic,
-                                      color: const Color(0xFF94A3B8),
-                                    ),
-                                  ),
-                                ],
                               ],
-                            ),
+                            ],
                           ),
+                        ),
                       ],
                     ),
                   ),
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () => _toggleEdit(med.tempId),
-                        icon: Icon(
-                          isEditing
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.edit_outlined,
+                        onPressed: () => _openEditSheet(med, controller),
+                        icon: const Icon(
+                          Icons.edit_outlined,
                           size: 18,
-                          color: const Color(0xFF64748B),
+                          color: Color(0xFF64748B),
                         ),
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -756,93 +747,6 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
               ),
             ),
           ),
-
-          // Edit Form (Visible only when isEditing is true)
-          if (isEditing)
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-              child: Column(
-                children: [
-                  const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _InlineInput(
-                          label: 'Frequency',
-                          value: med.frequency ?? '',
-                          hint: 'e.g. 1-0-1',
-                          onChanged: (val) => controller.updateMedicine(
-                            med.copyWith(frequency: val),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _InlineInput(
-                          label: 'Duration',
-                          value: med.duration ?? '',
-                          hint: 'e.g. 5 Days',
-                          onChanged: (val) => controller.updateMedicine(
-                            med.copyWith(duration: val),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _InlineInput(
-                          label: 'Instruction',
-                          value: med.instruction ?? '',
-                          hint: 'e.g. After Food',
-                          onChanged: (val) => controller.updateMedicine(
-                            med.copyWith(instruction: val),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _InlineInput(
-                          label: 'Special Note',
-                          value: med.specialInstructions ?? '',
-                          hint: 'Optional...',
-                          onChanged: (val) => controller.updateMedicine(
-                            med.copyWith(specialInstructions: val),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () => _toggleEdit(med.tempId),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Theme.of(
-                          context,
-                        ).primaryColor.withOpacity(0.05),
-                        foregroundColor: Theme.of(context).primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                      ),
-                      child: Text(
-                        'Done Editing',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
     );
@@ -863,76 +767,6 @@ class _MedicinesTabState extends ConsumerState<MedicinesTab> {
           color: textCol,
         ),
       ),
-    );
-  }
-}
-
-class _InlineInput extends StatelessWidget {
-  final String label;
-  final String value;
-  final String hint;
-  final Function(String) onChanged;
-
-  const _InlineInput({
-    required this.label,
-    required this.value,
-    this.hint = '',
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF64748B),
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextFormField(
-          initialValue: value,
-          onChanged: onChanged,
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            color: const Color(0xFF0F172A),
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFFCBD5E1),
-            ),
-            isDense: true,
-            filled: true,
-            fillColor: const Color(0xFFF1F5F9), // Slate 100
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: Theme.of(context).primaryColor.withOpacity(0.5),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
