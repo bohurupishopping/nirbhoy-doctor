@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'history_controller.dart';
 import '../domain/appointment_models.dart';
+import '../../patient/presentation/widgets/prescription_print_view.dart';
 
 class HistoryPage extends ConsumerStatefulWidget {
   const HistoryPage({super.key});
@@ -489,9 +490,7 @@ class _HistoryCard extends StatelessWidget {
               if (item.canPrint)
                 IconButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Printing...')),
-                    );
+                    PrescriptionPrintView.show(context, item.appointmentId);
                   },
                   icon: const Icon(Icons.print_outlined, color: Colors.grey),
                   tooltip: 'Print Prescription',

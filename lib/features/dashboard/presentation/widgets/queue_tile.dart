@@ -77,36 +77,14 @@ class QueueTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              item.patientName,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                color: Colors.black87,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          if (isCritical) ...[
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.warning_amber_rounded,
-                              color: Colors.red,
-                              size: 18,
-                            ),
-                          ],
-                          if (isWheelchair) ...[
-                            const SizedBox(width: 4),
-                            const Icon(
-                              Icons.accessible,
-                              color: Colors.amber,
-                              size: 18,
-                            ),
-                          ],
-                        ],
+                      Text(
+                        item.patientName,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Row(
@@ -140,6 +118,22 @@ class QueueTile extends StatelessWidget {
                                 color: Colors.grey[500],
                                 fontWeight: FontWeight.w500,
                               ),
+                            ),
+                          ],
+                          if (isCritical) ...[
+                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.red,
+                              size: 16,
+                            ),
+                          ],
+                          if (isWheelchair) ...[
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.accessible,
+                              color: Colors.amber,
+                              size: 16,
                             ),
                           ],
                         ],
