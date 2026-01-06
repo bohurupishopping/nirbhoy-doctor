@@ -52,40 +52,59 @@ class VitalsTab extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                _buildField(
-                  label: 'Blood Pressure',
-                  placeholder: 'e.g. 120/80',
-                  icon: Icons.favorite,
-                  iconColor: Colors.red.shade500,
-                  value: vitals['bp']?.toString(),
-                  onChanged: (val) => controller.updateVital('bp', val),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildField(
+                        label: 'Blood Pressure',
+                        placeholder: 'e.g. 120/80',
+                        icon: Icons.favorite,
+                        iconColor: Colors.red.shade500,
+                        value: vitals['bp']?.toString(),
+                        onChanged: (val) => controller.updateVital('bp', val),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildField(
+                        label: 'Temperature',
+                        placeholder: 'e.g. 98.6°F',
+                        icon: Icons.thermostat,
+                        iconColor: Colors.orange.shade500,
+                        value: vitals['temp']?.toString(),
+                        onChanged: (val) => controller.updateVital('temp', val),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-                _buildField(
-                  label: 'Temperature',
-                  placeholder: 'e.g. 98.6°F',
-                  icon: Icons.thermostat,
-                  iconColor: Colors.orange.shade500,
-                  value: vitals['temp']?.toString(),
-                  onChanged: (val) => controller.updateVital('temp', val),
-                ),
-                const SizedBox(height: 16),
-                _buildField(
-                  label: 'Body Weight',
-                  placeholder: 'e.g. 70 kg',
-                  icon: Icons.monitor_weight,
-                  iconColor: Theme.of(context).primaryColor,
-                  value: vitals['weight']?.toString(),
-                  onChanged: (val) => controller.updateVital('weight', val),
-                ),
-                const SizedBox(height: 16),
-                _buildField(
-                  label: 'Oxygen Saturation',
-                  placeholder: 'e.g. 98%',
-                  icon: Icons.air,
-                  iconColor: Colors.green.shade500,
-                  value: vitals['spo2']?.toString(),
-                  onChanged: (val) => controller.updateVital('spo2', val),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildField(
+                        label: 'Body Weight',
+                        placeholder: 'e.g. 70 kg',
+                        icon: Icons.monitor_weight,
+                        iconColor: Theme.of(context).primaryColor,
+                        value: vitals['weight']?.toString(),
+                        onChanged: (val) =>
+                            controller.updateVital('weight', val),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildField(
+                        label: 'Oxygen Saturation',
+                        placeholder: 'e.g. 98%',
+                        icon: Icons.air,
+                        iconColor: Colors.green.shade500,
+                        value: vitals['spo2']?.toString(),
+                        onChanged: (val) => controller.updateVital('spo2', val),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
