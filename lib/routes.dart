@@ -7,7 +7,6 @@ import 'features/dashboard/presentation/dashboard_page.dart';
 import 'features/patient/presentation/patient_details_page.dart';
 import 'features/patient/presentation/patient_list_page.dart';
 // import 'features/shared/presentation/main_layout.dart';
-import 'features/booking/presentation/booking_page.dart';
 import 'features/appointments/presentation/appointments_page.dart';
 import 'features/finance/presentation/pages/finance_page.dart';
 import 'features/splash/presentation/splash_page.dart';
@@ -71,13 +70,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: ':id', // /patient/:id
                 builder: (context, state) =>
                     PatientDetailsPage(patientId: state.pathParameters['id']!),
-                routes: [
-                  GoRoute(
-                    path: 'booking', // /patient/:id/booking
-                    builder: (context, state) =>
-                        BookingPage(patientId: state.pathParameters['id']!),
-                  ),
-                ],
               ),
             ],
           ),
