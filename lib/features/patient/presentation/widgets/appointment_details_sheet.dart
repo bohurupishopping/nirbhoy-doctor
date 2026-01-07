@@ -309,7 +309,12 @@ class _TimelineItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   if (event.description != null)
                     Text(
-                      event.description!,
+                      event.eventType == 'payment'
+                          ? event.description!
+                              .replaceAll(RegExp(r'Amount: [^|]+'), '')
+                              .replaceAll(RegExp(r'^\s*\|\s*'), '')
+                              .trim()
+                          : event.description!,
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         color: Colors.grey[600],

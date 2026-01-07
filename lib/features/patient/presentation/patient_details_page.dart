@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import '../../patient/domain/patient_models.dart';
 import 'patient_details_controller.dart';
 import 'widgets/appointment_details_sheet.dart';
-import 'widgets/invoice_print_view.dart';
 import 'widgets/prescription_print_view.dart';
 import 'widgets/registration_sheet.dart';
 import '../../appointments/presentation/widgets/reschedule_dialog.dart';
@@ -323,74 +322,9 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
               ),
 
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: Divider(height: 1),
               ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "TOTAL BILL",
-                        style: GoogleFonts.inter(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Text(
-                        "₹${v.grandTotal ?? 0}",
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if ((v.balanceDue ?? 0) > 0)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "DUE: ₹${v.balanceDue}",
-                        style: GoogleFonts.inter(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11,
-                        ),
-                      ),
-                    )
-                  else
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "PAID",
-                        style: GoogleFonts.inter(
-                          color: const Color(0xFF10B981),
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
@@ -403,17 +337,6 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  _VisitActionBtn(
-                    label: "Invoice",
-                    icon: Icons.receipt_long_outlined,
-                    onTap: () {
-                      if (v.invoiceId != null) {
-                        InvoicePrintView.show(context, v.invoiceId!);
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 8),
                   const SizedBox(width: 8),
                   _VisitActionBtn(
                     label: "View Rx",

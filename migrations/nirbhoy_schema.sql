@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 6F8cAoPbZC6ddq5bPcbOZFniGxhwPOeQCLT7AWrJhPBTk4UiLoxz8TCz5DcgSVB
+\restrict KxTeZ3wU3eCLpg9WanplSjeHnZpXjBD4KJ699fAr89lnVGAlw53Ib0cTcHpL6wY
 
 -- Dumped from database version 15.8
 -- Dumped by pg_dump version 18.1 (Debian 18.1-1.pgdg13+2)
@@ -200,16 +200,10 @@ $$;
 -- Name: book_appointment_atomic(uuid, uuid, uuid, timestamp with time zone, numeric); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE OR REPLACE FUNCTION public.book_appointment_atomic(
-    _patient_id uuid, 
-    _doctor_id uuid, 
-    _clinic_id uuid, 
-    _slot_time timestamp with time zone, 
-    _consult_fee numeric
-) RETURNS jsonb
-LANGUAGE plpgsql SECURITY DEFINER -- ⚠️ Runs with Owner privileges (Bypasses RLS)
-SET search_path TO 'public', 'pg_temp' -- 🛡️ Prevents search_path hijacking
-AS $$
+CREATE FUNCTION public.book_appointment_atomic(_patient_id uuid, _doctor_id uuid, _clinic_id uuid, _slot_time timestamp with time zone, _consult_fee numeric) RETURNS jsonb
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
 DECLARE
     _appt_id UUID;
     _appt_num TEXT;
@@ -360,14 +354,28 @@ $$;
 --
 
 CREATE FUNCTION public.configure_doctor_roster(_doctor_id uuid, _schedules jsonb) RETURNS void
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     item JSONB;
+    _doc_clinic_id uuid;
 BEGIN
-    -- Security: Ensure admin
-    IF auth.user_role() != 'admin' THEN RAISE EXCEPTION 'Unauthorized'; END IF;
+    -- 🛡️ SECURITY PATCH START --------------------------------------
+    -- 1. Role Check
+    IF public.auth_user_role() != 'admin' AND NOT public.is_super_admin() THEN 
+        RAISE EXCEPTION 'Unauthorized'; 
+    END IF;
 
+    -- 2. Scope Check: Ensure doctor belongs to the same clinic as the Admin
+    SELECT clinic_id INTO _doc_clinic_id FROM profiles WHERE id = _doctor_id;
+
+    IF _doc_clinic_id IS DISTINCT FROM public.auth_my_clinic_id() AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Doctor belongs to another clinic.';
+    END IF;
+    -- 🛡️ SECURITY PATCH END ----------------------------------------
+
+    -- ORIGINAL LOGIC PRESERVED BELOW
     DELETE FROM doctor_schedules WHERE doctor_id = _doctor_id;
 
     FOR item IN SELECT * FROM jsonb_array_elements(_schedules)
@@ -478,25 +486,26 @@ CREATE FUNCTION public.doctor_call_patient(_appointment_id uuid, _doctor_id uuid
     AS $$
 DECLARE
     _clinic_id UUID;
+    _appt_doctor_id UUID;
 BEGIN
-    -- Security: Ensure this appointment belongs to this doctor
-    -- Also fetches clinic_id for valid locking if needed later
-    SELECT clinic_id INTO _clinic_id
-    FROM appointments 
-    WHERE id = _appointment_id AND doctor_id = _doctor_id;
-
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'Appointment not found or access denied';
+    -- 🛡️ SECURITY PATCH
+    -- 1. Ensure the caller is actually the doctor they claim to be (or admin)
+    IF auth.uid() != _doctor_id AND public.auth_user_role() != 'admin' THEN
+        RAISE EXCEPTION 'Unauthorized: You cannot perform actions for another doctor.';
     END IF;
 
-    -- Update Queue Token Only
-    -- The Trigger 'trigger_sync_appt_status' will automatically:
-    -- 1. Set appointment.status = 'in_consult'
-    -- 2. Set appointment.consult_started_at = NOW()
+    -- 2. Ensure appointment belongs to this doctor
+    SELECT clinic_id, doctor_id INTO _clinic_id, _appt_doctor_id
+    FROM appointments 
+    WHERE id = _appointment_id;
+
+    IF _appt_doctor_id != _doctor_id THEN
+        RAISE EXCEPTION 'Unauthorized: This appointment is assigned to a different doctor.';
+    END IF;
+    -- 🛡️ END PATCH
+
     UPDATE queue_tokens
-    SET 
-        status = 'called',
-        called_at = NOW()
+    SET status = 'called', called_at = NOW()
     WHERE appointment_id = _appointment_id;
 END;
 $$;
@@ -612,9 +621,20 @@ $$;
 --
 
 CREATE FUNCTION public.get_admin_dashboard_stats(_clinic_id uuid) RETURNS jsonb
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 BEGIN
+    -- 🛡️ SECURITY PATCH
+    IF public.auth_user_role() != 'admin' AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Admin access required.';
+    END IF;
+
+    IF public.auth_my_clinic_id() IS DISTINCT FROM _clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized clinic scope.';
+    END IF;
+    -- 🛡️ END PATCH
+
     RETURN jsonb_build_object(
         'revenue_today', (SELECT COALESCE(SUM(grand_total), 0) FROM invoices i JOIN appointments a ON i.appointment_id = a.id WHERE a.clinic_id = _clinic_id AND i.created_at::DATE = CURRENT_DATE),
         'patients_waiting', (SELECT COUNT(*) FROM queue_tokens WHERE clinic_id = _clinic_id AND date_of_service = CURRENT_DATE AND status = 'waiting'),
@@ -1037,6 +1057,32 @@ $$;
 
 
 --
+-- Name: get_appointment_notification_data(uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_appointment_notification_data(_appointment_id uuid) RETURNS jsonb
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+    SELECT jsonb_build_object(
+        'phone', p.phone,
+        'clinic_id', a.clinic_id,
+        'patient_name', p.full_name,
+        'doctor_name', dr_p.full_name,
+        'clinic_name', c.name,
+        'clinic_phone', c.phone_primary,
+        'date_formatted', to_char(a.start_time, 'Dy, DD Mon YYYY'), 
+        'time_formatted', to_char(a.start_time, 'HH12:MI AM')       
+    )
+    FROM appointments a
+    JOIN patients p ON a.patient_id = p.id
+    JOIN profiles dr_p ON a.doctor_id = dr_p.id
+    JOIN clinics c ON a.clinic_id = c.id
+    WHERE a.id = _appointment_id;
+$$;
+
+
+--
 -- Name: get_appointment_timeline(uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1177,11 +1223,28 @@ $$;
 --
 
 CREATE FUNCTION public.get_appointments_grid(_clinic_id uuid, _date date) RETURNS jsonb
-    LANGUAGE plpgsql STABLE
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
+DECLARE
+    _user_clinic_id uuid;
 BEGIN
+    -- 🛡️ SECURITY PATCH
+    -- 1. Role Check: Doctors should NOT use this. They must use 'get_my_appointments_grid'.
+    IF public.auth_user_role() NOT IN ('admin', 'staff') AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Doctors must use the personal grid endpoint.';
+    END IF;
+
+    -- 2. Scope Check
+    _user_clinic_id := public.auth_my_clinic_id();
+    
+    IF _user_clinic_id IS DISTINCT FROM _clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: You cannot view schedules for another clinic.';
+    END IF;
+    -- 🛡️ END PATCH
+
     RETURN (
-        SELECT jsonb_agg(t) FROM (
+        SELECT COALESCE(jsonb_agg(t), '[]'::jsonb) FROM (
             SELECT 
                 a.id,
                 a.start_time,
@@ -1198,6 +1261,7 @@ BEGIN
             WHERE a.clinic_id = _clinic_id 
               AND a.start_time::DATE = _date
               AND a.status != 'cancelled'
+            ORDER BY a.start_time ASC
         ) t
     );
 END;
@@ -1632,13 +1696,24 @@ DECLARE
     _total_count bigint;
     _offset integer;
 BEGIN
-    -- 1. Security Check
-    SELECT clinic_id INTO _clinic_id FROM profiles WHERE id = auth.uid();
-    IF _clinic_id IS NULL THEN RAISE EXCEPTION 'Access Denied'; END IF;
+    -- 🛡️ SECURITY PATCH START --------------------------------------
+    -- 1. Role Check: REMOVED 'doctor' from this list
+    IF public.auth_user_role() NOT IN ('admin', 'staff') AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Only Admins and Staff can view financial records.';
+    END IF;
+
+    -- 2. Scope Check
+    _clinic_id := public.auth_my_clinic_id();
+    
+    IF _clinic_id IS NULL AND NOT public.is_super_admin() THEN 
+        RAISE EXCEPTION 'Unauthorized: No clinic assigned.'; 
+    END IF;
+    -- 🛡️ SECURITY PATCH END ----------------------------------------
 
     _offset := (_page - 1) * _page_size;
 
-    -- 2. Aggregate Stats (Ignoring status filter for context)
+    -- (Rest of the function remains the same...)
+    -- Aggregate Stats
     SELECT jsonb_build_object(
         'total_billed',    COALESCE(SUM(grand_total), 0),
         'total_collected', COALESCE(SUM(amount_paid), 0),
@@ -1658,7 +1733,7 @@ BEGIN
           p.phone ILIKE '%' || _search_text || '%'
       );
 
-    -- 3. Filtered List
+    -- Filtered List
     WITH filtered_data AS (
         SELECT 
             i.id, i.invoice_number, i.created_at, i.grand_total, i.amount_paid, i.payment_status, i.payment_mode,
@@ -2042,6 +2117,51 @@ $$;
 
 
 --
+-- Name: get_my_appointments_grid(date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_my_appointments_grid(_date date) RETURNS jsonb
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
+DECLARE
+    _doctor_id uuid;
+BEGIN
+    -- 1. Security Check: Only Doctors
+    IF public.auth_user_role() != 'doctor' THEN
+        RAISE EXCEPTION 'Unauthorized: Only doctors can access their personal schedule grid.';
+    END IF;
+
+    -- 2. Identify the Doctor
+    _doctor_id := auth.uid();
+
+    -- 3. Return Data (Same structure as the original grid for UI compatibility)
+    RETURN (
+        SELECT COALESCE(jsonb_agg(t), '[]'::jsonb) FROM (
+            SELECT 
+                a.id,
+                a.start_time,
+                a.end_time,
+                a.status,
+                a.type,
+                p.full_name as patient_name,
+                p.uhid,
+                dr_p.full_name as doctor_name,
+                a.doctor_id
+            FROM appointments a
+            JOIN patients p ON a.patient_id = p.id
+            JOIN profiles dr_p ON a.doctor_id = dr_p.id
+            WHERE a.doctor_id = _doctor_id -- 🔒 STRICT FILTER: Only My Appointments
+              AND a.start_time::DATE = _date
+              AND a.status != 'cancelled'
+            ORDER BY a.start_time ASC
+        ) t
+    );
+END;
+$$;
+
+
+--
 -- Name: get_my_subscription_details(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2091,11 +2211,28 @@ $$;
 --
 
 CREATE FUNCTION public.get_patient_360_summary(_patient_id uuid, _doctor_id uuid) RETURNS jsonb
-    LANGUAGE plpgsql STABLE
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     _result jsonb;
+    _patient_clinic_id uuid;
+    _user_clinic_id uuid;
 BEGIN
+    -- 🛡️ SECURITY PATCH START --------------------------------------
+    -- 1. Get Patient's Clinic
+    SELECT clinic_id INTO _patient_clinic_id FROM patients WHERE id = _patient_id;
+    
+    -- 2. Get User's Clinic
+    _user_clinic_id := public.auth_my_clinic_id();
+
+    -- 3. Scope Check (Prevent enumeration of other clinics' patients)
+    IF _patient_clinic_id IS DISTINCT FROM _user_clinic_id AND NOT public.is_super_admin() THEN
+        RETURN NULL; 
+    END IF;
+    -- 🛡️ SECURITY PATCH END ----------------------------------------
+
+    -- ORIGINAL LOGIC PRESERVED BELOW
     SELECT jsonb_build_object(
         -- 1. HEADER: Patient Identity
         'patient', jsonb_build_object(
@@ -2137,18 +2274,18 @@ BEGIN
                     'notes', c.clinical_notes_internal,
                     'vitals', c.vitals_snapshot,
                     
-                    -- Advice / Plan (Missing in previous version)
+                    -- Advice / Plan
                     'advice', jsonb_build_object(
                         'next_visit_date', c.next_visit_date,
                         'next_visit_text', c.next_visit_text
                     ),
 
-                    -- RX ITEMS (Matched exactly to Print Data)
+                    -- RX ITEMS
                     'prescriptions', (
                         SELECT COALESCE(jsonb_agg(
                             jsonb_build_object(
                                 'brand_name', COALESCE(m.name, pi.medicine_name_manual),
-                                -- Complex Generic Logic to match Printer
+                                -- Complex Generic Logic from original dump
                                 'generic_name', TRIM(BOTH ' ' FROM CONCAT_WS(' + ', 
                                     NULLIF(TRIM(m.short_composition1), ''), 
                                     NULLIF(TRIM(m.short_composition2), '')
@@ -2157,7 +2294,7 @@ BEGIN
                                 'dosage', pi.frequency,
                                 'duration', pi.duration,
                                 'instruction', pi.instructions_timing,
-                                'note', pi.special_instructions -- Added Notes
+                                'note', pi.special_instructions
                             ) ORDER BY pi.sort_order
                         ), '[]'::jsonb)
                         FROM prescription_items pi
@@ -2165,7 +2302,7 @@ BEGIN
                         WHERE pi.consultation_id = c.id
                     ),
 
-                    -- LAB ORDERS (Matched fields to Print Data)
+                    -- LAB ORDERS
                     'lab_orders', (
                         SELECT COALESCE(jsonb_agg(
                             jsonb_build_object(
@@ -2244,25 +2381,21 @@ DECLARE
     _requester_clinic_id uuid;
     _patient_clinic_id uuid;
 BEGIN
-    -- A. Security Check (Manual)
-    -- We fetch clinic IDs directly to ensure we aren't relying on stale context
+    -- 🛡️ SECURITY UPDATE
     SELECT clinic_id INTO _patient_clinic_id FROM patients WHERE id = _patient_id;
-    SELECT clinic_id INTO _requester_clinic_id FROM profiles WHERE id = auth.uid();
+    _requester_clinic_id := public.auth_my_clinic_id();
     
-    -- If not Super Admin, and not the patient themselves, enforce Clinic Match
-    IF NOT public.is_super_admin() AND auth.uid() != _patient_id THEN
+    -- Added 'doctor' check implicitly by allowing general access if Clinic IDs match
+    IF NOT public.is_super_admin() THEN
         IF _requester_clinic_id IS DISTINCT FROM _patient_clinic_id THEN
              RAISE EXCEPTION 'Unauthorized: Patient belongs to a different clinic.';
         END IF;
     END IF;
 
-    -- B. Fetch Profile (Scope 1)
-    SELECT to_jsonb(p) INTO _profile_data 
-    FROM patients p 
-    WHERE p.id = _patient_id;
+    -- Fetch Profile
+    SELECT to_jsonb(p) INTO _profile_data FROM patients p WHERE p.id = _patient_id;
 
-    -- C. Fetch Appointments (Scope 2 - Isolated)
-    -- We select from a subquery 'appt_rows' to strictly contain aliases
+    -- Fetch Appointments
     SELECT COALESCE(jsonb_agg(appt_rows), '[]'::jsonb) INTO _appointments_data
     FROM (
         SELECT 
@@ -2273,8 +2406,6 @@ BEGIN
             a.type,
             dr_p.full_name AS doctor_name,
             dr.specialty,
-            
-            -- Financials
             i.id AS invoice_id,
             i.invoice_number,
             i.grand_total AS amount,
@@ -2282,8 +2413,6 @@ BEGIN
             (i.grand_total - COALESCE(i.amount_paid, 0)) AS balance_due,
             i.payment_status,
             i.payment_mode,
-            
-            -- Queue
             q.token_number
         FROM appointments a
         JOIN profiles dr_p ON a.doctor_id = dr_p.id
@@ -2294,21 +2423,15 @@ BEGIN
         ORDER BY a.start_time DESC
     ) appt_rows;
 
-    -- D. Fetch Documents (Scope 3 - Isolated)
+    -- Fetch Documents
     SELECT COALESCE(jsonb_agg(doc_rows), '[]'::jsonb) INTO _documents_data
     FROM (
-        SELECT 
-            d.id,
-            d.file_name,
-            d.file_url,
-            d.category,
-            d.uploaded_at
+        SELECT d.id, d.file_name, d.file_url, d.category, d.uploaded_at
         FROM patient_documents d
         WHERE d.patient_id = _patient_id
         ORDER BY d.uploaded_at DESC
     ) doc_rows;
 
-    -- E. Combine and Return
     RETURN jsonb_build_object(
         'profile', _profile_data,
         'appointments', _appointments_data,
@@ -2470,23 +2593,33 @@ $$;
 --
 
 CREATE FUNCTION public.get_patients_v2(_clinic_id uuid, _search text DEFAULT NULL::text, _gender public.gender_type DEFAULT NULL::public.gender_type, _page integer DEFAULT 1, _page_size integer DEFAULT 10) RETURNS TABLE(id uuid, full_name text, phone text, uhid text, gender public.gender_type, age integer, created_at timestamp with time zone, total_count bigint)
-    LANGUAGE plpgsql STABLE
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     _offset integer;
+    _role public.user_role;
+    _user_clinic_id uuid;
 BEGIN
+    _role := public.auth_user_role();
+    _user_clinic_id := public.auth_my_clinic_id();
+
+    -- 🛡️ SECURITY UPDATE: Added 'doctor' to allowed roles
+    IF _role NOT IN ('admin', 'staff', 'doctor') AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Access denied.';
+    END IF;
+
+    -- Scope Check
+    IF _user_clinic_id IS DISTINCT FROM _clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: You cannot view patients from another clinic.';
+    END IF;
+
     _offset := (_page - 1) * _page_size;
 
     RETURN QUERY
     WITH filtered_patients AS (
         SELECT 
-            p.id,
-            p.full_name,
-            p.phone,
-            p.uhid,
-            p.gender,
-            p.age,
-            p.created_at
+            p.id, p.full_name, p.phone, p.uhid, p.gender, p.age, p.created_at
         FROM patients p
         WHERE p.clinic_id = _clinic_id
           AND (_gender IS NULL OR p.gender = _gender)
@@ -2497,22 +2630,12 @@ BEGIN
             p.uhid ILIKE '%' || _search || '%'
           )
     ),
-    total AS (
-        SELECT count(*) as count FROM filtered_patients
-    )
+    total AS ( SELECT count(*) as count FROM filtered_patients )
     SELECT 
-        f.id,
-        f.full_name,
-        f.phone,
-        f.uhid,
-        f.gender,
-        f.age,
-        f.created_at,
-        t.count
+        f.id, f.full_name, f.phone, f.uhid, f.gender, f.age, f.created_at, t.count
     FROM filtered_patients f, total t
     ORDER BY f.created_at DESC
-    LIMIT _page_size
-    OFFSET _offset;
+    LIMIT _page_size OFFSET _offset;
 END;
 $$;
 
@@ -2797,6 +2920,45 @@ $$;
 
 
 --
+-- Name: log_communication_event(uuid, uuid, text, text, text, text, text, jsonb, numeric); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.log_communication_event(_clinic_id uuid, _appointment_id uuid, _type text, _template_name text, _recipient text, _status text, _provider_message_id text, _provider_response jsonb, _cost numeric DEFAULT 0.33) RETURNS uuid
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    _new_id uuid;
+BEGIN
+    INSERT INTO public.communication_logs (
+        clinic_id,
+        appointment_id,
+        type,
+        template_name,
+        recipient,
+        status,
+        provider_message_id,
+        provider_response,
+        cost
+    ) VALUES (
+        _clinic_id,
+        _appointment_id,
+        _type,
+        _template_name,
+        _recipient,
+        _status,
+        _provider_message_id,
+        _provider_response,
+        _cost
+    )
+    RETURNING id INTO _new_id;
+
+    RETURN _new_id;
+END;
+$$;
+
+
+--
 -- Name: merge_patient_records(uuid, uuid); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2870,6 +3032,138 @@ BEGIN
         _keep_id
     );
 
+END;
+$$;
+
+
+--
+-- Name: notify_prescription_event(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.notify_prescription_event() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    _is_enabled BOOLEAN;
+    _payload JSONB;
+BEGIN
+    -- Logic: Status changed to 'completed'
+    IF NEW.status = 'completed'::public.appointment_status 
+       AND (OLD.status IS DISTINCT FROM 'completed'::public.appointment_status) THEN
+        
+        -- Gatekeeper: Check Active Subscription + SMS Enabled
+        -- FIX: Added alias 'cs' and removed explicit enum casting to prevent syntax errors
+        SELECT cs.limit_sms_enabled INTO _is_enabled
+        FROM clinic_subscriptions cs
+        WHERE cs.clinic_id = NEW.clinic_id
+          AND cs.status = 'active'
+          AND cs.starts_at <= NOW()
+          AND cs.ends_at > NOW()
+        ORDER BY cs.ends_at DESC
+        LIMIT 1;
+
+        -- Signal: Send Notification if enabled
+        IF _is_enabled IS TRUE THEN
+            _payload := jsonb_build_object(
+                'appointment_id', NEW.id,
+                'clinic_id', NEW.clinic_id,
+                'event', 'prescription_ready'
+            );
+            PERFORM pg_notify('prescription_events', _payload::text);
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: notify_prescription_ready(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.notify_prescription_ready() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
+    AS $$
+DECLARE
+    _is_enabled BOOLEAN;
+    _payload JSONB;
+BEGIN
+    -- 1. ONLY Run if status changed to 'completed'
+    -- We cast to text to be safe, or cast the string to the enum type
+    IF NEW.status = 'completed'::public.appointment_status 
+       AND (OLD.status IS DISTINCT FROM 'completed'::public.appointment_status) THEN
+        
+        -- 2. Check Subscription Logic (Gatekeeper)
+        -- Finds the most relevant ACTIVE subscription
+        SELECT limit_sms_enabled INTO _is_enabled
+        FROM clinic_subscriptions
+        WHERE clinic_id = NEW.clinic_id
+          AND status = 'active'::public.sub_status
+          AND starts_at <= NOW()
+          AND ends_at > NOW()
+        ORDER BY ends_at DESC
+        LIMIT 1;
+
+        -- 3. If Enabled, Fire the Notification
+        -- We explicitly check for TRUE to handle NULLs (orphan clinics) gracefully
+        IF _is_enabled IS TRUE THEN
+            _payload := jsonb_build_object(
+                'appointment_id', NEW.id,
+                'clinic_id', NEW.clinic_id,
+                'patient_id', NEW.patient_id,
+                'timestamp', NOW()
+            );
+
+            -- Send signal (Payload < 8000 bytes)
+            PERFORM pg_notify('prescription_events', _payload::text);
+        END IF;
+        
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: notify_reschedule_event(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.notify_reschedule_event() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+DECLARE
+    _is_enabled BOOLEAN;
+    _payload JSONB;
+BEGIN
+    -- Logic: Time changed AND it is a future appointment
+    IF NEW.start_time IS DISTINCT FROM OLD.start_time 
+       AND NEW.start_time > NOW() THEN
+            
+        -- Gatekeeper: Check Active Subscription + SMS Enabled
+        -- FIX: Added alias 'cs'
+        SELECT cs.limit_sms_enabled INTO _is_enabled
+        FROM clinic_subscriptions cs
+        WHERE cs.clinic_id = NEW.clinic_id
+          AND cs.status = 'active'
+          AND cs.ends_at > NOW()
+        ORDER BY cs.ends_at DESC
+        LIMIT 1;
+
+        -- Signal: Send Notification if enabled
+        IF _is_enabled IS TRUE THEN
+            _payload := jsonb_build_object(
+                'appointment_id', NEW.id,
+                'clinic_id', NEW.clinic_id,
+                'event', 'reschedule_alert'
+            );
+            PERFORM pg_notify('prescription_events', _payload::text);
+        END IF;
+    END IF;
+    RETURN NEW;
 END;
 $$;
 
@@ -3420,28 +3714,34 @@ DECLARE
     _grand_total numeric;
     _total_paid numeric;
     _clinic_id uuid;
+    _user_clinic_id uuid;
 BEGIN
-    -- 1. Security: Only Staff/Admin
+    -- 🛡️ SECURITY PATCH --------------------------------------------------------
+    -- 1. Role Check
     IF public.auth_user_role() NOT IN ('admin', 'staff', 'doctor') AND NOT public.is_super_admin() THEN
-        RAISE EXCEPTION 'Unauthorized: Only staff can record payments.';
+        RAISE EXCEPTION 'Unauthorized: Access denied.';
     END IF;
 
-    -- 2. Validation & Fetch (Ensure invoice belongs to user's clinic)
+    -- 2. Fetch Invoice & Clinic Info
     SELECT i.grand_total, i.amount_paid, a.clinic_id 
     INTO _grand_total, _total_paid, _clinic_id
     FROM invoices i
     JOIN appointments a ON i.appointment_id = a.id
     WHERE i.id = _invoice_id;
 
-    IF NOT public.is_super_admin() AND _clinic_id != public.auth_my_clinic_id() THEN
+    IF NOT FOUND THEN RAISE EXCEPTION 'Invoice not found'; END IF;
+
+    -- 3. Scope Check
+    _user_clinic_id := public.auth_my_clinic_id();
+    IF _clinic_id IS DISTINCT FROM _user_clinic_id AND NOT public.is_super_admin() THEN
         RAISE EXCEPTION 'Unauthorized: Invoice does not belong to your clinic.';
     END IF;
+    -- 🛡️ END PATCH -------------------------------------------------------------
 
     IF (_total_paid + _amount) > _grand_total THEN
         RAISE EXCEPTION 'Payment amount (%) exceeds balance due (%).', _amount, (_grand_total - _total_paid);
     END IF;
 
-    -- 3. Process Payment
     INSERT INTO invoice_payments (
         invoice_id, amount, payment_mode, transaction_ref, notes, created_by
     )
@@ -3465,6 +3765,7 @@ $$;
 
 CREATE FUNCTION public.reschedule_appointment(_appointment_id uuid, _new_start_time timestamp with time zone, _new_doctor_id uuid DEFAULT NULL::uuid) RETURNS jsonb
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     _current_doc_id uuid;
@@ -3474,78 +3775,88 @@ DECLARE
     _old_price numeric;
     _new_price numeric;
     _avg_time int;
+    _user_clinic_id uuid;
 BEGIN
-    -- 1. Fetch Current Metadata & Financials
-    SELECT 
-        a.doctor_id, a.clinic_id, a.patient_id, i.grand_total
-    INTO 
-        _current_doc_id, _clinic_id, _patient_id, _old_price
+    -- ==============================================================================
+    -- 🛡️ SECURITY PATCH
+    -- ==============================================================================
+    
+    -- 1. Role Check: Allow Admin, Staff, AND Doctor
+    IF public.auth_user_role() NOT IN ('admin', 'staff', 'doctor') AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: You do not have permission to reschedule appointments.';
+    END IF;
+
+    -- 2. Fetch Appointment Data & Verify Existence
+    SELECT a.doctor_id, a.clinic_id, a.patient_id, COALESCE(i.grand_total, 0)
+    INTO _current_doc_id, _clinic_id, _patient_id, _old_price
     FROM appointments a
     LEFT JOIN invoices i ON a.id = i.appointment_id
     WHERE a.id = _appointment_id;
 
-    -- 2. Determine Target Doctor
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Appointment not found.';
+    END IF;
+
+    -- 3. Scope Check: Ensure the appointment belongs to the user's clinic
+    _user_clinic_id := public.auth_my_clinic_id();
+
+    IF _clinic_id IS DISTINCT FROM _user_clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: This appointment belongs to another clinic.';
+    END IF;
+    -- ==============================================================================
+
+    -- 4. Logic: Determine Target Doctor
+    -- If _new_doctor_id is NULL, keep the current doctor.
     _final_doctor_id := COALESCE(_new_doctor_id, _current_doc_id);
 
-    -- 3. FINANCIAL GUARD: Check if Doctor changed and prices differ
+    -- 5. Logic: Check New Doctor Fees & Schedule
     SELECT (fees_structure->>'consultation')::numeric, avg_consult_time_min 
     INTO _new_price, _avg_time
     FROM doctors WHERE profile_id = _final_doctor_id;
 
-    -- If the new doctor is more expensive and invoice is already generated
-    IF _new_price > _old_price THEN
-        -- OPTION A: Block it (Strict)
-        -- RAISE EXCEPTION 'Cannot reschedule: New doctor fees (%) are higher than paid amount (%).', _new_price, _old_price;
-        
-        -- OPTION B: Allow it but return a warning (Preferred for flexibility)
-        -- We continue, but the frontend should alert the staff.
-        -- This part can be left as is, or made more explicit.
-        -- For now, the 'financial_warning' flag in the return will handle it.
-    END IF;
-    
-    -- Handle case where doctor or their fees/time are not found
     IF NOT FOUND THEN
-       RAISE EXCEPTION 'Doctor or their fee/schedule not found for profile ID: %', _final_doctor_id;
+       RAISE EXCEPTION 'Target doctor configuration not found.';
     END IF;
 
-    -- 4. Concurrency Guard (Slot Availability)
+    -- 6. Concurrency Guard: Check if the new slot is available
     IF EXISTS (
         SELECT 1 FROM appointments 
         WHERE doctor_id = _final_doctor_id 
           AND start_time = _new_start_time 
-          AND id != _appointment_id
+          AND id != _appointment_id -- Ignore self
           AND status != 'cancelled'
     ) THEN
         RAISE EXCEPTION 'Slot already booked';
     END IF;
 
-    -- 5. Update Appointment
+    -- 7. Perform Update
     UPDATE appointments
     SET 
         doctor_id = _final_doctor_id,
         start_time = _new_start_time,
         end_time = _new_start_time + (_avg_time || ' minutes')::interval,
         status = 'rescheduled', 
-        checked_in_at = NULL -- Reset lobby status
+        checked_in_at = NULL -- Reset lobby status since time changed
     WHERE id = _appointment_id;
 
-    -- 6. REGENERATE QUEUE TOKEN
-    -- A. Delete old token (orphaned date/doctor)
+    -- 8. Regenerate Queue Token
+    -- Delete old token (it was tied to the old date/doctor)
     DELETE FROM queue_tokens WHERE appointment_id = _appointment_id;
 
-    -- B. Generate new token using the Shared Function (DRY Principle)
+    -- Generate new token
     PERFORM public._internal_generate_queue_token(
-        _clinic_id,
-        _appointment_id,
-        _patient_id,
-        _final_doctor_id,
+        _clinic_id, 
+        _appointment_id, 
+        _patient_id, 
+        _final_doctor_id, 
         _new_start_time::DATE
     );
 
+    -- 9. Return Result
     RETURN jsonb_build_object(
         'success', true, 
         'message', 'Rescheduled successfully',
-        'financial_warning', (_new_price > _old_price) -- simplified boolean check
+        'financial_warning', (_new_price > _old_price) -- Flag for UI to warn about fee difference
     );
 END;
 $$;
@@ -4132,23 +4443,26 @@ $$;
 
 CREATE FUNCTION public.save_patient_document(_patient_id uuid, _file_name text, _file_url text, _category public.file_category, _uploaded_by uuid) RETURNS uuid
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 DECLARE
     new_id uuid;
+    _patient_clinic_id uuid;
+    _user_clinic_id uuid;
 BEGIN
+    -- 🛡️ SECURITY PATCH
+    SELECT clinic_id INTO _patient_clinic_id FROM patients WHERE id = _patient_id;
+    _user_clinic_id := public.auth_my_clinic_id();
+
+    IF _patient_clinic_id IS DISTINCT FROM _user_clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Patient belongs to another clinic.';
+    END IF;
+    -- 🛡️ END PATCH
+
     INSERT INTO public.patient_documents (
-        patient_id,
-        file_name,
-        file_url,
-        category,
-        uploaded_by
-    )
-    VALUES (
-        _patient_id,
-        _file_name,
-        _file_url,
-        _category,
-        _uploaded_by
+        patient_id, file_name, file_url, category, uploaded_by
+    ) VALUES (
+        _patient_id, _file_name, _file_url, _category, _uploaded_by
     )
     RETURNING id INTO new_id;
     
@@ -4201,18 +4515,23 @@ $$;
 --
 
 CREATE FUNCTION public.search_patients_fuzzy(_query text, _clinic_id uuid) RETURNS TABLE(id uuid, full_name text, phone text, uhid text, age integer, gender text, last_visit date)
-    LANGUAGE plpgsql STABLE
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 BEGIN
+    -- 🛡️ SECURITY UPDATE: Added 'doctor' to allowed roles
+    IF public.auth_user_role() NOT IN ('admin', 'staff', 'doctor') AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized';
+    END IF;
+
+    -- Scope Check
+    IF public.auth_my_clinic_id() IS DISTINCT FROM _clinic_id AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized scope';
+    END IF;
+
     RETURN QUERY
-    SELECT 
-        p.id, 
-        p.full_name, 
-        p.phone, 
-        p.uhid, 
-        p.age, 
-        p.gender::TEXT,
-        (SELECT start_time::DATE FROM appointments WHERE patient_id = p.id ORDER BY start_time DESC LIMIT 1)
+    SELECT p.id, p.full_name, p.phone, p.uhid, p.age, p.gender::TEXT,
+           (SELECT start_time::DATE FROM appointments WHERE patient_id = p.id ORDER BY start_time DESC LIMIT 1)
     FROM patients p
     WHERE p.clinic_id = _clinic_id
       AND (
@@ -4237,41 +4556,52 @@ DECLARE
     _med JSONB;
     _lab JSONB;
     _appt_id UUID;
-    _sort_idx INTEGER := 0;
+    _doctor_id UUID;
+    _sort_idx INTEGER := 0; -- Tracks order of medicines
 BEGIN
-    -- MANUAL SECURITY CHECK
-    -- Ensure the consultation belongs to the user's clinic
-    IF NOT EXISTS (
-        SELECT 1 
-        FROM consultations c
-        JOIN appointments a ON c.appointment_id = a.id
-        WHERE c.id = _consult_id
-        AND a.clinic_id = public.auth_my_clinic_id()
-    ) THEN
-        RAISE EXCEPTION 'Access Denied: Consultation not found or belongs to another clinic.';
+    -- ==============================================================================
+    -- 🛡️ SECURITY PATCH: VALIDATION & OWNERSHIP CHECK
+    -- ==============================================================================
+    -- 1. Check Role: Only Doctors (or Super Admins) can submit prescriptions
+    IF public.auth_user_role() != 'doctor' AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: Only doctors can submit prescriptions.';
     END IF;
 
-    -- Update Consultation Header
+    -- 2. Fetch Context: Get the Appointment ID and Owner (Doctor ID)
+    -- We need this BEFORE updating to ensure the user owns this record.
+    SELECT appointment_id, doctor_id 
+    INTO _appt_id, _doctor_id
+    FROM consultations
+    WHERE id = _consult_id;
+
+    IF NOT FOUND THEN 
+        RAISE EXCEPTION 'Consultation not found.';
+    END IF;
+
+    -- 3. Check Ownership: Ensure the logged-in user is the doctor for this consult
+    IF _doctor_id != auth.uid() AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized: This consultation belongs to another doctor.';
+    END IF;
+    -- ==============================================================================
+
+    -- 1. Update Consultation Header
     UPDATE consultations 
     SET diagnosis_codes = _diagnosis,
-        chief_complaint = _chief_complaint,
-        clinical_notes_internal = _notes,
+        chief_complaint = _chief_complaint,  -- Preserved
+        clinical_notes_internal = _notes,    -- Preserved
         vitals_snapshot = _vitals,
         next_visit_date = _next_visit_date,
-        next_visit_text = _next_visit_text
-    WHERE id = _consult_id
-    RETURNING appointment_id INTO _appt_id;
+        next_visit_text = _next_visit_text   -- Preserved (Advice/Instructions)
+    WHERE id = _consult_id;
+    -- Note: removed 'RETURNING appointment_id' because we fetched it safely in the security block above.
 
-    IF _appt_id IS NULL THEN
-        RAISE EXCEPTION 'Consultation ID invalid.';
-    END IF;
-
-    -- Insert Medicines (Clean & Insert)
-    DELETE FROM prescription_items WHERE consultation_id = _consult_id;
+    -- 2. Insert Medicines (Loop)
+    -- ⚠️ CRITICAL: Keep this DELETE. It ensures if you save twice, you don't get duplicate meds.
+    DELETE FROM prescription_items WHERE consultation_id = _consult_id; 
 
     FOR _med IN SELECT * FROM jsonb_array_elements(_meds)
     LOOP
-        _sort_idx := _sort_idx + 1;
+        _sort_idx := _sort_idx + 1; -- Preserved increment counter
 
         INSERT INTO prescription_items (
             consultation_id, 
@@ -4292,12 +4622,13 @@ BEGIN
             _med->>'duration', 
             _med->>'instruction',
             _med->>'special_instructions',
-            _sort_idx,
+            _sort_idx, -- Preserved sort order
             _med->>'composition'
         );
     END LOOP;
 
-    -- Insert Labs (Clean & Insert)
+    -- 3. Insert Labs (Loop)
+    -- ⚠️ CRITICAL: Keep this DELETE.
     DELETE FROM lab_orders WHERE consultation_id = _consult_id;
 
     FOR _lab IN SELECT * FROM jsonb_array_elements(_labs)
@@ -4314,7 +4645,7 @@ BEGIN
         );
     END LOOP;
 
-    -- Update Status
+    -- 4. Close the Loop (Update Appointment & Queue)
     UPDATE appointments 
     SET status = 'completed', 
         consult_ended_at = NOW() 
@@ -4323,6 +4654,7 @@ BEGIN
     UPDATE queue_tokens 
     SET status = 'completed' 
     WHERE appointment_id = _appt_id;
+
 END;
 $$;
 
@@ -4547,48 +4879,33 @@ CREATE FUNCTION public.update_appointment_status(_appointment_id uuid, _new_stat
     LANGUAGE plpgsql
     AS $$
 BEGIN
-    -- 1. Handle "Check In" (Patient Arrived)
+    -- 🔒 SECURITY PATCH
+    IF public.auth_user_role() NOT IN ('admin', 'staff') THEN
+        RAISE EXCEPTION 'Unauthorized: Only Staff can update appointment status.';
+    END IF;
+    -- 🔒 END PATCH
+
+    -- (Existing Logic...)
     IF _new_status = 'checked_in' THEN
         UPDATE appointments 
-        SET status = 'checked_in',
-            checked_in_at = NOW() -- <--- THIS is where we set the arrival time
-        WHERE id = _appointment_id;
-
-        -- Ensure Queue Token is ready
-        UPDATE queue_tokens 
-        SET status = 'waiting' 
-        WHERE appointment_id = _appointment_id;
-
-    -- 2. Handle "Rescheduled" or "Undo Check-in"
-    -- If staff made a mistake and moves them back to 'scheduled', clear the timestamp
-    ELSIF _new_status = 'scheduled' THEN
-        UPDATE appointments 
-        SET status = 'scheduled',
-            checked_in_at = NULL 
+        SET status = 'checked_in', checked_in_at = NOW() 
         WHERE id = _appointment_id;
         
-        -- Set token to hold
+        UPDATE queue_tokens SET status = 'waiting' WHERE appointment_id = _appointment_id;
+
+    ELSIF _new_status = 'scheduled' THEN
+        UPDATE appointments SET status = 'scheduled', checked_in_at = NULL WHERE id = _appointment_id;
         UPDATE queue_tokens SET status = 'scheduled' WHERE appointment_id = _appointment_id;
 
-    -- 3. Handle Cancellation
     ELSIF _new_status = 'cancelled' THEN
-        UPDATE appointments 
-        SET status = 'cancelled'
-        WHERE id = _appointment_id;
-
-        UPDATE queue_tokens 
-        SET status = 'cancelled' 
-        WHERE appointment_id = _appointment_id;
-
+        UPDATE appointments SET status = 'cancelled' WHERE id = _appointment_id;
+        UPDATE queue_tokens SET status = 'cancelled' WHERE appointment_id = _appointment_id;
+        
         -- Void unpaid invoices
         UPDATE invoices 
-        SET payment_status = CASE 
-            WHEN payment_status = 'paid' THEN 'refunded'::payment_status
-            ELSE 'pending' -- You might want a 'void' status here eventually
-        END
+        SET payment_status = CASE WHEN payment_status = 'paid' THEN 'refunded'::payment_status ELSE 'pending' END
         WHERE appointment_id = _appointment_id;
 
-    -- 4. Standard Update for other statuses (triaged, completed, etc)
     ELSE
         UPDATE appointments SET status = _new_status WHERE id = _appointment_id;
     END IF;
@@ -4672,17 +4989,29 @@ $$;
 --
 
 CREATE FUNCTION public.update_queue_triage(_appointment_id uuid, _vitals jsonb, _critical boolean, _wheelchair boolean) RETURNS void
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public', 'pg_temp'
     AS $$
+DECLARE 
+    _clinic_id uuid;
 BEGIN
-    -- 1. Update/Create Consultations Vitals
-    -- Note: We use ON CONFLICT to handle cases where the consult row exists
+    -- 🛡️ SECURITY PATCH
+    IF public.auth_user_role() NOT IN ('staff', 'admin', 'doctor') THEN
+         RAISE EXCEPTION 'Unauthorized.';
+    END IF;
+
+    SELECT clinic_id INTO _clinic_id FROM appointments WHERE id = _appointment_id;
+    
+    IF _clinic_id IS DISTINCT FROM public.auth_my_clinic_id() AND NOT public.is_super_admin() THEN
+        RAISE EXCEPTION 'Unauthorized scope.';
+    END IF;
+    -- 🛡️ END PATCH
+
     INSERT INTO consultations (appointment_id, vitals_snapshot)
     VALUES (_appointment_id, _vitals)
     ON CONFLICT (appointment_id) 
     DO UPDATE SET vitals_snapshot = consultations.vitals_snapshot || _vitals;
 
-    -- 2. Update Patient Access Flags (Critical for UI badges)
     UPDATE patients 
     SET access_flags = access_flags || jsonb_build_object('critical', _critical, 'wheelchair', _wheelchair),
         updated_at = NOW()
@@ -4802,7 +5131,8 @@ CREATE TABLE public.appointments (
     consult_ended_at timestamp with time zone,
     created_by uuid,
     created_at timestamp with time zone DEFAULT now(),
-    appointment_number text
+    appointment_number text,
+    is_reminder_sent boolean DEFAULT false
 );
 
 
@@ -4901,12 +5231,15 @@ CREATE TABLE public.clinics (
 
 CREATE TABLE public.communication_logs (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    clinic_id uuid,
+    clinic_id uuid NOT NULL,
+    appointment_id uuid,
     type text NOT NULL,
+    template_name text,
     recipient text NOT NULL,
     status text,
+    provider_message_id text,
     provider_response jsonb,
-    cost numeric(10,4) DEFAULT 0,
+    cost numeric(10,2) DEFAULT 0,
     created_at timestamp with time zone DEFAULT now()
 );
 
@@ -5455,10 +5788,10 @@ CREATE INDEX idx_appointments_queue ON public.appointments USING btree (doctor_i
 
 
 --
--- Name: idx_comms_clinic_date; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_comms_billing; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_comms_clinic_date ON public.communication_logs USING btree (clinic_id, created_at DESC);
+CREATE INDEX idx_comms_billing ON public.communication_logs USING btree (clinic_id, created_at DESC);
 
 
 --
@@ -5679,6 +6012,20 @@ CREATE TRIGGER trg_gen_inv_num BEFORE INSERT ON public.invoices FOR EACH ROW EXE
 
 
 --
+-- Name: appointments trg_notify_prescription; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_notify_prescription AFTER UPDATE OF status ON public.appointments FOR EACH ROW EXECUTE FUNCTION public.notify_prescription_event();
+
+
+--
+-- Name: appointments trg_notify_reschedule; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_notify_reschedule AFTER UPDATE OF start_time ON public.appointments FOR EACH ROW EXECUTE FUNCTION public.notify_reschedule_event();
+
+
+--
 -- Name: appointments trg_on_appointment_created; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5790,6 +6137,14 @@ ALTER TABLE ONLY public.clinic_subscriptions
 
 ALTER TABLE ONLY public.clinic_subscriptions
     ADD CONSTRAINT clinic_subscriptions_plan_code_fkey FOREIGN KEY (plan_code) REFERENCES public.plan_master(code);
+
+
+--
+-- Name: communication_logs communication_logs_appointment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.communication_logs
+    ADD CONSTRAINT communication_logs_appointment_id_fkey FOREIGN KEY (appointment_id) REFERENCES public.appointments(id);
 
 
 --
@@ -6036,13 +6391,6 @@ CREATE POLICY "Authorized users view keys" ON public.clinic_api_keys FOR SELECT 
 
 
 --
--- Name: communication_logs Clinic view logs; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY "Clinic view logs" ON public.communication_logs FOR SELECT USING ((clinic_id = public.auth_my_clinic_id()));
-
-
---
 -- Name: clinic_subscriptions Clinic view own sub; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6267,13 +6615,6 @@ CREATE POLICY "SA manage subs" ON public.clinic_subscriptions USING (public.is_s
 
 
 --
--- Name: communication_logs SA view logs; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY "SA view logs" ON public.communication_logs USING (public.is_super_admin());
-
-
---
 -- Name: doctor_schedules Schedules Access; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -6338,12 +6679,6 @@ ALTER TABLE public.clinic_subscriptions ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.clinics ENABLE ROW LEVEL SECURITY;
-
---
--- Name: communication_logs; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.communication_logs ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: consultations; Type: ROW SECURITY; Schema: public; Owner: -
@@ -6451,5 +6786,5 @@ ALTER TABLE public.service_master ENABLE ROW LEVEL SECURITY;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 6F8cAoPbZC6ddq5bPcbOZFniGxhwPOeQCLT7AWrJhPBTk4UiLoxz8TCz5DcgSVB
+\unrestrict KxTeZ3wU3eCLpg9WanplSjeHnZpXjBD4KJ699fAr89lnVGAlw53Ib0cTcHpL6wY
 
