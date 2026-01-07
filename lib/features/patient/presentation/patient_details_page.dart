@@ -338,13 +338,15 @@ class _PatientDetailsPageState extends ConsumerState<PatientDetailsPage>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  _VisitActionBtn(
-                    label: "View Rx",
-                    icon: Icons.description_outlined,
-                    onTap: () =>
-                        PrescriptionPrintView.show(context, v.appointmentId),
-                  ),
-                  const SizedBox(width: 8),
+                  if (v.status == 'completed') ...[
+                    _VisitActionBtn(
+                      label: "View Rx",
+                      icon: Icons.description_outlined,
+                      onTap: () =>
+                          PrescriptionPrintView.show(context, v.appointmentId),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   PopupMenuButton<String>(
                     icon: Container(
                       padding: const EdgeInsets.all(8),
