@@ -57,13 +57,13 @@ export async function getDoctorDashboardData(): Promise<DoctorDashboardData | { 
     try {
         // Fetch Metrics
         const { data: metricsData, error: metricsError } = await supabase
-            .rpc("get_doctor_dashboard_metrics", { p_doctor_id: user.id });
+            .rpc("get_doctor_dashboard_metrics", { _doctor_id: user.id });
 
         if (metricsError) throw metricsError;
 
         // Fetch Active Queue
         const { data: queueData, error: queueError } = await supabase
-            .rpc("get_doctor_active_queue", { p_doctor_id: user.id });
+            .rpc("get_doctor_active_queue", { _doctor_id: user.id });
 
         if (queueError) throw queueError;
 

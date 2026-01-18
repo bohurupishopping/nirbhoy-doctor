@@ -1,7 +1,7 @@
 name: nirbhoy_doctor
 description: "nirbhoy doctor by bohurupi services"
 publish_to: 'none'
-version: 0.2.070126+12
+version: 0.3.011826+139
 
 environment:
   sdk: ^3.10.1

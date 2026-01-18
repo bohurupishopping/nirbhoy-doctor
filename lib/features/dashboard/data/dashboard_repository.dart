@@ -14,10 +14,7 @@ class DashboardRepository {
   Future<DashboardStats> getDashboardStats(String doctorId) async {
     try {
       final response = await _supabase
-          .rpc(
-            'get_doctor_dashboard_metrics',
-            params: {'p_doctor_id': doctorId},
-          )
+          .rpc('get_doctor_dashboard_metrics', params: {'_doctor_id': doctorId})
           .timeout(const Duration(seconds: 10));
 
       // RPC returns a list of 1 object usually, or a single object if configured.
@@ -33,7 +30,7 @@ class DashboardRepository {
   Future<QueueData> getLiveQueue(String doctorId) async {
     try {
       final response = await _supabase
-          .rpc('get_doctor_active_queue', params: {'p_doctor_id': doctorId})
+          .rpc('get_doctor_active_queue', params: {'_doctor_id': doctorId})
           .timeout(const Duration(seconds: 10));
 
       final List<dynamic> list = response as List<dynamic>;

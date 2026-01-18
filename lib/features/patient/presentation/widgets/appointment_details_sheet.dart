@@ -137,15 +137,6 @@ class AppointmentDetailsSheet extends ConsumerWidget {
                       fontSize: 15,
                     ),
                   ),
-                  Text(
-                    meta.specialty?.toUpperCase() ?? 'SPECIALIST',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
                 ],
               ),
             ],
@@ -311,9 +302,9 @@ class _TimelineItem extends StatelessWidget {
                     Text(
                       event.eventType == 'payment'
                           ? event.description!
-                              .replaceAll(RegExp(r'Amount: [^|]+'), '')
-                              .replaceAll(RegExp(r'^\s*\|\s*'), '')
-                              .trim()
+                                .replaceAll(RegExp(r'Amount: [^|]+'), '')
+                                .replaceAll(RegExp(r'^\s*\|\s*'), '')
+                                .trim()
                           : event.description!,
                       style: GoogleFonts.inter(
                         fontSize: 13,

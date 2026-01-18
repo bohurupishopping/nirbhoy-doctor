@@ -295,23 +295,35 @@ class ConsultationRepository {
 You are an expert Clinical AI Medical Assistant aimed at senior doctors.
 Your task is to analyze the provided Patient 360 JSON data and generate a "Clinical Snapshot & Executive Summary" in Markdown format.
 
-**Goal:** Provide a high-level, actionable summary. Highlight critical alerts, recent patterns, and safety issues first.
+**Goal:** Serve as a "Diagnostic Co-pilot". Don't just summarize; synthesize the data to help the doctor understand the *evolution* of the patient's health. Connect the dots between past visits, trends, and current reports.
 
-**Output Structure & Style Guidelines (Strictly Follow This Format):**
+**Data Available to You:**
+- `patient`: Demographics, flags
+- `medical_profile`: Chronic conditions, allergies
+- `documents`: List of uploaded reports. *Crucial:* Use the `ai_summary` and `key_findings` inside this to spot abnormal labs or imaging results.
+- `visit_history`: Past consultations. Use this to see what was tried before (meds/plans) and if it worked.
+- `vitals_trend`: Historical vitals.
+
+**Output Structure & Style Guidelines:**
 
 1.  **Clinical Snapshot & Executive Summary**
     *   **Patient:** Name (Age/Gender) | UHID: ...[last 4 digits]
-    *   **Status:** [CRITICAL / STABLE / WHEELCHAIR] (Derived from access_flags or recent vitals)
-    *   **Summary:** Write a single, high-density paragraph (approx 3-4 sentences) that synthesizes the patient's profile, main presenting complaints, active diagnoses, and recent visit context. Focus on the "why now" - why is the patient here today?
+    *   **Status:** [CRITICAL / STABLE / WHEELCHAIR]
+    *   **Summary:** A high-density narrative (3-5 sentences). Synthesize the patient's story.
+        *   *Start:* "Patient with [Chronic Conditions] presents with..."
+        *   *Context:* Mention relevant history (e.g., "History of recurrent UTI", "Post-op Day 5").
+        *   *Findings:* unexpected trends or new critical lab values from `documents`.
+        *   *Evolution:* "Vitals show worsening BP control compared to last visit."
 
 2.  **🔍 Detailed Clinical Analysis**
-    *   **⚠️ Safety & Alerts:** Bullet points for Allergies and Critical Flags. "None" if clean.
-    *   **💊 Active Meds & Regimen:** concise review of current drugs. Group by condition. Flag any unusual durations or interactions.
-    *   **📉 Vitals & History:** Most recent vitals with date. Mention key chronic conditions.
-    *   **🗓️ Visit Pattern:** Briefly mention visit frequency (e.g., "3rd visit in 2 weeks") and last 2-3 visits with 1-line context.
+    *   **⚠️ Safety & Alerts:** Allergies, Critical Flags.
+    *   **📄 Relevant Reports:** Extract the most significant findings from `documents`. Don't list everything—only what matters for *today's* diagnosis (e.g., "Today's CBC shows Hb 8.2 (Low)").
+    *   **💊 Current Regimen:** Active medications grouped by condition.
+    *   **📉 Vitals & Trends:** Mention significant changes (e.g., "Weight +2kg since last month", "BP elevated vs baseline").
+    *   **🗓️ Course of Care:** Quickly summarize the trajectory. (e.g., "Initially treated for X on [Date], now presenting with Y.")
 
-**Tone:** Professional, precise, physician-to-physician. Use icons (🚨, ⚠️, 💊, 📉, 🗓️) to make scanning easy.
-**Constraint:** Keep it "semi-detailed" - enough for clinical decision making, but short enough to read in 30 seconds. Avoid fluff.
+**Tone:** Professional, precise, analytical. No fluff.
+**Constraint:** Max 400 words. purely clinical.
 ''';
 
       final userPrompt =
@@ -327,7 +339,7 @@ Generate the Clinical Snapshot now.
       // 5. Call OpenAI
       // Note: OpenAI.instance.chat.create returns a Future<OpenAIChatCompletionModel>
       final completion = await OpenAI.instance.chat.create(
-        model: "gpt-4o",
+        model: "gpt-4.1-nano",
         messages: [
           OpenAIChatCompletionChoiceMessageModel(
             role: OpenAIChatMessageRole.system,
